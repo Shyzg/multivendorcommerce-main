@@ -186,48 +186,7 @@ class OrderController extends Controller
             $log->order_status = $data['order_status'];
             $log->save();
 
-
-            // "Update Order Status" email: We send an email and SMS to the user when the general Order Status is updated by an 'admin' (pending, shipped, in progress, …)
-            $deliveryDetails = Order::select('mobile', 'email', 'name')->where('id', $data['order_id'])->first()->toArray();
-            $orderDetails    = Order::with('orders_products')->where('id', $data['order_id'])->first()->toArray(); // Eager Loading: https://laravel.com/docs/9.x/eloquent-relationships#eager-loading    // 'orders_products' is the relationship method name in Order.php model
-
-
-            if (!empty($data['courier_name']) && !empty($data['tracking_number'])) { // if an 'admin' Updates the Order Status to 'Shipped' in admin/orders/order_details.blade.php, and submits both Courier Name and Tracking Number HTML input fields, include the Courier Name and Tracking Nubmer data in the email (send them with the email)
-                $email = $deliveryDetails['email'];
-
-                // The email message data/variables that will be passed in to the email view
-                $messageData = [
-                    'email'           => $email,
-                    'name'            => $deliveryDetails['name'],
-                    'order_id'        => $data['order_id'],
-                    'orderDetails'    => $orderDetails,
-                    'order_status'    => $data['order_status'],
-                    'courier_name'    => $data['courier_name'],
-                    'tracking_number' => $data['tracking_number']
-                ];
-
-                \Illuminate\Support\Facades\Mail::send('emails.order_status', $messageData, function ($message) use ($email) { // Sending Mail: https://laravel.com/docs/9.x/mail#sending-mail    // 'emails.order_status' is the order_status.blade.php file inside the 'resources/views/emails' folder that will be sent as an email    // We pass in all the variables that order_status.blade.php will use    // https://www.php.net/manual/en/functions.anonymous.php
-                    $message->to($email)->subject('Order Status Updated - MultiVendorEcommerceApplication.com.eg');
-                });
-            } else { // if there are no Courier Name and Tracking Number data, don't include them in the email
-                $email = $deliveryDetails['email'];
-
-                // The email message data/variables that will be passed in to the email view
-                $messageData = [
-                    'email'        => $email,
-                    'name'         => $deliveryDetails['name'],
-                    'order_id'     => $data['order_id'],
-                    'orderDetails' => $orderDetails,
-                    'order_status' => $data['order_status']
-                ];
-
-                \Illuminate\Support\Facades\Mail::send('emails.order_status', $messageData, function ($message) use ($email) { // Sending Mail: https://laravel.com/docs/9.x/mail#sending-mail    // 'emails.order_status' is the order_status.blade.php file inside the 'resources/views/emails' folder that will be sent as an email    // We pass in all the variables that order_status.blade.php will use    // https://www.php.net/manual/en/functions.anonymous.php
-                    $message->to($email)->subject('Order Status Updated - MultiVendorEcommerceApplication.com.eg');
-                });
-            }
-
             $message = 'Order Status has been updated successfully!';
-
 
             return redirect()->back()->with('success_message', $message);
         }
@@ -267,57 +226,7 @@ class OrderController extends Controller
             $log->order_status  = $data['order_item_status'];
             $log->save();
 
-
-            // "Item Status" update email: We send an email and SMS to the user when the Item Status (in the "Ordered Products" section) is updated by a 'vendor' or 'admin' (pending, shipped, in progress, …) for every product on its own in the email (not the whole order products, but the email is about the product that has been updated ONLY)
-            $deliveryDetails = Order::select('mobile', 'email', 'name')->where('id', $getOrderId['order_id'])->first()->toArray();
-
-            // Making sure that ONLY ONE order product (from the `orders_products` table) that has been item status updated, NOT all the order products, are sent in the email
-            $order_item_id = $data['order_item_id'];
-            $orderDetails  = Order::with([ // Eager Loading: https://laravel.com/docs/9.x/eloquent-relationships#eager-loading    // 'orders_products' is the relationship method name in Order.php model    // Constraining Eager Loads: https://laravel.com/docs/9.x/eloquent-relationships#constraining-eager-loads    // Subquery Where Clauses: https://laravel.com/docs/9.x/queries#subquery-where-clauses    // Advanced Subqueries: https://laravel.com/docs/9.x/eloquent#advanced-subqueries
-                'orders_products' => function ($query) use ($order_item_id) { // function () use ()     syntax: https://www.php.net/manual/en/functions.anonymous.php#:~:text=the%20use%20language%20construct     // 'orders_products' is the Relationship method name in Order.php model
-                    $query->where('id', $order_item_id); // `id` column in `orders_products` table
-                }
-            ])->where('id', $getOrderId['order_id'])->first()->toArray(); // Eager Loading: https://laravel.com/docs/9.x/eloquent-relationships#eager-loading    // 'orders_products' is the relationship method name in Order.php model
-            // dd($orderDetails);
-            // Note: Now in this case, updating the item status of one product will send an email to user but with telling the item statuses of all of the Order items (not ONLY the item with the status updated!). The solution to this is using a subquery (Constraining Eager Loads)
-
-
-            if (!empty($data['item_courier_name']) && !empty($data['item_tracking_number'])) { // if a 'vendor' or 'admin' Updates the Order "Item Status" to 'Shipped' in admin/orders/order_details.blade.php, and submits both Courier Name and Tracking Number HTML input fields, include the Courier Name and Tracking Nubmer data in the email (send them with the email)
-                $email = $deliveryDetails['email'];
-
-                // The email message data/variables that will be passed in to the email view
-                $messageData = [
-                    'email'           => $email,
-                    'name'            => $deliveryDetails['name'],
-                    'order_id'        => $getOrderId['order_id'],
-                    'orderDetails'    => $orderDetails,
-                    'order_status'    => $data['order_item_status'],
-                    'courier_name'    => $data['item_courier_name'],
-                    'tracking_number' => $data['item_tracking_number']
-                ];
-
-                \Illuminate\Support\Facades\Mail::send('emails.order_item_status', $messageData, function ($message) use ($email) { // Sending Mail: https://laravel.com/docs/9.x/mail#sending-mail    // 'emails.order_item_status' is the order_item_status.blade.php file inside the 'resources/views/emails' folder that will be sent as an email    // We pass in all the variables that order_item_status.blade.php will use    // https://www.php.net/manual/en/functions.anonymous.php
-                    $message->to($email)->subject('Order Item Status Updated - MultiVendorEcommerceApplication.com.eg');
-                });
-            } else { // if there are no Courier Name and Tracking Number data, don't include them in the email
-                $email = $deliveryDetails['email'];
-
-                // The email message data/variables that will be passed in to the email view
-                $messageData = [
-                    'email'        => $email,
-                    'name'         => $deliveryDetails['name'],
-                    'order_id'     => $getOrderId['order_id'],
-                    'orderDetails' => $orderDetails,
-                    'order_status' => $data['order_item_status']
-                ];
-
-                \Illuminate\Support\Facades\Mail::send('emails.order_item_status', $messageData, function ($message) use ($email) { // Sending Mail: https://laravel.com/docs/9.x/mail#sending-mail    // 'emails.order_item_status' is the order_item_status.blade.php file inside the 'resources/views/emails' folder that will be sent as an email    // We pass in all the variables that order_item_status.blade.php will use    // https://www.php.net/manual/en/functions.anonymous.php
-                    $message->to($email)->subject('Order Item Status Updated - MultiVendorEcommerceApplication.com.eg');
-                });
-            }
-
             $message = 'Order Item Status has been updated successfully!';
-
 
             return redirect()->back()->with('success_message', $message);
         }

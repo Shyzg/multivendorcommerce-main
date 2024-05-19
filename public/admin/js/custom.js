@@ -44,32 +44,6 @@ $(document).ready(function() {
         });
     });
 
-
-
-    // Updating admin status (active/inactive) using AJAX in admin/admins/admins.blade.php    
-    $(document).on('click', '.updateAdminStatus', function() { // '.updateAdminStatus' is the anchor link <a> CSS class    // This is the same as    $('.updateAdminStatus').on('click', function() {
-        var status   = $(this).children('i').attr('status'); // Using HTML Custom Attributes
-        var admin_id = $(this).attr('admin_id'); // Using HTML Custom Attributes
-
-        
-        $.ajax({
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}, // X-CSRF-TOKEN: https://laravel.com/docs/9.x/csrf#csrf-x-csrf-token    
-            type   : 'post',
-            url    : '/admin/update-admin-status', // check the web.php for this route and check the AdminController for the updateAdminStatus() method
-            data   : {status: status, admin_id: admin_id}, // we pass the status and admin_id
-            success: function(resp) {
-                if (resp.status == 0) { // in case of success, reverse the status (active/inactive) and show the right icon in the frontend    // Or the same    if (resp['status'] == 0) {
-                    $('#admin-' + admin_id).html('<i style="font-size: 25px" class="mdi mdi-bookmark-outline" status="Inactive"></i>');
-                } else if (resp.status == 1) {
-                    $('#admin-' + admin_id).html('<i style="font-size: 25px" class="mdi mdi-bookmark-check" status="Active"></i>');
-                }
-            },
-            error  : function() {
-                alert('Error');
-            }
-        });
-    });
-
     // Updating section status (active/inactive) using AJAX in sections.blade.php    
     $(document).on('click', '.updateSectionStatus', function() { // '.updateSectionStatus' is the anchor link <a> CSS class    // This is the same as    $('.updateSectionStatus').on('click', function() {
         var status     = $(this).children('i').attr('status'); // Using HTML Custom Attributes
