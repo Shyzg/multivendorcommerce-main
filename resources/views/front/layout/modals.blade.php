@@ -1,4 +1,4 @@
-{{-- Modal Popup --}} 
+{{-- Modal Popup --}}
 
 
 <!-- Dummy Selectbox -->
@@ -22,14 +22,7 @@
         </div>
     </div>
 </div>
-<!-- Responsive-Search /- -->
-<!-- Newsletter-Modal -->
 
-
-
-
-<!-- Newsletter-Modal /- -->
-<!-- Quick-view-Modal -->
 <div id="quick-view" class="modal fade">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -42,22 +35,22 @@
                             <img id="zoom-pro-quick-view" class="img-fluid" src="{{ asset('front/images/product/product@4x.jpg') }}" data-zoom-image="{{ asset('front/images/product/product@4x.jpg') }}" alt="Zoom Image">
                             <div id="gallery-quick-view" class="u-s-m-t-10">
                                 <a class="active" data-image="{{ asset('front/images/product/product@4x.jpg') }}" data-zoom-image="{{ asset('front/images/product/product@4x.jpg') }}">
-                                <img src="{{ asset('front/images/product/product@2x.jpg') }}" alt="Product">
+                                    <img src="{{ asset('front/images/product/product@2x.jpg') }}" alt="Product">
                                 </a>
                                 <a data-image="{{ asset('front/images/product/product@4x.jpg') }}" data-zoom-image="{{ asset('front/images/product/product@4x.jpg') }}">
-                                <img src="{{ asset('front/images/product/product@2x.jpg') }}" alt="Product">
+                                    <img src="{{ asset('front/images/product/product@2x.jpg') }}" alt="Product">
                                 </a>
                                 <a data-image="{{ asset('front/images/product/product@4x.jpg') }}" data-zoom-image="{{ asset('front/images/product/product@4x.jpg') }}">
-                                <img src="{{ asset('front/images/product/product@2x.jpg') }}" alt="Product">
+                                    <img src="{{ asset('front/images/product/product@2x.jpg') }}" alt="Product">
                                 </a>
                                 <a data-image="{{ asset('front/images/product/product@4x.jpg') }}" data-zoom-image="{{ asset('front/images/product/product@4x.jpg') }}">
-                                <img src="{{ asset('front/images/product/product@2x.jpg') }}" alt="Product">
+                                    <img src="{{ asset('front/images/product/product@2x.jpg') }}" alt="Product">
                                 </a>
                                 <a data-image="{{ asset('front/images/product/product@4x.jpg') }}" data-zoom-image="{{ asset('front/images/product/product@4x.jpg') }}">
-                                <img src="{{ asset('front/images/product/product@2x.jpg') }}" alt="Product">
+                                    <img src="{{ asset('front/images/product/product@2x.jpg') }}" alt="Product">
                                 </a>
                                 <a data-image="{{ asset('front/images/product/product@4x.jpg') }}" data-zoom-image="{{ asset('front/images/product/product@4x.jpg') }}">
-                                <img src="{{ asset('front/images/product/product@2x.jpg') }}" alt="Product">
+                                    <img src="{{ asset('front/images/product/product@2x.jpg') }}" alt="Product">
                                 </a>
                             </div>
                         </div>
@@ -168,27 +161,27 @@
                                         <ul class="social-media-list">
                                             <li>
                                                 <a href="#">
-                                                <i class="fab fa-facebook-f"></i>
+                                                    <i class="fab fa-facebook-f"></i>
                                                 </a>
                                             </li>
                                             <li>
                                                 <a href="#">
-                                                <i class="fab fa-twitter"></i>
+                                                    <i class="fab fa-twitter"></i>
                                                 </a>
                                             </li>
                                             <li>
                                                 <a href="#">
-                                                <i class="fab fa-google-plus-g"></i>
+                                                    <i class="fab fa-google-plus-g"></i>
                                                 </a>
                                             </li>
                                             <li>
                                                 <a href="#">
-                                                <i class="fas fa-rss"></i>
+                                                    <i class="fas fa-rss"></i>
                                                 </a>
                                             </li>
                                             <li>
                                                 <a href="#">
-                                                <i class="fab fa-pinterest"></i>
+                                                    <i class="fab fa-pinterest"></i>
                                                 </a>
                                             </li>
                                         </ul>

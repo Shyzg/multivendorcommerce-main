@@ -136,23 +136,6 @@ Route::prefix('/admin')->namespace('App\Http\Controllers\Admin')->group(function
         // Render admin/shipping/edit_shipping_charges.blade.php page in case of HTTP 'GET' request ('Edit/Update Shipping Charges'), or hadle the HTML Form submission in the same page in case of HTTP 'POST' request
         Route::match(['get', 'post'], 'edit-shipping-charges/{id}', 'ShippingController@editShippingCharges');
 
-
-
-        // Newsletter Subscribers module
-        // Render admin/subscribers/subscribers.blade.php page (Show all Newsletter subscribers in the Admin Panel)
-        Route::get('subscribers', 'NewsletterController@subscribers');
-
-        // Update Subscriber Status (active/inactive) via AJAX in admin/subscribers/subscribers.blade.php, check admin/js/custom.js
-        Route::post('update-subscriber-status', 'NewsletterController@updateSubscriberStatus');
-
-        // Delete a Subscriber via AJAX in admin/subscribers/subscribers.blade.php, check admin/js/custom.js
-        Route::get('delete-subscriber/{id}', 'NewsletterController@deleteSubscriber');
-
-
-
-        // Export subscribers (`newsletter_subscribers` database table) as an Excel file using Maatwebsite/Laravel Excel Package in admin/subscribers/subscribers.blade.php
-        Route::get('export-subscribers', 'NewsletterController@exportSubscribers');
-
         // User Ratings & Reviews
         // Render admin/ratings/ratings.blade.php page in the Admin Panel
         Route::get('ratings', 'RatingController@ratings');
@@ -257,9 +240,6 @@ Route::namespace('App\Http\Controllers\Front')->group(function () {
 
     // Render the Contact Us page (front/pages/contact.blade.php) using GET HTTP Requests, or the HTML Form Submission using POST HTTP Requests
     Route::match(['get', 'post'], 'contact', 'CmsController@contact');
-
-    // Add a Newsletter Subscriber email HTML Form Submission in front/layout/footer.blade.php when clicking on the Submit button (using an AJAX Request/Call)
-    Route::post('add-subscriber-email', 'NewsletterController@addSubscriber');
 
     // Add Rating & Review on a product in front/products/detail.blade.php
     Route::post('add-rating', 'RatingController@addRating');
