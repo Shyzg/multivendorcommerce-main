@@ -15,32 +15,24 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-
             $table->integer('section_id');
             $table->integer('category_id');
             $table->integer('brand_id');
-            $table->integer('vendor_id'); // in case the product has been added by a some vendor (And in case the product has been added by another entity like a superadmin, admin or subadmin, the value will be 0 zero)
-            $table->integer('admin_id'); // whether a vendor or a superadmin/admin/subadmin (from the `admins` table)
-            $table->string('admin_type'); // can be vendor, superadmin, admin or subadmin
+            $table->integer('vendor_id');
+            $table->integer('admin_id');
+            $table->string('admin_type');
             $table->string('product_name');
             $table->string('product_code');
             $table->string('product_color');
-            // $table->string('product_price');
             $table->float('product_price');
-            // $table->string('product_discount');
             $table->float('product_discount');
-            // $table->string('product_weight');
             $table->integer('product_weight');
             $table->string('product_image')->nullable();
             $table->string('product_video')->nullable();
-            $table->string('group_code')->nullable(); // For Managing Product Colors (in front/products/detail.blade.php)    
+            $table->string('group_code')->nullable();
             $table->text('description')->nullable();
-            $table->string('meta_title')->nullable(); // For SEO
-            $table->string('meta_keywords')->nullable();  // For SEO
-            $table->string('meta_description')->nullable(); // For SEO
-            $table->enum('is_featured', ['No', 'Yes']); // "No" is the default value
+            $table->enum('is_featured', ['No', 'Yes']);
             $table->tinyInteger('status');
-
             $table->timestamps();
         });
     }

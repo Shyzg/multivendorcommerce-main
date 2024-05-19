@@ -340,15 +340,6 @@ $(function () {
 (function ($, window, document) {
     'use strict';
     /**
-     * Shows Newsletter Modal After 5sec = 5000milliseconds
-     */
-    const showNewsletterModal = function () {
-            setTimeout(function () {
-                // Manually opens a modal
-                $('#newsletter-modal').modal('show');
-            }, 5000);
-    };
-    /**
      * Initialize Main Slider
      */
     const sliderMain = function () {
@@ -500,15 +491,6 @@ $(function () {
         onTabChangeRefreshPositionOfCarousel();
         brandSlider();
     });
-
-    /**
-     * Check everything including DOM elements and images loaded
-     */
-    $(window).on('load',function () {
-        showNewsletterModal();
-       $('.ph-item').removeClass('ph-item');
-    });
-
 })(jQuery, window, document);
 
 /*============================================================================*/

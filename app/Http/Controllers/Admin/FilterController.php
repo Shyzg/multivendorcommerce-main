@@ -15,7 +15,8 @@ class FilterController extends Controller
 
 
 
-    public function filters() {
+    public function filters()
+    {
         // Correcting issues in the Skydash Admin Panel Sidebar using Session
         Session::put('page', 'filters');
 
@@ -27,7 +28,8 @@ class FilterController extends Controller
         return view('admin.filters.filters')->with(compact('filters'));
     }
 
-    public function updateFilterStatus(Request $request) { // Update Filter Status using AJAX in filters.blade.php    
+    public function updateFilterStatus(Request $request)
+    { // Update Filter Status using AJAX in filters.blade.php    
         if ($request->ajax()) { // if the request is coming via an AJAX call
             $data = $request->all(); // Getting the name/value pairs array that are sent from the AJAX request (AJAX call)
             // dd($data);
@@ -49,7 +51,8 @@ class FilterController extends Controller
         }
     }
 
-    public function updateFilterValueStatus(Request $request) { // Update Filter Value Status using AJAX in filters_values.blade.php    
+    public function updateFilterValueStatus(Request $request)
+    { // Update Filter Value Status using AJAX in filters_values.blade.php    
         if ($request->ajax()) { // if the request is coming via an AJAX call
             $data = $request->all(); // Getting the name/value pairs array that are sent from the AJAX request (AJAX call)
             // dd($data);
@@ -71,7 +74,8 @@ class FilterController extends Controller
         }
     }
 
-    public function filtersValues() {
+    public function filtersValues()
+    {
         // Correcting issues in the Skydash Admin Panel Sidebar using Session
         Session::put('page', 'filters');
 
@@ -83,7 +87,8 @@ class FilterController extends Controller
         return view('admin.filters.filters_values')->with(compact('filters_values'));
     }
 
-    public function addEditFilter(Request $request, $id = null) { // If the $id is not passed, this means 'Add a Filter', but if it's passed, this means 'Edit the Filter'    
+    public function addEditFilter(Request $request, $id = null)
+    { // If the $id is not passed, this means 'Add a Filter', but if it's passed, this means 'Edit the Filter'    
         // Correcting issues in the Skydash Admin Panel Sidebar using Session
         Session::put('page', 'filters');
 
@@ -100,7 +105,6 @@ class FilterController extends Controller
         }
 
 
-        // SECONDLY, IF THE REQUEST METHOS IS 'POST', THEN SUBMIT THE HTML <form> IN add_edit_filter.blade.php PAGE (WHETHER ADD OR UPDATE A BANNER):
         if ($request->isMethod('post')) { // WHETHER Add or Update <form> submission!!
             $data = $request->all();
             // dd($data);
@@ -135,7 +139,8 @@ class FilterController extends Controller
         return view('admin.filters.add_edit_filter')->with(compact('title', 'categories', 'filter'));
     }
 
-    public function addEditFilterValue(Request $request, $id = null) { // If the $id is not passed, this means 'Add Filter Value', but if it's passed, this means 'Edit the Filter Value'    
+    public function addEditFilterValue(Request $request, $id = null)
+    { // If the $id is not passed, this means 'Add Filter Value', but if it's passed, this means 'Edit the Filter Value'    
         // Correcting issues in the Skydash Admin Panel Sidebar using Session
         Session::put('page', 'filters');
 
@@ -151,8 +156,6 @@ class FilterController extends Controller
             $message = 'Filter Value updated successfully!';
         }
 
-
-        // SECONDLY, IF THE REQUEST METHOS IS 'POST', THEN SUBMIT THE HTML <form> IN add_edit_filter_value.blade.php PAGE (WHETHER ADD OR UPDATE A BANNER):
         if ($request->isMethod('post')) { // WHETHER Add or Update <form> submission!!
             $data = $request->all();
             // dd($data);
@@ -178,7 +181,8 @@ class FilterController extends Controller
         return view('admin.filters.add_edit_filter_value')->with(compact('title', 'filter', 'filters'));
     }
 
-    public function categoryFilters(Request $request) { // Show the related filters depending on the selected category <select> in category_filters.blade.php (which in turn is included by add_edit_product.php) using AJAX. Check admin/js/custom.js    
+    public function categoryFilters(Request $request)
+    { // Show the related filters depending on the selected category <select> in category_filters.blade.php (which in turn is included by add_edit_product.php) using AJAX. Check admin/js/custom.js    
         if ($request->ajax()) {
             $data = $request->all();
             // dd($data);
@@ -188,9 +192,8 @@ class FilterController extends Controller
 
 
             return response()->json([ // JSON Responses: https://laravel.com/docs/9.x/responses#json-responses
-                'view' => (String) \Illuminate\Support\Facades\View::make('admin.filters.category_filters')->with(compact('category_id')) // View Responses: https://laravel.com/docs/9.x/responses#view-responses    // Creating & Rendering Views: https://laravel.com/docs/9.x/views#creating-and-rendering-views    // Passing Data To Views: https://laravel.com/docs/9.x/views#passing-data-to-views
+                'view' => (string) \Illuminate\Support\Facades\View::make('admin.filters.category_filters')->with(compact('category_id')) // View Responses: https://laravel.com/docs/9.x/responses#view-responses    // Creating & Rendering Views: https://laravel.com/docs/9.x/views#creating-and-rendering-views    // Passing Data To Views: https://laravel.com/docs/9.x/views#passing-data-to-views
             ]);
         }
     }
-
 }

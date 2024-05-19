@@ -17,24 +17,23 @@ use App\Http\Controllers\RajaOngkir\CheckOngkirController;
 
 require __DIR__ . '/auth.php';
 
-
-
-// Note: OUR WEBSITE WILL HAVE TWO MAJOR SECTIONS: ADMIN ROUTES (for the Admin Panel) & FRONT ROUTES (for the Frontend section routes)!:
-
-// First: Admin Panel routes:
-// The website 'ADMIN' Section: Route Group for routes starting with the 'admin' word (Admin Route Group)    // NOTE: ALL THE ROUTES INSIDE THIS PREFIX STATRT WITH 'admin/', SO THOSE ROUTES INSIDE THE PREFIX, YOU DON'T WRITE '/admin' WHEN YOU DEFINE THEM, IT'LL BE DEFINED AUTOMATICALLY!!
 Route::prefix('/admin')->namespace('App\Http\Controllers\Admin')->group(function () {
-    Route::match(['get', 'post'], 'login', 'AdminController@login'); // match() method is used to use more than one HTTP request method for the same route, so GET for rendering the login.php page, and POST for the login.php page <form> submission (e.g. GET and POST)    // Matches the '/admin/dashboard' URL (i.e. http://127.0.0.1:8000/admin/dashboard)
-
-
-    // This a Route Group for routes that ALL start with 'admin/-something' and utilizes the 'admin' Authentication Guard    // Note: You must remove the '/admin'/ part from the routes that are written inside this Route Group (e.g.    Route::get('logout');    , NOT    Route::get('admin/logout');    )
-    Route::group(['middleware' => ['admin']], function () { // using our 'admin' guard (which we created in auth.php)
-        Route::get('dashboard', 'AdminController@dashboard'); // Admin login
-        Route::get('logout', 'AdminController@logout'); // Admin logout
-        Route::match(['get', 'post'], 'update-admin-password', 'AdminController@updateAdminPassword'); // GET request to view the update password <form>, and a POST request to submit the update password <form>
-        Route::post('check-admin-password', 'AdminController@checkAdminPassword'); // Check Admin Password // This route is called from the AJAX call in admin/js/custom.js page
-        Route::match(['get', 'post'], 'update-admin-details', 'AdminController@updateAdminDetails'); // Update Admin Details in update_admin_details.blade.php page    // 'GET' method to show the update_admin_details.blade.php page, and 'POST' method for the <form> submission in the same page
-        Route::match(['get', 'post'], 'update-vendor-details/{slug}', 'AdminController@updateVendorDetails'); // Update Vendor Details    // In the slug we can pass: 'personal' which means update vendor personal details, or 'business' which means update vendor business details, or 'bank' which means update vendor bank details    // We'll create one view (not 3) for the 3 pages, but parts inside it will change depending on the $slug value    // GET method to show the update admin details page, POST method for <form> submission
+    Route::match(['get', 'post'], 'login', 'AdminController@login');
+    Route::group(['middleware' => ['admin']], function () {
+        // Admin login
+        Route::get('dashboard', 'AdminController@dashboard');
+        // Admin logout
+        Route::get('logout', 'AdminController@logout');
+        // GET request to view the update password <form>, and a POST request to submit the update password <form>
+        Route::match(['get', 'post'], 'update-admin-password', 'AdminController@updateAdminPassword');
+        // Check Admin Password
+        // This route is called from the AJAX call in admin/js/custom.js page
+        Route::post('check-admin-password', 'AdminController@checkAdminPassword');
+        // Update Admin Details in update_admin_details.blade.php page
+        Route::match(['get', 'post'], 'update-admin-details', 'AdminController@updateAdminDetails');
+        // Update Vendor Details
+        // In the slug we can pass: 'personal' which means update vendor personal details, or 'business' which means update vendor business details, or 'bank' which means update vendor bank details
+        Route::match(['get', 'post'], 'update-vendor-details/{slug}', 'AdminController@updateVendorDetails');
 
         // Update the vendor's commission percentage (by the Admin) in `vendors` table (for every vendor on their own) in the Admin Panel in admin/admins/view_vendor_details.blade.php (Commissions module: Every vendor must pay a certain commission (that may vary from a vendor to another) for the website owner (admin) on every item sold, and it's defined by the website owner (admin))
         Route::post('update-vendor-commission', 'AdminController@updateVendorCommission');
@@ -82,12 +81,6 @@ Route::prefix('/admin')->namespace('App\Http\Controllers\Admin')->group(function
         Route::match(['get', 'post'], 'add-images/{id}', 'ProductsController@addImages'); // GET request to render the add_edit_attributes.blade.php view, and POST request to submit the <form> in that view
         Route::post('update-image-status', 'ProductsController@updateImageStatus'); // Update Images Status using AJAX in add_images.blade.php
         Route::get('delete-image/{id}', 'ProductsController@deleteImage'); // Delete an image in add_images.blade.php
-
-        // Banners
-        Route::get('banners', 'BannersController@banners');
-        Route::post('update-banner-status', 'BannersController@updateBannerStatus'); // Update Categories Status using AJAX in banners.blade.php
-        Route::get('delete-banner/{id}', 'BannersController@deleteBanner'); // Delete a banner in banners.blade.php
-        Route::match(['get', 'post'], 'add-edit-banner/{id?}', 'BannersController@addEditBanner'); // the slug (Route Parameter) {id?} is an Optional Parameter, so if it's passed, this means 'Edit/Update the Banner', and if not passed, this means' Add a Banner'    // GET request to render the add_edit_banner.blade.php view, and POST request to submit the <form> in that view
 
         // Filters
         Route::get('filters', 'FilterController@filters'); // Render filters.blade.php page
@@ -138,18 +131,6 @@ Route::prefix('/admin')->namespace('App\Http\Controllers\Admin')->group(function
 
         // Render admin/shipping/edit_shipping_charges.blade.php page in case of HTTP 'GET' request ('Edit/Update Shipping Charges'), or hadle the HTML Form submission in the same page in case of HTTP 'POST' request
         Route::match(['get', 'post'], 'edit-shipping-charges/{id}', 'ShippingController@editShippingCharges');
-
-
-
-        // Newsletter Subscribers module
-        // Render admin/subscribers/subscribers.blade.php page (Show all Newsletter subscribers in the Admin Panel)
-        Route::get('subscribers', 'NewsletterController@subscribers');
-
-        // Update Subscriber Status (active/inactive) via AJAX in admin/subscribers/subscribers.blade.php, check admin/js/custom.js
-        Route::post('update-subscriber-status', 'NewsletterController@updateSubscriberStatus');
-
-        // Delete a Subscriber via AJAX in admin/subscribers/subscribers.blade.php, check admin/js/custom.js
-        Route::get('delete-subscriber/{id}', 'NewsletterController@deleteSubscriber');
 
 
         // User Ratings & Reviews
@@ -253,9 +234,6 @@ Route::namespace('App\Http\Controllers\Front')->group(function () {
     // Render the Contact Us page (front/pages/contact.blade.php) using GET HTTP Requests, or the HTML Form Submission using POST HTTP Requests
     Route::match(['get', 'post'], 'contact', 'CmsController@contact');
 
-    // Add a Newsletter Subscriber email HTML Form Submission in front/layout/footer.blade.php when clicking on the Submit button (using an AJAX Request/Call)
-    Route::post('add-subscriber-email', 'NewsletterController@addSubscriber');
-
     // Add Rating & Review on a product in front/products/detail.blade.php
     Route::post('add-rating', 'RatingController@addRating');
 
@@ -290,30 +268,6 @@ Route::namespace('App\Http\Controllers\Front')->group(function () {
 
         // Render User 'My Orders' page
         Route::get('user/orders/{id?}', 'OrderController@orders'); // If the slug {id?} (Optional Parameters) is passed in, this means go to the front/orders/order_details.blade.php page, and if not, this means go to the front/orders/orders.blade.php page
-
-
-
-        // PayPal routes:
-        // PayPal payment gateway integration in Laravel (this route is accessed from checkout() method in Front/ProductsController.php). Rendering front/paypal/paypal.blade.php page
-        Route::get('paypal', 'PaypalController@paypal');
-
-        // Make a PayPal payment
-        Route::post('pay', 'PaypalController@pay')->name('payment');
-
-        // PayPal successful payment
-        Route::get('success', 'PaypalController@success');
-
-        // PayPal failed payment
-        Route::get('error', 'PaypalController@error');
-
-
-
-        // iyzipay (iyzico) routes:    // iyzico Payment Gateway integration in/with Laravel
-        // iyzico payment gateway integration in Laravel (this route is accessed from checkout() method in Front/ProductsController.php). Rendering front/iyzipay/iyzipay.blade.php page
-        Route::get('iyzipay', 'IyzipayController@iyzipay');
-
-        // Make an iyzipay payment (redirect the user to iyzico payment gateway with the order details)
-        Route::get('iyzipay/pay', 'IyzipayController@pay');
 
         Route::get('rajaongkir/checkongkir', [CheckOngkirController::class, 'checkOngkir'])->name('check-ongkir');
     });

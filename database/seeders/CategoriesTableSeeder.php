@@ -28,9 +28,6 @@ class CategoriesTableSeeder extends Seeder
                 'category_discount' => 0,
                 'description'       => '',
                 'url'               => 'men',
-                'meta_title'        => '',
-                'meta_description'  => '',
-                'meta_keywords'     => '',
                 'status'            => 1,
             ],
             [
@@ -42,9 +39,6 @@ class CategoriesTableSeeder extends Seeder
                 'category_discount' => 0,
                 'description'       => '',
                 'url'               => 'women',
-                'meta_title'        => '',
-                'meta_description'  => '',
-                'meta_keywords'     => '',
                 'status'            => 1,
             ],
             [
@@ -56,9 +50,6 @@ class CategoriesTableSeeder extends Seeder
                 'category_discount' => 0,
                 'description'       => '',
                 'url'               => 'kids',
-                'meta_title'        => '',
-                'meta_description'  => '',
-                'meta_keywords'     => '',
                 'status'            => 1,
             ],
         ];
