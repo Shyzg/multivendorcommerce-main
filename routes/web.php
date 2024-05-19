@@ -238,9 +238,6 @@ Route::namespace('App\Http\Controllers\Front')->group(function () {
     // PIN code Availability Check: check if the PIN code of the user's Delivery Address exists in our database (in both `cod_pincodes` and `prepaid_pincodes`) or not in front/products/detail.blade.php via AJAX. Check front/js/custom.js
     Route::post('check-pincode', 'ProductsController@checkPincode');
 
-    // Render the Contact Us page (front/pages/contact.blade.php) using GET HTTP Requests, or the HTML Form Submission using POST HTTP Requests
-    Route::match(['get', 'post'], 'contact', 'CmsController@contact');
-
     // Add Rating & Review on a product in front/products/detail.blade.php
     Route::post('add-rating', 'RatingController@addRating');
 
@@ -275,30 +272,6 @@ Route::namespace('App\Http\Controllers\Front')->group(function () {
 
         // Render User 'My Orders' page
         Route::get('user/orders/{id?}', 'OrderController@orders'); // If the slug {id?} (Optional Parameters) is passed in, this means go to the front/orders/order_details.blade.php page, and if not, this means go to the front/orders/orders.blade.php page
-
-
-
-        // PayPal routes:
-        // PayPal payment gateway integration in Laravel (this route is accessed from checkout() method in Front/ProductsController.php). Rendering front/paypal/paypal.blade.php page
-        Route::get('paypal', 'PaypalController@paypal');
-
-        // Make a PayPal payment
-        Route::post('pay', 'PaypalController@pay')->name('payment');
-
-        // PayPal successful payment
-        Route::get('success', 'PaypalController@success');
-
-        // PayPal failed payment
-        Route::get('error', 'PaypalController@error');
-
-
-
-        // iyzipay (iyzico) routes:    // iyzico Payment Gateway integration in/with Laravel
-        // iyzico payment gateway integration in Laravel (this route is accessed from checkout() method in Front/ProductsController.php). Rendering front/iyzipay/iyzipay.blade.php page
-        Route::get('iyzipay', 'IyzipayController@iyzipay');
-
-        // Make an iyzipay payment (redirect the user to iyzico payment gateway with the order details)
-        Route::get('iyzipay/pay', 'IyzipayController@pay');
 
         Route::get('rajaongkir/checkongkir', [CheckOngkirController::class, 'checkOngkir'])->name('check-ongkir');
     });
