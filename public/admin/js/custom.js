@@ -10,8 +10,7 @@ $(document).ready(function() {
     $('#coupons').DataTable();     // in admin/coupons/coupons.blade.php              
     $('#users').DataTable();       // in admin/users/users.blade.php                  
     $('#orders').DataTable();      // in admin/orders/orders.blade.php                
-    $('#shipping').DataTable();    // in admin/shipping/shipping_charges.blade.php    
-    $('#subscribers').DataTable(); // in admin/subscribers/subscribers.blade.php      
+    $('#shipping').DataTable();    // in admin/shipping/shipping_charges.blade.php
     $('#ratings').DataTable();     // in admin/ratings/ratings.blade.php              
 
 
