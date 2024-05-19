@@ -1,6 +1,31 @@
 <!-- Footer -->
 <footer class="footer">
     <div class="container">
+        <!-- Outer-Footer -->
+        <div class="outer-footer-wrapper u-s-p-y-80">
+            <h6>
+                For special offers and other discount information
+            </h6>
+            <h1>
+                Subscribe to our Newsletter
+            </h1>
+            <p>
+                Subscribe to the mailing list to receive updates on promotions, new arrivals, discount and coupons.
+            </p>
+
+
+
+            
+            <form class="newsletter-form">
+                <label class="sr-only" for="subscriber_email">Enter your Email</label>
+                <input type="text" placeholder="Your Email Address" id="subscriber_email" name="subscriber_email" required> {{-- We'll use the HTML id Global Attribute in jQuery in front/js/custom.js --}} 
+                <button type="button" class="button" onclick="addSubscriber()">SUBMIT</button> {{-- Check the addSubscriber() function in front/js/custom.js. We'll use it in conjunction with the    id="subscriber_email"    of the <input> field --}}
+            </form>
+
+
+
+        </div>
+        <!-- Outer-Footer /- -->
         <!-- Mid-Footer -->
         <div class="mid-footer-wrapper u-s-p-b-80">
             <div class="row">
@@ -59,15 +84,15 @@
                             </li>
                             <li>
                                 <a href="tel:+201255845857">
-                                    <i class="fas fa-phone u-s-m-r-9"></i>
-                                    <span>+01255845857</span>
+                                <i class="fas fa-phone u-s-m-r-9"></i>
+                                <span>+01255845857</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="mailto:info@multi-vendore-commerce.com">
-                                    <i class="fas fa-envelope u-s-m-r-9"></i>
-                                    <span>
-                                        info@multi-vendore-commerce.com</span>
+                                <i class="fas fa-envelope u-s-m-r-9"></i>
+                                <span>
+                                info@multi-vendore-commerce.com</span>
                                 </a>
                             </li>
                         </ul>
@@ -82,37 +107,37 @@
                 <ul class="social-media-list">
                     <li>
                         <a target="_blank" href="#">
-                            <i class="fab fa-facebook-f"></i>
+                        <i class="fab fa-facebook-f"></i>
                         </a>
                     </li>
                     <li>
                         <a target="_blank" href="#">
-                            <i class="fab fa-twitter"></i>
+                        <i class="fab fa-twitter"></i>
                         </a>
                     </li>
                     <li>
                         <a target="_blank" href="#">
-                            <i class="fab fa-google-plus-g"></i>
+                        <i class="fab fa-google-plus-g"></i>
                         </a>
                     </li>
                     <li>
                         <a target="_blank" href="#">
-                            <i class="fas fa-rss"></i>
+                        <i class="fas fa-rss"></i>
                         </a>
                     </li>
                     <li>
                         <a target="_blank" href="#">
-                            <i class="fab fa-pinterest"></i>
+                        <i class="fab fa-pinterest"></i>
                         </a>
                     </li>
                     <li>
                         <a target="_blank" href="#">
-                            <i class="fab fa-linkedin-in"></i>
+                        <i class="fab fa-linkedin-in"></i>
                         </a>
                     </li>
                     <li>
                         <a target="_blank" href="#">
-                            <i class="fab fa-youtube"></i>
+                        <i class="fab fa-youtube"></i>
                         </a>
                     </li>
                 </ul>

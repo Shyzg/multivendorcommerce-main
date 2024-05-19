@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
         // Note: Check the Seeder Classes files: CategoriesTableSeeder, ProductsTableSeeder, ... etc!!!
         // Database Seeding: Check    AdminsTableSeeder.php    // Calling Additional Seeders: https://laravel.com/docs/9.x/seeding#calling-additional-seeders
         // Databas Seeding
-
+        
         $this->call(AdminsTableSeeder::class);
         $this->call(VendorsTableSeeder::class);
         $this->call(VendorsBusinessDetailsTableSeeder::class);
@@ -39,14 +39,16 @@ class DatabaseSeeder extends Seeder
         $this->call(BrandsTableSeeder::class);
         $this->call(ProductsTableSeeder::class);
         $this->call(ProductsAttributesTableSeeder::class);
+        $this->call(BannersTableSeeder::class);
         $this->call(FiltersTableSeeder::class);
         $this->call(FiltersValuesTableSeeder::class);
-        $this->call(CouponsTableSeeder::class);
-        $this->call(DeliveryAddressTableSeeder::class);
-        $this->call(OrderStatusTableSeeder::class);
-        $this->call(OrderItemStatusTableSeeder::class);
-        $this->call(RatingsTableSeeder::class);
-        $this->call(ProvinceSeeder::class);
-        $this->call(CitySeeder::class);
+        $this->call(CouponsTableSeeder::class);              
+        $this->call(DeliveryAddressTableSeeder::class);      
+        $this->call(OrderStatusTableSeeder::class);          
+        $this->call(OrderItemStatusTableSeeder::class);      
+        $this->call(NewsletterSubscriberTableSeeder::class); 
+        $this->call(RatingsTableSeeder::class);        
+        $this->call(ProvinceSeeder::class);        
+        $this->call(CitySeeder::class);        
     }
 }
