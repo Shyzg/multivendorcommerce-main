@@ -16,7 +16,7 @@
         {{-- In case the authenticated user (the logged-in user) (using the 'admin' Authentication Guard in auth.php) type is 'vendor' --}}
         @if (Auth::guard('admin')->user()->type == 'vendor') {{-- Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances --}}
         <li class="nav-item">
-            <a @if (Session::get('page')=='update_personal_details' || Session::get('page')=='update_business_details' || Session::get('page')=='update_bank_details' ) style="background: #052CA3 !important; color: #FFF !important" @endif class="nav-link" data-toggle="collapse" href="#ui-vendors" aria-expanded="false" aria-controls="ui-vendors">
+            <a @if (Session::get('page')=='update_personal_details' || Session::get('page')=='update_business_details' ) style="background: #052CA3 !important; color: #FFF !important" @endif class="nav-link" data-toggle="collapse" href="#ui-vendors" aria-expanded="false" aria-controls="ui-vendors">
                 <i class="icon-layout menu-icon"></i>
                 <span class="menu-title">Vendor Details</span>
                 <i class="menu-arrow"></i>
@@ -25,7 +25,6 @@
                 <ul class="nav flex-column sub-menu" style="background: #fff !important; color: #052CA3 !important">
                     <li class="nav-item"> <a @if (Session::get('page')=='update_personal_details' ) style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif class="nav-link" href="{{ url('admin/update-vendor-details/personal') }}">Personal Details</a></li>
                     <li class="nav-item"> <a @if (Session::get('page')=='update_business_details' ) style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif class="nav-link" href="{{ url('admin/update-vendor-details/business') }}">Business Details</a></li>
-                    <li class="nav-item"> <a @if (Session::get('page')=='update_bank_details' ) style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif class="nav-link" href="{{ url('admin/update-vendor-details/bank') }}">Bank Details</a></li>
                 </ul>
             </div>
         </li>

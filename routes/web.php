@@ -32,7 +32,7 @@ Route::prefix('/admin')->namespace('App\Http\Controllers\Admin')->group(function
         // Update Admin Details in update_admin_details.blade.php page
         Route::match(['get', 'post'], 'update-admin-details', 'AdminController@updateAdminDetails');
         // Update Vendor Details
-        // In the slug we can pass: 'personal' which means update vendor personal details, or 'business' which means update vendor business details, or 'bank' which means update vendor bank details
+        // In the slug we can pass: 'personal' which means update vendor personal details, or 'business' which means update vendor business details
         Route::match(['get', 'post'], 'update-vendor-details/{slug}', 'AdminController@updateVendorDetails');
 
         // Update the vendor's commission percentage (by the Admin) in `vendors` table (for every vendor on their own) in the Admin Panel in admin/admins/view_vendor_details.blade.php (Commissions module: Every vendor must pay a certain commission (that may vary from a vendor to another) for the website owner (admin) on every item sold, and it's defined by the website owner (admin))

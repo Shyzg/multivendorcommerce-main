@@ -8,8 +8,4 @@ use Illuminate\Database\Eloquent\Model;
 class Country extends Model
 {
     use HasFactory;
-
-
-    // All world countries in the database `countries` table
-    
 }
