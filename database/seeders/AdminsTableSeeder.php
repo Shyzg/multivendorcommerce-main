@@ -29,11 +29,10 @@ class AdminsTableSeeder extends Seeder
                 'mobile'    => '9800000000',
                 'email'     => 'admin@admin.com',
                 'password'  => '$2a$12$xvkjSScUPRexfcJTAy9ATutIeGUuRgJrjDIdL/.xlrddEvRZINpeC', // This is the encryption of '123456'    // using https://bcrypt-generator.com/
-                'image'     => '',
-                'status'    => 1,
+                'image'     => ''
             ],
 
-            
+
             [
                 'id'        => 2,
                 'name'      => 'John Singh - Vendor',
@@ -42,8 +41,7 @@ class AdminsTableSeeder extends Seeder
                 'mobile'    => '9700000000',
                 'email'     => 'john@admin.com',
                 'password'  => '$2a$12$xvkjSScUPRexfcJTAy9ATutIeGUuRgJrjDIdL/.xlrddEvRZINpeC', // This is the encryption of '123456'    // using https://bcrypt-generator.com/
-                'image'     => '',
-                'status'    => 1, // Our authentication logic in the login() method in the AdminController won't allow this admin logging in in case of 'status' = 0
+                'image'     => ''
             ],
         ];
         // Note: Check DatabaseSeeder.php

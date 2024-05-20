@@ -99,7 +99,6 @@ Route::prefix('/admin')->namespace('App\Http\Controllers\Admin')->group(function
 
         // Users
         Route::get('users', 'UserController@users'); // Render admin/users/users.blade.php page in the Admin Panel
-        Route::post('update-user-status', 'UserController@updateUserStatus'); // Update User Status (active/inactive) via AJAX in admin/users/users.blade.php, check admin/js/custom.js
 
         // Orders
         // Render admin/orders/orders.blade.php page (Orders Management section) in the Admin Panel

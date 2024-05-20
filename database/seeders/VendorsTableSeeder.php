@@ -27,8 +27,7 @@ class VendorsTableSeeder extends Seeder
                 'country' => 'Egypt',
                 'pincode' => '110001',
                 'mobile'  => '9700000000',
-                'email'   => 'yasser@admin.com',
-                'status'  => 1,
+                'email'   => 'yasser@admin.com'
             ],
         ];
 

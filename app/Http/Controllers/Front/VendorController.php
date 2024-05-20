@@ -47,7 +47,6 @@ class VendorController extends Controller
             $vendor->name   = $data['name'];
             $vendor->mobile = $data['mobile'];
             $vendor->email  = $data['email'];
-            $vendor->status = 0;
             date_default_timezone_set('Asia/Jakarta');
             $vendor->created_at = date('Y-m-d H:i:s');
             $vendor->updated_at = date('Y-m-d H:i:s');
@@ -61,7 +60,6 @@ class VendorController extends Controller
             $admin->mobile    = $data['mobile'];
             $admin->email     = $data['email'];
             $admin->password  = bcrypt($data['password']);
-            $admin->status    = 0;
             date_default_timezone_set('Africa/Cairo');
             $admin->created_at = date('Y-m-d H:i:s');
             $admin->updated_at = date('Y-m-d H:i:s');

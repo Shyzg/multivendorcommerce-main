@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('vendors', function (Blueprint $table) {
             // Add `commission` percentage column to `vendors` table    
-            $table->float('commission')->after('confirm')->nullable(); // `commission` is a percentage
+            $table->float('commission')->nullable(); // `commission` is a percentage
         });
     }
 

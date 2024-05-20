@@ -15,7 +15,6 @@ return new class extends Migration
     {
         Schema::create('vendors', function (Blueprint $table) {
             $table->id();
-
             $table->string('name');
             $table->string('address')->nullable();
             $table->string('city')->nullable();
@@ -24,9 +23,6 @@ return new class extends Migration
             $table->string('pincode')->nullable();
             $table->string('mobile');
             $table->string('email')->unique();
-            $table->enum('confirm', ['No', 'Yes']); // added later    // "No" is the default value    
-            $table->tinyInteger('status'); // active or not active (admins will approve the status of the vendor)
-
             $table->timestamps();
         });
     }
