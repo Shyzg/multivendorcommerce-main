@@ -123,7 +123,6 @@ class ProductsController extends Controller
             $product->section_id  = $categoryDetails['section_id'];
             $product->category_id = $data['category_id'];
             $product->group_code  = $data['group_code'];
-            $productFilters = ProductsFilter::productFilters();
 
             if ($id == '') {
                 $adminType = Auth::guard('admin')->user()->type;

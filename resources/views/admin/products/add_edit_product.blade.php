@@ -105,13 +105,6 @@
                                     {{-- <option value="{{ $category['id'] }}" @if (!empty($product['category_id']) && $product['category_id'] == $category['id']) selected @endif >{{ $category['name'] }}</option> --}}
                                 </select>
                             </div>
-
-
-
-                            {{-- Including the related filters <select> box of a product DEPENDING ON THE SELECTED CATEGORY of the product --}}
-                            <div class="loadFilters">
-                                {{-- @include('admin.filters.category_filters') --}}
-                            </div>
                             <div class="form-group">
                                 <label for="product_name">Product Name</label>
                                 <input type="text" class="form-control" id="product_name" placeholder="Enter Product Name" name="product_name" @if (!empty($product['product_name'])) value="{{ $product['product_name'] }}" @else value="{{ old('product_name') }}" @endif> {{-- Repopulating Forms (using old() method): https://laravel.com/docs/9.x/validation#repopulating-forms --}}

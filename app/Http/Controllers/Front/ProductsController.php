@@ -41,13 +41,6 @@ class ProductsController extends Controller
             if ($categoryCount > 0) {
                 $categoryDetails = Category::categoryDetails($url);
                 $categoryProducts = Product::whereIn('category_id', $categoryDetails['catIds'])->where('status', 1);
-                $productFilters = ProductsFilter::productFilters();
-
-                foreach ($productFilters as $key => $filter) {
-                    if (isset($filter['filter_column']) && isset($data[$filter['filter_column']]) && !empty($filter['filter_column']) && !empty($data[$filter['filter_column']])) {
-                        $categoryProducts->whereIn($filter['filter_column'], $data[$filter['filter_column']]);
-                    }
-                }
 
                 if (isset($_GET['sort']) && !empty($_GET['sort'])) {
                     if ($_GET['sort'] == 'product_latest') {
