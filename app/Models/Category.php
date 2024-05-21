@@ -40,7 +40,7 @@ class Category extends Model
                 $query->select('id', 'parent_id', 'category_name', 'url', 'description'); // Important Note: It's a MUST to select 'id' even if you don't need it, because the relationship Foreign Key `product_id` depends on it, or else the `product` relationship would give you 'null'!
             }
         ])->where('url', $url)->first()->toArray(); // using the relationship subCategories() method with with() method    // Get the parent category and its subcategories
-
+        
         $catIds = array(); // this array will contain both the parent category ids and its subcategories (child categories) ids too
         $catIds[] = $categoryDetails['id']; // add/append the PARENT category id to the $catIds array
 
@@ -85,8 +85,8 @@ class Category extends Model
     {
         $getCategoryName = Category::select('category_name')->where('id', $category_id)->first();
 
-
-        return $getCategoryName->category_name;
+        // dd($getCategoryName['']);
+        return $getCategoryName->category_name ?? null;
     }
 
     // Note: We also prevent making orders of the products of the Categories that are disabled (`status` = 0) (whether the Category is a Child Category or a Parent Category (Root Category) is disabled) in admin/categories/categories.blade.php

@@ -110,12 +110,12 @@
 
                             {{-- Including the related filters <select> box of a product DEPENDING ON THE SELECTED CATEGORY of the product --}}
                             <div class="loadFilters">
-                                @include('admin.filters.category_filters')
+                                {{-- @include('admin.filters.category_filters') --}}
                             </div>
 
 
 
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 <label for="brand_id">Select Brand</label>
                                 <select name="brand_id" id="brand_id" class="form-control text-dark">
                                     <option value="">Select Brand</option>
@@ -123,7 +123,7 @@
                                     <option value="{{ $brand['id'] }}" @if (!empty($product['brand_id']==$brand['id'])) selected @endif>{{ $brand['name'] }}</option>
                                     @endforeach
                                 </select>
-                            </div>
+                            </div> --}}
                             <div class="form-group">
                                 <label for="product_name">Product Name</label>
                                 <input type="text" class="form-control" id="product_name" placeholder="Enter Product Name" name="product_name" @if (!empty($product['product_name'])) value="{{ $product['product_name'] }}" @else value="{{ old('product_name') }}" @endif> {{-- Repopulating Forms (using old() method): https://laravel.com/docs/9.x/validation#repopulating-forms --}}
@@ -132,10 +132,10 @@
                                 <label for="product_code">Product Code</label>
                                 <input type="text" class="form-control" id="product_code" placeholder="Enter Code" name="product_code" @if (!empty($product['product_code'])) value="{{ $product['product_code'] }}" @else value="{{ old('product_code') }}" @endif> {{-- Repopulating Forms (using old() method): https://laravel.com/docs/9.x/validation#repopulating-forms --}}
                             </div>
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 <label for="product_color">Product Color</label>
-                                <input type="text" class="form-control" id="product_color" placeholder="Enter Product Color" name="product_color" @if (!empty($product['product_color'])) value="{{ $product['product_color'] }}" @else value="{{ old('product_color') }}" @endif> {{-- Repopulating Forms (using old() method): https://laravel.com/docs/9.x/validation#repopulating-forms --}}
-                            </div>
+                                <input type="text" class="form-control" id="product_color" placeholder="Enter Product Color" name="product_color" @if (!empty($product['product_color'])) value="{{ $product['product_color'] }}" @else value="{{ old('product_color') }}" @endif> Repopulating Forms (using old() method): https://laravel.com/docs/9.x/validation#repopulating-forms
+                            </div> --}}
                             <div class="form-group">
                                 <label for="product_price">Product Price</label>
                                 <input type="text" class="form-control" id="product_price" placeholder="Enter Product Price" name="product_price" @if (!empty($product['product_price'])) value="{{ $product['product_price'] }}" @else value="{{ old('product_price') }}" @endif> {{-- Repopulating Forms (using old() method): https://laravel.com/docs/9.x/validation#repopulating-forms --}}
@@ -173,20 +173,20 @@
                                 <a href="JavaScript:void(0)" class="confirmDelete" module="product-image" moduleid="{{ $product['id'] }}">Delete Product Image</a> {{-- Delete the product image from BOTH SERVER (FILESYSTEM) & DATABASE --}} {{-- Check admin/js/custom.js and web.php (routes) --}}
                                 @endif
                             </div>
-                            <div class="form-group">
-                                <label for="product_video">Product Video (Recommended Size: Less than 2 MB)</label> {{-- Important Note: Default php.ini file upload Maximum file size is 2MB (If you upload a file with a larger size, it won't be uploaded!). Check upload_max_filesize using phpinfo() method --}}
+                            {{-- <div class="form-group">
+                                <label for="product_video">Product Video (Recommended Size: Less than 2 MB)</label> Important Note: Default php.ini file upload Maximum file size is 2MB (If you upload a file with a larger size, it won't be uploaded!). Check upload_max_filesize using phpinfo() method
                                 <input type="file" class="form-control" id="product_video" name="product_video">
-                                {{-- Show the admin image if exists --}}
+                                Show the admin image if exists
 
 
 
 
-                                {{-- Show the product video, if any (if exits) --}}
+                                Show the product video, if any (if exits)
                                 @if (!empty($product['product_video']))
                                 <a target="_blank" href="{{ url('front/videos/product_videos/' . $product['product_video']) }}">View Product Video</a>&nbsp;|&nbsp;
-                                <a href="JavaScript:void(0)" class="confirmDelete" module="product-video" moduleid="{{ $product['id'] }}">Delete Product Video</a> {{-- Delete the product video from BOTH SERVER (FILESYSTEM) & DATABASE --}} {{-- Check admin/js/custom.js and web.php (routes) --}}
+                                <a href="JavaScript:void(0)" class="confirmDelete" module="product-video" moduleid="{{ $product['id'] }}">Delete Product Video</a> Delete the product video from BOTH SERVER (FILESYSTEM) & DATABASE Check admin/js/custom.js and web.php (routes)
                                 @endif
-                            </div>
+                            </div> --}}
                             <div class="form-group">
                                 <label for="description">Product Description</label>
                                 <textarea name="description" id="description" class="form-control" rows="3">{{ $product['description'] }}</textarea>

@@ -160,11 +160,11 @@ class ProductsController extends Controller
                         'products.id',
                         'products.section_id',
                         'products.category_id',
-                        'products.brand_id',
+                        // 'products.brand_id',
                         'products.vendor_id',
                         'products.product_name',
                         'products.product_code',
-                        'products.product_color',
+                        // 'products.product_color',
                         'products.product_price',
                         'products.product_discount',
                         'products.product_image',
@@ -192,11 +192,11 @@ class ProductsController extends Controller
                         'products.id',
                         'products.section_id',
                         'products.category_id',
-                        'products.brand_id',
+                        // 'products.brand_id',
                         'products.vendor_id',
                         'products.product_name',
                         'products.product_code',
-                        'products.product_color',
+                        // 'products.product_color',
                         'products.product_price',
                         'products.product_discount',
                         'products.product_image',
@@ -224,11 +224,11 @@ class ProductsController extends Controller
                         'products.id',
                         'products.section_id',
                         'products.category_id',
-                        'products.brand_id',
+                        // 'products.brand_id',
                         'products.vendor_id',
                         'products.product_name',
                         'products.product_code',
-                        'products.product_color',
+                        // 'products.product_color',
                         'products.product_price',
                         'products.product_discount',
                         'products.product_image',
@@ -256,11 +256,11 @@ class ProductsController extends Controller
                         'products.id',
                         'products.section_id',
                         'products.category_id',
-                        'products.brand_id',
+                        // 'products.brand_id',
                         'products.vendor_id',
                         'products.product_name',
                         'products.product_code',
-                        'products.product_color',
+                        // 'products.product_color',
                         'products.product_price',
                         'products.product_discount',
                         'products.product_image',
@@ -287,11 +287,11 @@ class ProductsController extends Controller
                         'products.id',
                         'products.section_id',
                         'products.category_id',
-                        'products.brand_id',
+                        // 'products.brand_id',
                         'products.vendor_id',
                         'products.product_name',
                         'products.product_code',
-                        'products.product_color',
+                        // 'products.product_color',
                         'products.product_price',
                         'products.product_discount',
                         'products.product_image',
@@ -305,7 +305,7 @@ class ProductsController extends Controller
                         // We'll search for the searched term by the user in the `product_name`, `product_code`, `product_color` and `description` columns in the `products` table and in the `category_name` column in the `categories` table
                         $query->where('products.product_name',    'like', '%' . $search_product . '%')  // 'like' SQL operator    // '%' SQL Wildcard Character    // Basic Where Clauses: Where Clauses: https://laravel.com/docs/9.x/queries#where-clauses
                             ->orWhere('products.product_code',    'like', '%' . $search_product . '%')  // 'like' SQL operator    // '%' SQL Wildcard Character    // Basic Where Clauses: Where Clauses: https://laravel.com/docs/9.x/queries#where-clauses
-                            ->orWhere('products.product_color',   'like', '%' . $search_product . '%')  // 'like' SQL operator    // '%' SQL Wildcard Character    // Basic Where Clauses: Where Clauses: https://laravel.com/docs/9.x/queries#where-clauses
+                            // ->orWhere('products.product_color',   'like', '%' . $search_product . '%')  // 'like' SQL operator    // '%' SQL Wildcard Character    // Basic Where Clauses: Where Clauses: https://laravel.com/docs/9.x/queries#where-clauses
                             ->orWhere('products.description',     'like', '%' . $search_product . '%')  // 'like' SQL operator    // '%' SQL Wildcard Character    // Basic Where Clauses: Where Clauses: https://laravel.com/docs/9.x/queries#where-clauses
                             ->orWhere('categories.category_name', 'like', '%' . $search_product . '%'); // 'like' SQL operator    // '%' SQL Wildcard Character    // Basic Where Clauses: Where Clauses: https://laravel.com/docs/9.x/queries#where-clauses
                     })->where('products.status', 1);
@@ -376,7 +376,7 @@ class ProductsController extends Controller
         ])->find($id)->toArray(); // Eager Loading (using with() method): https://laravel.com/docs/9.x/eloquent-relationships#eager-loading    // Eager Loading Multiple Relationships: https://laravel.com/docs/9.x/eloquent-relationships#eager-loading-multiple-relationships
 
 
-        $categoryDetails = Category::categoryDetails($productDetails['category']['url']); // to get the Breadcrumb links (which is HTML) to show them in front/products/detail.blade.php
+        $categoryDetails = Category::categoryDetails($productDetails['category']['url'] ?? null); // to get the Breadcrumb links (which is HTML) to show them in front/products/detail.blade.php
 
 
         // Get similar products (or related products) (functionality) by getting other products from THE SAME CATEGORY    
@@ -434,7 +434,7 @@ class ProductsController extends Controller
             'product_id' => $id,
             'status'     => 1
         ])->get()->toArray();
-
+        // dd($ratings);
         // Calculate Average Rating (for a product):
         $ratingSum = Rating::where([
             'product_id' => $id,

@@ -87,11 +87,11 @@ class ProductsFilter extends Model
         // dd($getProductIds);
 
         // Get the colors of the product ids from the `products` table
-        $getProductColors = Product::select('product_color')->whereIn('id', $getProductIds)->groupBy('product_color')->pluck('product_color')->toArray(); // We used groupBy() method to eliminate the repeated product `color`-s (in order not to show repeated 'filters' values (like red, red, green, ...)): https://laravel.com/docs/9.x/collections#method-groupby
+        // $getProductColors = Product::select('product_color')->whereIn('id', $getProductIds)->groupBy('product_color')->pluck('product_color')->toArray(); // We used groupBy() method to eliminate the repeated product `color`-s (in order not to show repeated 'filters' values (like red, red, green, ...)): https://laravel.com/docs/9.x/collections#method-groupby
         // dd($getProductColors);
 
 
-        return $getProductColors;
+        return $getProductColors ?? null;
     }
 
     // Get the brand of a product from a URL (URL of the category)    
@@ -104,14 +104,14 @@ class ProductsFilter extends Model
 
 
         // Get the brand ids of the product ids of the fetched categories (depending on the URL)
-        $brandIds = Product::select('brand_id')->whereIn('id', $getProductIds)->groupBy('brand_id')->pluck('brand_id')->toArray(); // We used groupBy() method to eliminate the repeated product `brand_id`-s (in order not to show repeated 'filters' values (like Samsung, Samsung, LG, ...)): https://laravel.com/docs/9.x/collections#method-groupby
+        // $brandIds = Product::select('brand_id')->whereIn('id', $getProductIds)->groupBy('brand_id')->pluck('brand_id')->toArray(); // We used groupBy() method to eliminate the repeated product `brand_id`-s (in order not to show repeated 'filters' values (like Samsung, Samsung, LG, ...)): https://laravel.com/docs/9.x/collections#method-groupby
 
 
         // Get the brand names from `brands` table
-        $brandDetails = \App\Models\Brand::select('id', 'name')->whereIn('id', $brandIds)->get()->toArray(); // from `brands` table 
+        // $brandDetails = \App\Models\Brand::select('id', 'name')->whereIn('id', $brandIds)->get()->toArray(); // from `brands` table 
 
 
-        return $brandDetails;
+        return null;
     }
 
 }

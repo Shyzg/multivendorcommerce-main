@@ -36,7 +36,7 @@
                                             <th>ID</th>
                                             <th>Product Name</th>
                                             <th>Product Code</th>
-                                            <th>Product Color</th>
+                                            {{-- <th>Product Color</th> --}}
                                             <th>Product Image</th>
                                             <th>Category</th> {{-- Through the relationship --}}
                                             <th>Section</th>  {{-- Through the relationship --}}
@@ -51,7 +51,7 @@
                                                 <td>{{ $product['id'] }}</td>
                                                 <td>{{ $product['product_name'] }}</td>
                                                 <td>{{ $product['product_code'] }}</td>
-                                                <td>{{ $product['product_color'] }}</td>
+                                                {{-- <td>{{ $product['product_color'] }}</td> --}}
                                                 <td>
                                                     @if (!empty($product['product_image']))
                                                         <img style="width:120px; height:100px" src="{{ asset('front/images/product_images/small/' . $product['product_image']) }}"> {{-- Show the 'small' image size from the 'small' folder --}}
@@ -59,8 +59,9 @@
                                                         <img style="width:120px; height:100px" src="{{ asset('front/images/product_images/small/no-image.png') }}"> {{-- Show the 'no-image' Dummy Image: If you have for example a table with an 'images' column (that can exist or not exist), use a 'Dummy Image' in case there's no image. Example: https://dummyimage.com/  --}}
                                                     @endif
                                                 </td>
-                                                <td>{{ $product['category']['category_name'] }}</td> {{-- Through the relationship --}}
-                                                <td>{{ $product['section']['name'] }}</td> {{-- Through the relationship --}}
+                                                {{-- {{dd($product)}} --}}
+                                                <td>{{ $product['category']['category_name'] ?? null }}</td> {{-- Through the relationship --}}
+                                                <td>{{ $product['section']['name']  ?? null }}</td> {{-- Through the relationship --}}
                                                 <td>
                                                     @if ($product['admin_type'] == 'vendor')
                                                         <a target="_blank" href="{{ url('admin/view-vendor-details/' . $product['admin_id']) }}">{{ ucfirst($product['admin_type']) }}</a>

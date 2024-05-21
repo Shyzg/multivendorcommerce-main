@@ -83,12 +83,13 @@ class ProductsController extends Controller
 
         if ($request->isMethod('post')) {
             $data = $request->all();
+            
             $rules = [
                 'category_id'   => 'required',
                 'product_name'  => 'required',
                 'product_code'  => 'required|regex:/^\w+$/',
                 'product_price' => 'required|numeric',
-                'product_color' => 'required|regex:/^[\pL\s\-]+$/u',
+                // 'product_color' => 'required|regex:/^[\pL\s\-]+$/u',
             ];
             $customMessages = [
                 'category_id.required'   => 'Category is required',
@@ -98,8 +99,8 @@ class ProductsController extends Controller
                 'product_code.regex'     => 'Valid Product Code is required',
                 'product_price.required' => 'Product Price is required',
                 'product_price.numeric'  => 'Valid Product Price is required',
-                'product_color.required' => 'Product Color is required',
-                'product_color.regex'    => 'Valid Product Color is required',
+                // 'product_color.required' => 'Product Color is required',
+                // 'product_color.regex'    => 'Valid Product Color is required',
 
             ];
 
@@ -122,33 +123,25 @@ class ProductsController extends Controller
                 }
             }
 
-            if ($request->hasFile('product_video')) {
-                $video_tmp = $request->file('product_video');
+            // if ($request->hasFile('product_video')) {
+            //     $video_tmp = $request->file('product_video');
 
-                if ($video_tmp->isValid()) {
-                    $extension  = $video_tmp->getClientOriginalExtension();
-                    $videoName = rand() . '.' . $extension;
-                    $videoPath = 'front/videos/product_videos/';
-                    $video_tmp->move($videoPath, $videoName);
-                    $product->product_video = $videoName;
-                }
-            }
+            //     if ($video_tmp->isValid()) {
+            //         $extension  = $video_tmp->getClientOriginalExtension();
+            //         $videoName = rand() . '.' . $extension;
+            //         $videoPath = 'front/videos/product_videos/';
+            //         $video_tmp->move($videoPath, $videoName);
+            //         $product->product_video = $videoName;
+            //     }
+            // }
 
             $categoryDetails = \App\Models\Category::find($data['category_id']);
             $product->section_id  = $categoryDetails['section_id'];
             $product->category_id = $data['category_id'];
-            $product->brand_id    = $data['brand_id'];
+            // $product->brand_id    = $data['brand_id'];
             $product->group_code  = $data['group_code'];
             $productFilters = ProductsFilter::productFilters();
-            foreach ($productFilters as $filter) {
-                $filterAvailable = ProductsFilter::filterAvailable($filter['id'], $data['category_id']);
-
-                if ($filterAvailable == 'Yes') {
-                    if (isset($filter['filter_column']) && $data[$filter['filter_column']]) {
-                        $product->{$filter['filter_column']} = $data[$filter['filter_column']];
-                    }
-                }
-            }
+            
 
             if ($id == '') {
                 $adminType = Auth::guard('admin')->user()->type;
@@ -174,7 +167,7 @@ class ProductsController extends Controller
 
             $product->product_name     = $data['product_name'];
             $product->product_code     = $data['product_code'];
-            $product->product_color    = $data['product_color'];
+            // $product->product_color    = $data['product_color'];
             $product->product_price    = $data['product_price'];
             $product->product_discount = $data['product_discount'];
             $product->product_weight   = $data['product_weight'];
