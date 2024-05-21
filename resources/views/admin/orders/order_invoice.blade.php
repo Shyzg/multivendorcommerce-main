@@ -1,26 +1,13 @@
-{{-- This is the HTML Order Invoice. This page is rendered by viewOrderInvoice() method inside Admin/OrderController.php --}}
-
-
-
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-<!------ Include the above in your HEAD tag ---------->
 
 <div class="container">
     <div class="row">
         <div class="col-xs-12">
             <div class="invoice-title">
                 <h2>Invoice</h2>
-                <h3 class="pull-right">
-                    Order # {{ $orderDetails['id'] }}
-
-                    {{-- Laravel barcode/QR code generation package (to show barcodes/QR codes for both Product ID and Product Code): https://github.com/milon/barcode --}}
-                    @php
-                    echo DNS1D::getBarcodeHTML($orderDetails['id'], 'C39'); // This is the product `id` Barcode
-                    // echo DNS2D::getBarcodeHTML($orderDetails['id'], 'QRCODE'); // This is the product `id` QR code
-                    @endphp
-                </h3>
+                <h3 class="pull-right">Order # {{ $orderDetails['id'] }}</h3>
             </div>
             <hr>
             <div class="row">
