@@ -131,7 +131,7 @@
 
                                         @foreach ($getCartItems as $item) {{-- $getCartItems is passed in from cart() method in Front/ProductsController.php --}}
                                         @php
-                                        $getDiscountAttributePrice = \App\Models\Product::getDiscountAttributePrice($item['product_id'], $item['size']); // from the `products_attributes` table, not the `products` table
+                                        $getDiscountAttributePrice = \App\Models\Product::getDiscountAttributePrice($item['product_id']); // from the `products_attributes` table, not the `products` table
                                         // dd($getDiscountAttributePrice);
                                         @endphp
 
@@ -141,8 +141,8 @@
                                                 <a href="{{ url('product/' . $item['product_id']) }}">
                                                     <img width="50px" src="{{ asset('front/images/product_images/small/' . $item['product']['product_image']) }}" alt="Product">
                                                     <h6 class="order-h6">{{ $item['product']['product_name'] }}
-                                                        <br>
-                                                        {{ $item['size'] }}/{{ $item['product']['product_color'] }}
+                                                        
+                                                        
                                                     </h6>
                                                 </a>
                                                 <span class="order-span-quantity">x {{ $item['quantity'] }}</span>

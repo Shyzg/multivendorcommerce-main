@@ -72,11 +72,11 @@ class Product extends Model
 
 
     
-    public static function getDiscountAttributePrice($product_id, $size) { // this method is called (used) in front/products/detail.blade.php and cart_items.blade.php and in applyCoupon() method in Front/ProudctsController.php
+    public static function getDiscountAttributePrice($product_id) { // this method is called (used) in front/products/detail.blade.php and cart_items.blade.php and in applyCoupon() method in Front/ProudctsController.php
         // Get that product attributes from `products_attributes` table which has that specific `product_id` and `size`
         $proAttrPrice = \App\Models\ProductsAttribute::where([ // from `products_attributes` table
             'product_id' => $product_id,
-            'size'       => $size
+            // 'size'       => $size
         ])->first()->toArray();
 
         // Get the product DISCOUNT and CATEGORY ID of that product

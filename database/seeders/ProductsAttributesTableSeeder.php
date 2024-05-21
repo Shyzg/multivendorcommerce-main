@@ -23,8 +23,8 @@ class ProductsAttributesTableSeeder extends Seeder
             // Note: The three attributes we will insert ALL are related to one product (T-shirt): small, medium and large sizes of one T-shirt
             [
                 'id'         => 1,
-                'product_id' => 2,
-                'size'       => 'Small',
+                'product_id' => 1,
+                // 'size'       => 'Small',
                 'price'      => 1000,
                 'stock'      => 10,
                 'sku'        => 'RC001-S', // SKU is similar to Product Code then hypen -Size (which is S here which means 'small' size)
@@ -32,8 +32,8 @@ class ProductsAttributesTableSeeder extends Seeder
             ],
             [
                 'id'         => 2,
-                'product_id' => 2,
-                'size'       => 'Medium',
+                'product_id' => 1,
+                // 'size'       => 'Medium',
                 'price'      => 1100,
                 'stock'      => 15,
                 'sku'        => 'RC001-M', // SKU is similar to Product Code then hypen -Size (which is S here which means 'medium' size)
@@ -42,7 +42,7 @@ class ProductsAttributesTableSeeder extends Seeder
             [
                 'id'         => 3,
                 'product_id' => 2,
-                'size'       => 'Large',
+                // 'size'       => 'Large',
                 'price'      => 1200,
                 'stock'      => 20,
                 'sku'        => 'RC001-L', // SKU is similar to Product Code then hypen -Size (which is S here which means 'large' size)
