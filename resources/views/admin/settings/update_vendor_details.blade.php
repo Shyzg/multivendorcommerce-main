@@ -275,6 +275,7 @@
                 </div>
             </div>
         </div>
+        @endif
     </div>
     @include('admin.layout.footer')
 </div>

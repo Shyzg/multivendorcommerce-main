@@ -83,7 +83,7 @@ class ProductsController extends Controller
 
         if ($request->isMethod('post')) {
             $data = $request->all();
-            
+
             $rules = [
                 'category_id'   => 'required',
                 'product_name'  => 'required',
@@ -141,7 +141,7 @@ class ProductsController extends Controller
             // $product->brand_id    = $data['brand_id'];
             $product->group_code  = $data['group_code'];
             $productFilters = ProductsFilter::productFilters();
-            
+
 
             if ($id == '') {
                 $adminType = Auth::guard('admin')->user()->type;
@@ -167,7 +167,6 @@ class ProductsController extends Controller
 
             $product->product_name     = $data['product_name'];
             $product->product_code     = $data['product_code'];
-            // $product->product_color    = $data['product_color'];
             $product->product_price    = $data['product_price'];
             $product->product_discount = $data['product_discount'];
             $product->product_weight   = $data['product_weight'];
@@ -243,7 +242,7 @@ class ProductsController extends Controller
     {
         Session::put('page', 'products');
 
-        $product = Product::select('id', 'product_name', 'product_code', 'product_color', 'product_price', 'product_image')->with('attributes')->find($id);
+        $product = Product::select('id', 'product_name', 'product_code', 'product_price', 'product_image')->with('attributes')->find($id);
 
         if ($request->isMethod('post')) {
             $data = $request->all();
@@ -324,7 +323,7 @@ class ProductsController extends Controller
     {
         Session::put('page', 'products');
 
-        $product = Product::select('id', 'product_name', 'product_code', 'product_color', 'product_price', 'product_image')->with('images')->find($id);
+        $product = Product::select('id', 'product_name', 'product_code', 'product_price', 'product_image')->with('images')->find($id);
 
         if ($request->isMethod('post')) {
             $data = $request->all();
