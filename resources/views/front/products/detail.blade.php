@@ -237,10 +237,10 @@
                                 <span>Product Code:</span>
                                 <span>{{ $productDetails['product_code'] }}</span>
                             </div>
-                            <div class="left">
+                            {{-- <div class="left">
                                 <span>Product Color:</span>
                                 <span>{{ $productDetails['product_color'] }}</span>
-                            </div>
+                            </div> --}}
                             <div class="availability">
                                 <span>Availability:</span>
 
@@ -310,10 +310,11 @@
 
 
 
-                                <div class="sizes u-s-m-b-11" style="margin-top: 20px">
+                                {{-- <div class="sizes u-s-m-b-11" style="margin-top: 20px">
                                     <span>Available Size:</span>
                                     <div class="size-variant select-box-wrapper">
-                                        <select class="select-box product-size" id="getPrice" product-id="{{ $productDetails['id'] }}" name="size" required> {{-- Check front/js/custom.js file --}}
+                                        <select class="select-box product-size" id="getPrice" product-id="{{ $productDetails['id'] }}" name="size" required> 
+                                            Check front/js/custom.js file
 
 
 
@@ -326,7 +327,7 @@
 
                                         </select>
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
                             <div class="section-6-social-media-quantity-actions u-s-p-y-14">
 
@@ -350,9 +351,10 @@
 
 
                         {{-- PIN code Availability Check: check if the PIN code of the user's Delivery Address exists in our database (in both `cod_pincodes` and `prepaid_pincodes`) or not via AJAX. Check front/js/custom.js --}} 
-                        <br><br><b>Delivery</b>
+                        {{-- <br><br><b>Delivery</b>
                         <input type="text" id="pincode" placeholder="Check Pincode" required>
-                        <button type="button" id="checkPincode">Go</button> {{-- We'll use that checkPincode HTML id attribute in front/js/custom.js as a handle for jQuery --}}
+                        <button type="button" id="checkPincode">Go</button> --}}
+                         {{-- We'll use that checkPincode HTML id attribute in front/js/custom.js as a handle for jQuery --}}
 
 
                     </div>
@@ -366,12 +368,12 @@
                     <div class="detail-tabs-wrapper u-s-p-t-80">
                         <div class="detail-nav-wrapper u-s-m-b-30">
                             <ul class="nav single-product-nav justify-content-center">
-                                <li class="nav-item">
+                                {{-- <li class="nav-item">
                                     <a class="nav-link active" data-toggle="tab" href="#video">Product Video</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" data-toggle="tab" href="#detail">Product Details</a>
-                                </li>
+                                </li> --}}
                                 <li class="nav-item">
                                     {{-- <a class="nav-link" data-toggle="tab" href="#review">Reviews (15)</a> --}}
                                     <a class="nav-link" data-toggle="tab" href="#review">Reviews {{ count($ratings) }}</a>
@@ -385,13 +387,13 @@
 
 
 
-                                    @if ($productDetails['product_video'])
+                                    {{-- @if ($productDetails['product_video'])
                                         <video controls>
                                             <source src="{{ url('front/videos/product_videos/' . $productDetails['product_video']) }}" type="video/mp4">
                                         </video>
                                     @else
                                         Product Video does not exist    
-                                    @endif
+                                    @endif --}}
 
 
 
@@ -570,9 +572,10 @@
                                             {{-- Display/Show user's Ratings --}}
                                             @if (count($ratings) > 0) {{-- if there're any ratings for the product --}}
                                                 @foreach($ratings as $rating)
+                                                
                                                     <div class="review-data">
                                                         <div class="reviewer-name-and-date">
-                                                            <h6 class="reviewer-name">{{ $rating['user']['name'] }}</h6>
+                                                            <h6 class="reviewer-name">{{ $rating['user']['name'] ?? null }}</h6>
                                                             <h6 class="review-posted-date">{{ date('d-m-Y H:i:s', strtotime($rating['created_at'])) }}</h6>
                                                         </div>
                                                         <div class="reviewer-stars-title-body">
@@ -669,15 +672,15 @@
 
                                                         <a href="shop-v1-root-category.html">{{ $product['product_code'] }}</a>
                                                     </li>
-                                                    <li class="has-separator">
+                                                    {{-- <li class="has-separator">
                                                         <a href="listing.html">{{ $product['product_color'] }}</a>
-                                                    </li>
-                                                    <li>
+                                                    </li> --}}
+                                                    {{-- <li>
                                                         <a href="listing.html">{{ $product['brand']['name'] }}</a>
 
 
 
-                                                    </li>
+                                                    </li> --}}
                                                 </ul>
                                                 <h6 class="item-title">
                                                     <a href="{{ url('product/' . $product['id']) }}">{{ $product['product_name'] }}</a>
@@ -774,15 +777,15 @@
 
                                                         <a href="shop-v1-root-category.html">{{ $product['product_code'] }}</a>
                                                     </li>
-                                                    <li class="has-separator">
+                                                    {{-- <li class="has-separator">
                                                         <a href="listing.html">{{ $product['product_color'] }}</a>
-                                                    </li>
-                                                    <li>
+                                                    </li> --}}
+                                                    {{-- <li>
                                                         <a href="listing.html">{{ $product['brand']['name'] }}</a>
 
 
 
-                                                    </li>
+                                                    </li> --}}
                                                 </ul>
                                                 <h6 class="item-title">
                                                     <a href="{{ url('product/' . $product['id']) }}">{{ $product['product_name'] }}</a>

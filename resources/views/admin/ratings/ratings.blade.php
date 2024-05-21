@@ -49,7 +49,7 @@
                                                         {{ $rating['product']['product_name'] }}
                                                     </a>
                                                 </td>
-                                                <td>{{ $rating['user']['email'] }}</td>
+                                                <td>{{ $rating['user']['email'] ?? null }}</td>
                                                 <td>{{ $rating['review'] }}</td>
                                                 <td>{{ $rating['rating'] }}</td>
                                                 <td>
