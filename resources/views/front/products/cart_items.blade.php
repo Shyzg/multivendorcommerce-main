@@ -21,7 +21,7 @@
 
             @foreach ($getCartItems as $item) {{-- $getCartItems is passed in from cart() method in Front/ProductsController.php --}}
                 @php
-                    $getDiscountAttributePrice = \App\Models\Product::getDiscountAttributePrice($item['product_id'], $item['size']); // from the `products_attributes` table, not the `products` table
+                    $getDiscountAttributePrice = \App\Models\Product::getDiscountAttributePrice($item['product_id']); // from the `products_attributes` table, not the `products` table
                     // dd($getDiscountAttributePrice);
                 @endphp
 
@@ -29,11 +29,11 @@
                     <td>
                         <div class="cart-anchor-image">
                             <a href="{{ url('product/' . $item['product_id']) }}">
-                                <img src="{{ asset('front/images/product_images/small/' . $item['product']['product_image']) }}" alt="Product">
+                                <img src="{{ asset('front/images/product_images/small/' . $item['product']['product_image']) }}" alt="">
                                 <h6>
-                                    {{ $item['product']['product_name'] }} ({{ $item['product']['product_code'] }}) - {{ $item['size'] }}
-                                    <br>
-                                    Color: {{ $item['product']['product_color'] }}
+                                    {{ $item['product']['product_name'] }} ({{ $item['product']['product_code'] }}) {{-- - {{ $item['size'] }} --}}
+                                    {{-- <br> --}}
+                                    {{-- Color: {{ $item['product']['product_color'] }} --}}
                                 </h6>
                             </a>
                         </div>

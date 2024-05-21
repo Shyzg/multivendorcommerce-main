@@ -20,7 +20,7 @@
 
             @foreach ($getCartItems as $item) {{-- $getCartItems is passed in from cart() method in Front/ProductsController.php --}}
                 @php
-                    $getDiscountAttributePrice = \App\Models\Product::getDiscountAttributePrice($item['product_id'], $item['size']); // from the `products_attributes` table, not the `products` table
+                    $getDiscountAttributePrice = \App\Models\Product::getDiscountAttributePrice($item['product_id']); // from the `products_attributes` table, not the `products` table
                     // dd($getDiscountAttributePrice);
                 @endphp
                 <li class="clearfix">

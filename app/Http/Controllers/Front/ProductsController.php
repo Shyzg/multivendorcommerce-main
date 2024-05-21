@@ -98,11 +98,11 @@ class ProductsController extends Controller
 
                 // Size, price, color, brand, … are also Dynamic Filters, but won't be managed like the other Dynamic Filters, but we will manage every filter of them from the suitable respective database table, like the 'size' Filter from the `products_attributes` database table, 'color' Filter and `price` Filter from `products` table, 'brand' Filter from `brands` table
                 // Second: the 'color' filter (from `products` database table)
-                if (isset($data['color']) && !empty($data['color'])) { // coming from the AJAX call in front/js/custom.js    // example:    $data['color'] = 'Large'
-                    $productIds = Product::select('id')->whereIn('product_color', $data['color'])->pluck('id')->toArray(); // fetch the products ids of the $data['color'] from the `products` table
+                // if (isset($data['color']) && !empty($data['color'])) { // coming from the AJAX call in front/js/custom.js    // example:    $data['color'] = 'Large'
+                //     $productIds = Product::select('id')->whereIn('product_color', $data['color'])->pluck('id')->toArray(); // fetch the products ids of the $data['color'] from the `products` table
 
-                    $categoryProducts->whereIn('products.id', $productIds); // `products.id` means that `products` is the table name (means grab the `id` column of the `products` table)
-                }
+                //     $categoryProducts->whereIn('products.id', $productIds); // `products.id` means that `products` is the table name (means grab the `id` column of the `products` table)
+                // }
 
                 // Size, price, color, brand, … are also Dynamic Filters, but won't be managed like the other Dynamic Filters, but we will manage every filter of them from the suitable respective database table, like the 'size' Filter from the `products_attributes` database table, 'color' Filter and `price` Filter from `products` table, 'brand' Filter from `brands` table
                 // Third: the 'price' filter (from `products` database table)
@@ -126,11 +126,11 @@ class ProductsController extends Controller
 
                 // Size, price, color, brand, … are also Dynamic Filters, but won't be managed like the other Dynamic Filters, but we will manage every filter of them from the suitable respective database table, like the 'size' Filter from the `products_attributes` database table, 'color' Filter and `price` Filter from `products` table, 'brand' Filter from `brands` table
                 // Fourth: the 'brand' filter (from `products` and `brands` database table)
-                if (isset($data['brand']) && !empty($data['brand'])) { // coming from the AJAX call in front/js/custom.js    // example:    $data['brand'] = 'Large'
-                    $productIds = Product::select('id')->whereIn('brand_id', $data['brand'])->pluck('id')->toArray(); // fetch the products ids with `brand_id` of $data['brand'] from the `products` table
+                // if (isset($data['brand']) && !empty($data['brand'])) { // coming from the AJAX call in front/js/custom.js    // example:    $data['brand'] = 'Large'
+                    // $productIds = Product::select('id')->whereIn('brand_id', $data['brand'])->pluck('id')->toArray(); // fetch the products ids with `brand_id` of $data['brand'] from the `products` table
 
-                    $categoryProducts->whereIn('products.id', $productIds); // `products.id` means that `products` is the table name (means grab the `id` column of the `products` table)
-                }
+                    // $categoryProducts->whereIn('products.id', $productIds); // `products.id` means that `products` is the table name (means grab the `id` column of the `products` table)
+                // }
 
 
 
@@ -546,7 +546,7 @@ class ProductsController extends Controller
 
 
             // Check if the selected product `product_id` with that selected `size` have available `stock` in `products_attributes` table
-            $getProductStock = ProductsAttribute::getProductStock($data['product_id'], $data['size']);
+            $getProductStock = ProductsAttribute::getProductStock($data['product_id']);
 
             if ($getProductStock < $data['quantity']) { // if the `stock` available (in `products_attributes` table) is less than the ordered quantity by user (the quantity that the user desires)
                 return redirect()->back()->with('error_message', 'Required Quantity is not available!');
@@ -572,7 +572,7 @@ class ProductsController extends Controller
                 $countProducts = Cart::where([
                     'user_id'    => $user_id, // THAT EXACT authenticated/logged in user (using their `user_id` because they're authenticated/logged in)
                     'product_id' => $data['product_id'],
-                    'size'       => $data['size']
+                    // 'size'       => $data['size']
                 ])->count();
             } else { // if the user is NOT logged in (guest)
                 // Check if that guest or NOT logged in user has already THE SAME products `product_id` with THE SAME `size` (in `carts` table) in the Cart i.e. the `carts` table    // When user logins, their `user_id` gets updated (check userLogin() method in UserController.php)
@@ -580,7 +580,7 @@ class ProductsController extends Controller
                 $countProducts = Cart::where([ // We get the count (number) of that specific product `product_id` with that specific `size` to prevent repetition in the `carts` table 
                     'session_id' => $session_id, // THAT EXACT NON-authenticated/NOT logged or Guest user (using their `session_id` because they're NOT authenticated/NOT logged in or Guest)
                     'product_id' => $data['product_id'],
-                    'size'       => $data['size']
+                    // 'size'       => $data['size']
                 ])->count();
             }
 
@@ -592,7 +592,7 @@ class ProductsController extends Controller
                     'session_id' => $session_id, // THAT EXACT NON-authenticated/NOT logged or Guest user (using their `session_id` because they're NOT authenticated/NOT logged in or Guest)
                     'user_id'    => $user_id ?? 0, // if the user is authenticated/logged in, take its $user_id. If not, make it zero 0    // When user logins, their `user_id` gets updated (check userLogin() method in UserController.php)
                     'product_id' => $data['product_id'],
-                    'size'       => $data['size']
+                    // 'size'       => $data['size']
                 ])->increment('quantity', $data['quantity']); // Add the new added quantity (    $data['quantity']    ) to the already existing `quantity` in the `carts` table    // Update Statements: Increment & Decrement: https://laravel.com/docs/9.x/queries#increment-and-decrement
             } else { // if that `product_id` with that `size` was never ordered by that user `session_id` or `user_id` (i.e. that product with that size for that user doesn't exist in the `carts` table), INSERT it into the `carts` table for the first time
                 // INSERT the ordered product `product_id`, the user's session ID `session_id`, `size` and `quantity` in the `carts` table
@@ -601,7 +601,7 @@ class ProductsController extends Controller
                 $item->session_id = $session_id; // $session_id will be stored whether the user is authenticated/logged in or NOT
                 $item->user_id    = $user_id; // depending on the last if statement (whether user is authenticated/logged in or NOT (guest))    // $user_id will be always zero 0 if the user is NOT authenticated/logged in    // When user logins, their `user_id` gets updated (check userLogin() method in UserController.php)
                 $item->product_id = $data['product_id'];
-                $item->size       = $data['size'];
+                // $item->size       = $data['size'];
                 $item->quantity   = $data['quantity'];
 
                 $item->save();
@@ -934,7 +934,7 @@ class ProductsController extends Controller
         $total_weight = 0;
 
         foreach ($getCartItems as $item) {
-            $attrPrice = Product::getDiscountAttributePrice($item['product_id'], $item['size']);
+            $attrPrice = Product::getDiscountAttributePrice($item['product_id']);
             $total_price = $total_price + ($attrPrice['final_price'] * $item['quantity']);
 
 
@@ -948,7 +948,7 @@ class ProductsController extends Controller
         $getCityDestinationId = [];
         // Calculating the Shipping Charges of every one of the user's Delivery Addresses (depending on the 'country' of the Delivery Address)    
         foreach ($deliveryAddresses as $key => $value) {
-            $shippingCharges = ShippingCharge::getShippingCharges($total_weight, $value['country']);
+            $shippingCharges = ShippingCharge::getShippingCharges($total_weight, 'Indonesia');
 
             // Append/Add the Shipping Charge of every Delivery Address (depending on the 'country' of the Delivery Addresss) to the $deliveryAddresses array
             $deliveryAddresses[$key]['shipping_charges'] = $shippingCharges;
@@ -972,29 +972,29 @@ class ProductsController extends Controller
                 // Prevent 'disabled' (`status` = 0) products from being ordered (if it's disabled in admin/products/products.blade.php) by checking the `products` database table
                 $product_status = Product::getProductStatus($item['product_id']);
                 if ($product_status == 0) { // if the product is disabled (`status` = 0)
-                    $message = $item['product']['product_name'] . ' with ' . $item['size'] . ' size is not available. Please remove it from the Cart and choose another product.';
+                    $message = $item['product']['product_name'] . ' with size is not available. Please remove it from the Cart and choose another product.';
                     return redirect('/cart')->with('error_message', $message); // Redirect to the Cart page with an error message
                 }
             }
 
             // Preventing out of stock / sold out products from being ordered (by checking the `products_attributes` database table)
-            $getProductStock = ProductsAttribute::getProductStock($item['product_id'], $item['size']); // A product (`product_id`) with a certain `size`
+            $getProductStock = ProductsAttribute::getProductStock($item['product_id']); // A product (`product_id`) with a certain `size`
             if ($getProductStock == 0) { // if the product's `stock` is 0 zero
-                $message = $item['product']['product_name'] . ' with ' . $item['size'] . ' size is not available. Please remove it from the Cart and choose another product.';
+                $message = $item['product']['product_name'] . ' with  size is not available. Please remove it from the Cart and choose another product.';
                 return redirect('/cart')->with('error_message', $message); // Redirect to the Cart page with an error message
             }
 
             // Preventing the products with 'disabled' Product Attributes (in admin/attributes/add_edit_attributes.blade.php) from being ordered (by checking the `products_attributes` database table)
-            $getAttributeStatus = ProductsAttribute::getAttributeStatus($item['product_id'], $item['size']); // A product (`product_id`) with a certain `size`
+            $getAttributeStatus = ProductsAttribute::getAttributeStatus($item['product_id']); // A product (`product_id`) with a certain `size`
             if ($getAttributeStatus == 0) { // if the product's `stock` is 0 zero
-                $message = $item['product']['product_name'] . ' with ' . $item['size'] . ' size is not available. Please remove it from the Cart and choose another product.';
+                $message = $item['product']['product_name'] . ' with size is not available. Please remove it from the Cart and choose another product.';
                 return redirect('/cart')->with('error_message', $message); // Redirect to the Cart page with an error message
             }
 
             // Note: We also prevent making orders of the products of the Categories that are disabled (`status` = 0) (whether the Category is a Child Category or a Parent Category (Root Category) is disabled) in admin/categories/categories.blade.php
             $getCategoryStatus = Category::getCategoryStatus($item['product']['category_id']);
             if ($getCategoryStatus == 0) { // if the Category is disabled (`status` = 0)
-                $message = $item['product']['product_name'] . ' with ' . $item['size'] . ' size is not available. Please remove it from the Cart and choose another product.';
+                $message = $item['product']['product_name'] . ' with size is not available. Please remove it from the Cart and choose another product.';
                 return redirect('/cart')->with('error_message', $message); // Redirect to the Cart page with an error message
             }
 
@@ -1067,7 +1067,7 @@ class ProductsController extends Controller
             // Get the Total Price (the 'Subtotal')
             $total_price = 0;
             foreach ($getCartItems as $item) {
-                $getDiscountAttributePrice = Product::getDiscountAttributePrice($item['product_id'], $item['size']); // from the `products_attributes` table, not the `products` table
+                $getDiscountAttributePrice = Product::getDiscountAttributePrice($item['product_id']); // from the `products_attributes` table, not the `products` table
                 $total_price = $total_price + ($getDiscountAttributePrice['final_price'] * $item['quantity']);
             }
 
@@ -1075,7 +1075,7 @@ class ProductsController extends Controller
             $shipping_charges = 0;
 
             // Get the Shipping Charge based on the chosen Delivery Address    
-            $shipping_charges = ShippingCharge::getShippingCharges($total_weight, $deliveryAddress['country']);
+            $shipping_charges = ShippingCharge::getShippingCharges($total_weight, 'Indonesia');
 
             // Grand Total (`grand_total`)
             $grand_total = $total_price + $shipping_charges - Session::get('couponAmount');
@@ -1123,7 +1123,7 @@ class ProductsController extends Controller
                 $cartItem->user_id  = Auth::user()->id; // Retrieving The Authenticated User: https://laravel.com/docs/9.x/authentication#retrieving-the-authenticated-user
 
                 // Get some product details of the Cart Items from the `products` table (to be able to fill in data in the `orders_products` table)
-                $getProductDetails = Product::select('product_code', 'product_name', 'product_color', 'admin_id', 'vendor_id')->where('id', $item['product_id'])->first()->toArray();
+                $getProductDetails = Product::select('product_code', 'product_name', 'admin_id', 'vendor_id')->where('id', $item['product_id'])->first()->toArray();
 
                 // Continue filling in data into the `orders_products` table
                 $cartItem->admin_id        = $getProductDetails['admin_id'];
@@ -1138,17 +1138,18 @@ class ProductsController extends Controller
                 $cartItem->product_id      = $item['product_id'];
                 $cartItem->product_code    = $getProductDetails['product_code'];
                 $cartItem->product_name    = $getProductDetails['product_name'];
-                $cartItem->product_color   = $getProductDetails['product_color'];
-                $cartItem->product_size    = $item['size'];
+                $cartItem->item_status    = 'In Progress';
+                // $cartItem->product_color   = $getProductDetails['product_color'];
+                // $cartItem->product_size    = $item['size'];
 
-                $getDiscountAttributePrice = Product::getDiscountAttributePrice($item['product_id'], $item['size']); // from the `products_attributes` table, not the `products` table
+                $getDiscountAttributePrice = Product::getDiscountAttributePrice($item['product_id']); // from the `products_attributes` table, not the `products` table
                 $cartItem->product_price   = $getDiscountAttributePrice['final_price'];
 
 
 
-                $getProductStock = ProductsAttribute::getProductStock($item['product_id'], $item['size']);
+                $getProductStock = ProductsAttribute::getProductStock($item['product_id']);
                 if ($item['quantity'] > $getProductStock) { // if the ordered quantity is greater than the existing stock, cancel the order/opertation
-                    $message = $getProductDetails['product_name'] . ' with ' . $item['size'] . ' size stock is not available/enough for your order. Please reduce its quantity and try again!';
+                    $message = $getProductDetails['product_name'] . ' with size stock is not available/enough for your order. Please reduce its quantity and try again!';
 
                     return redirect('/cart')->with('error_message', $message); // Redirect to the Cart page with an error message
                 }
@@ -1161,11 +1162,10 @@ class ProductsController extends Controller
 
                 // Inventory Management - Reduce inventory/stock when an order gets placed
                 // We wrote the Inventory/Stock Management script in TWO places: in the checkout() method in Front/ProductsController.php and in the success() method in Front/PaypalController.php
-                $getProductStock = ProductsAttribute::getProductStock($item['product_id'], $item['size']); // Get the `stock` of that product `product_id` with that specific `size` from `products_attributes` table
+                $getProductStock = ProductsAttribute::getProductStock($item['product_id']); // Get the `stock` of that product `product_id` with that specific `size` from `products_attributes` table
                 $newStock = $getProductStock - $item['quantity']; // The new product `stock` is the original stock reduced by the order `quantity`
                 ProductsAttribute::where([ // Update the new `quantity` in the `products_attributes` table
                     'product_id' => $item['product_id'],
-                    'size'       => $item['size']
                 ])->update(['stock' => $newStock]);
             }
 
