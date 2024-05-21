@@ -24,16 +24,14 @@ class VendorController extends Controller
             $rules = [
                 'name'          => 'required',
                 'email'         => 'required|email|unique:admins|unique:vendors',
-                'mobile'        => 'required|min:10|numeric|unique:admins|unique:vendors',
-                'accept'        => 'required'
+                'mobile'        => 'required|min:10|numeric|unique:admins|unique:vendors'
             ];
             $customMessages = [
                 'name.required'             => 'Name is required',
                 'email.required'            => 'Email is required',
                 'email.unique'              => 'Email alreay exists',
                 'mobile.required'           => 'Mobile is required',
-                'mobile.unique'             => 'Mobile alreay exists',
-                'accept.required'           => 'Please accept Terms & Conditions',
+                'mobile.unique'             => 'Mobile alreay exists'
             ];
             $validator = Validator::make($data, $rules, $customMessages);
 

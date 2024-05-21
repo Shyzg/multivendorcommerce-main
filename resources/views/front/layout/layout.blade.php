@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Laravel Multi Vendor E-commerce Template - By Multi-vendor E-commerce Application Channel</title>
+    <title>NutriBites</title>
     <!-- Standard Favicon -->
     <link href="favicon.ico" rel="shortcut icon">
     <!-- Base Google Font for Web-app -->
@@ -119,7 +119,7 @@
             }
         });
     </script>
-    @include('front.layout.scripts') {{-- scripts.blade.php --}}
+    @include('front.layout.scripts')
 </body>
 
 </html>

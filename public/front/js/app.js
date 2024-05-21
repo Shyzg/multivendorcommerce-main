@@ -120,22 +120,6 @@ $(function () {
     };
 
     /**
-     * Attach Click Event on Mini Cart Anchor
-     */
-    const attachClickOnMiniCart = function () {
-        //  let $href = $('#mini-cart-trigger'.attr('href');
-        //   window.location.href = $href; //causes the browser to refresh and
-        // load the requested url
-        $('#mini-cart-trigger').on('click', function () {
-            $('.mini-cart-wrapper').addClass('mini-cart-open');
-        });
-
-        $('#mini-cart-close').on('click', function () {
-            $('.mini-cart-wrapper').removeClass('mini-cart-open');
-        });
-    };
-
-    /**
      * Attach Click Event on VMenu
      */
     const attachClickOnVMenu = function () {
@@ -321,8 +305,6 @@ $(function () {
     $(function () {
         //  Attach Click Event on Search Button
         attachClickOnResponsiveSearchForm();
-        //  Attach Click Event on Mini Cart Anchor
-        attachClickOnMiniCart();
         // Attach Click Event on VMenu
         attachClickOnVMenu();
        // Manually Restart Pace-js when we change any tab

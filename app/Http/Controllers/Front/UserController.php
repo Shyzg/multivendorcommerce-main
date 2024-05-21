@@ -25,10 +25,7 @@ class UserController extends Controller
                 'name'     => 'required|string|max:100',
                 'mobile'   => 'required|numeric|digits:11',
                 'email'    => 'required|email|max:150|unique:users',
-                'password' => 'required|min:6',
-                'accept'   => 'required'
-            ], [
-                'accept.required' => 'Please accept our Terms & Conditions'
+                'password' => 'required|min:6'
             ]);
 
             if ($validator->passes()) {
