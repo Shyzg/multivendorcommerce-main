@@ -24,12 +24,7 @@ class VendorsBusinessDetailsTableSeeder extends Seeder
                 'shop_country'            => 'Egypt',
                 'shop_mobile'             => '1253247745',
                 'shop_website'            => 'amazon.com.eg',
-                'shop_email'              => 'john@admin.com',
-                'address_proof'           => 'Passport',
-                'address_proof_image'     => 'test.jpg',
-                'business_license_number' => '1234556',
-                'gst_number'              => '446444664',
-                'pan_number'              => '2135446',
+                'shop_email'              => 'john@admin.com'
             ],
         ];
 

@@ -64,15 +64,15 @@
             </div>
         </li>
         <li class="nav-item">
-            <a @if (Session::get('page')=='view_admins' || Session::get('page')=='view_vendors' ) style="background: #052CA3 !important; color: #FFF !important" @endif class="nav-link" data-toggle="collapse" href="#ui-admins" aria-expanded="false" aria-controls="ui-admins">
+            <a @if (Session::get('page')=='users' || Session::get('page')=='view_vendors' ) style="background: #052CA3 !important; color: #FFF !important" @endif class="nav-link" data-toggle="collapse" href="#ui-admins" aria-expanded="false" aria-controls="ui-admins">
                 <i class="icon-layout menu-icon"></i>
-                <span class="menu-title">Admin Management</span>
+                <span class="menu-title">User Management</span>
                 <i class="menu-arrow"></i>
             </a>
             <div class="collapse" id="ui-admins">
                 <ul class="nav flex-column sub-menu" style="background: #fff !important; color: #052CA3 !important">
-                    <li class="nav-item"> <a @if (Session::get('page')=='view_admins' ) style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif class="nav-link" href="{{ url('admin/admins/admin') }}">Admins</a></li>
-                    <li class="nav-item"> <a @if (Session::get('page')=='view_vendors' ) style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif class="nav-link" href="{{ url('admin/admins/vendor') }}">Vendors</a></li>
+                    <li class="nav-item"> <a @if (Session::get('page')=='view_admins' ) style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif class="nav-link" href="{{ url('admin/admins/admin') }}">Vendors</a></li>
+                    <li class="nav-item"> <a @if (Session::get('page')=='users' ) style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif class="nav-link" href="{{ url('admin/admins/vendor') }}">Users</a></li>
                 </ul>
             </div>
         </li>
@@ -100,18 +100,6 @@
             <div class="collapse" id="ui-orders">
                 <ul class="nav flex-column sub-menu" style="background: #fff !important; color: #052CA3 !important">
                     <li class="nav-item"> <a @if (Session::get('page')=='orders' ) style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif class="nav-link" href="{{ url('admin/orders') }}">Orders</a></li>
-                </ul>
-            </div>
-        </li>
-        <li class="nav-item">
-            <a @if (Session::get('page')=='users' ) style="background: #052CA3 !important; color: #FFF !important" @endif class="nav-link" data-toggle="collapse" href="#ui-users" aria-expanded="false" aria-controls="ui-users">
-                <i class="icon-layout menu-icon"></i>
-                <span class="menu-title">Users Management</span>
-                <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="ui-users">
-                <ul class="nav flex-column sub-menu" style="background: #fff !important; color: #052CA3 !important">
-                    <li class="nav-item"> <a @if (Session::get('page')=='users' ) style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif class="nav-link" href="{{ url('admin/users') }}">Users</a></li>
                 </ul>
             </div>
         </li>

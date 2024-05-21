@@ -218,8 +218,7 @@ class AdminController extends Controller
                 $rules = [
                     'shop_name'           => 'required|regex:/^[\pL\s\-]+$/u',
                     'shop_city'           => 'required|regex:/^[\pL\s\-]+$/u',
-                    'shop_mobile'         => 'required|numeric',
-                    'address_proof'       => 'required',
+                    'shop_mobile'         => 'required|numeric'
                 ];
                 $customMessages = [
                     'shop_name.required'           => 'Name is required',
@@ -232,22 +231,6 @@ class AdminController extends Controller
 
                 $this->validate($request, $rules, $customMessages);
 
-                if ($request->hasFile('address_proof_image')) {
-                    $image_tmp = $request->file('address_proof_image');
-
-                    if ($image_tmp->isValid()) {
-                        $extension = $image_tmp->getClientOriginalExtension();
-                        $imageName = rand(111, 99999) . '.' . $extension;
-                        $imagePath = 'admin/images/proofs/' . $imageName;
-
-                        Image::make($image_tmp)->save($imagePath);
-                    }
-                } else if (!empty($data['current_address_proof'])) {
-                    $imageName = $data['current_address_proof'];
-                } else {
-                    $imageName = '';
-                }
-
                 $vendorCount = VendorsBusinessDetail::where('vendor_id', Auth::guard('admin')->user()->vendor_id)->count();
 
                 if ($vendorCount > 0) {
@@ -258,12 +241,7 @@ class AdminController extends Controller
                         'shop_address'            => $data['shop_address'],
                         'shop_city'               => $data['shop_city'],
                         'shop_state'              => $data['shop_state'],
-                        'shop_country'            => $data['shop_country'],
-                        'business_license_number' => $data['business_license_number'],
-                        'gst_number'              => $data['gst_number'],
-                        'pan_number'              => $data['pan_number'],
-                        'address_proof'           => $data['address_proof'],
-                        'address_proof_image'     => $imageName,
+                        'shop_country'            => $data['shop_country']
                     ]);
                 } else {
                     VendorsBusinessDetail::insert([
@@ -274,12 +252,7 @@ class AdminController extends Controller
                         'shop_address'            => $data['shop_address'],
                         'shop_city'               => $data['shop_city'],
                         'shop_state'              => $data['shop_state'],
-                        'shop_country'            => $data['shop_country'],
-                        'business_license_number' => $data['business_license_number'],
-                        'gst_number'              => $data['gst_number'],
-                        'pan_number'              => $data['pan_number'],
-                        'address_proof'           => $data['address_proof'],
-                        'address_proof_image'     => $imageName,
+                        'shop_country'            => $data['shop_country']
                     ]);
                 }
 
