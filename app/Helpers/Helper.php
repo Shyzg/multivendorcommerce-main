@@ -20,7 +20,7 @@ function getCartItems()
     if (\Illuminate\Support\Facades\Auth::check()) {
         $getCartItems = Cart::with([
             'product' => function ($query) {
-                $query->select('id', 'category_id', 'product_name', 'product_code', 'product_image');
+                $query->select('id', 'category_id', 'product_name', 'product_image');
             }
         ])->orderBy('id', 'Desc')->where([
             'user_id'    => \Illuminate\Support\Facades\Auth::user()->id
@@ -28,7 +28,7 @@ function getCartItems()
     } else {
         $getCartItems = Cart::with([
             'product' => function ($query) {
-                $query->select('id', 'category_id', 'product_name', 'product_code', 'product_image');
+                $query->select('id', 'category_id', 'product_name', 'product_image');
             }
         ])->orderBy('id', 'Desc')->where([
             'session_id' => \Illuminate\Support\Facades\Session::get('session_id')

@@ -42,7 +42,7 @@
                                         <td>{{ $order['email'] }}</td>
                                         <td>
                                             @foreach ($order['orders_products'] as $product)
-                                            {{ $product['product_code'] }} ({{ $product['product_qty'] }})
+                                            {{ $product['product_name'] }} ({{ $product['product_qty'] }})
                                             <br>
                                             @endforeach
                                         </td>

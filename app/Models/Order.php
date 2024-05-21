@@ -61,7 +61,6 @@ class Order extends Model
 
         foreach ($orderDetails['order_items'] as $key => $item) {                         // 'order_items'   is the Shiprocket's JSON request key/name    // 'order_items' is the Relationship method name in Order.php model    // $key    denotes the 1st order, 2nd order, 3rd order, ...etc
             $orderDetails['order_items'][$key]['name']          = $item['product_name'];  // 'name'          is the Shiprocket's JSON request key/name, while 'product_name'  is our `orders_products` table column name
-            $orderDetails['order_items'][$key]['sku']           = $item['product_code'];  // 'sku'           is the Shiprocket's JSON request key/name, while 'product_code'  is our `orders_products` table column name
             $orderDetails['order_items'][$key]['units']         = $item['product_qty'];   // 'units'         is the Shiprocket's JSON request key/name, while 'product_qty'   is our `orders_products` table column name
             $orderDetails['order_items'][$key]['selling_price'] = $item['product_price']; // 'selling_price' is the Shiprocket's JSON request key/name, while 'product_price' is our `orders_products` table column name
             $orderDetails['order_items'][$key]['discount']      = '';                     // 'discount'      is the Shiprocket's JSON request key/name

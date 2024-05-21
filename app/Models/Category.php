@@ -21,7 +21,7 @@ class Category extends Model
 
     public function subCategories()
     {
-        return $this->hasMany('App\Models\Category', 'parent_id')->where('status', 1);
+        return $this->hasMany('App\Models\Category', 'parent_id');
     }
 
     public static function categoryDetails($url)
@@ -64,12 +64,5 @@ class Category extends Model
         $getCategoryName = Category::select('category_name')->where('id', $category_id)->first();
 
         return $getCategoryName->category_name ?? null;
-    }
-
-    public static function getCategoryStatus($category_id)
-    {
-        $getCategoryStatus = Category::select('status')->where('id', $category_id)->first();
-
-        return $getCategoryStatus->status;
     }
 }

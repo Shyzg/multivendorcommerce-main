@@ -21,12 +21,10 @@ return new class extends Migration
             $table->integer('admin_id');
             $table->string('admin_type');
             $table->string('product_name');
-            $table->string('product_code');
             $table->float('product_price');
             $table->float('product_discount');
             $table->integer('product_weight');
             $table->string('product_image')->nullable();
-            $table->string('group_code')->nullable();
             $table->text('description')->nullable();
             $table->enum('is_featured', ['No', 'Yes']);
             $table->tinyInteger('status');

@@ -22,7 +22,6 @@ return new class extends Migration
             $table->double('category_discount')->default(0);
             $table->text('description')->nullable();
             $table->string('url');
-            $table->tinyInteger('status')->default(1);
             $table->timestamps();
         });
     }

@@ -15,8 +15,7 @@ class CountriesSeeder extends Seeder
     {
         Country::create([
             'country_code' => 'IND',
-            'country_name' => 'Indonesia',
-            'status' => (boolean) true
+            'country_name' => 'Indonesia'
         ]);
     }
 }

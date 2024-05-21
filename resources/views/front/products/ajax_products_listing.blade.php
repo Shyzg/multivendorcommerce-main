@@ -33,11 +33,6 @@
                 </div>
                 <div class="item-content">
                     <div class="what-product-is">
-                        <ul class="bread-crumb">
-                            <li class="has-separator">
-                                <a href="shop-v1-root-category.html">{{ $product['product_code'] }}</a>
-                            </li>
-                        </ul>
                         <h6 class="item-title">
                             <a href="{{ url('product/' . $product['id']) }}">{{ $product['product_name'] }}</a>
                         </h6>

@@ -138,10 +138,6 @@
                     </div>
                     <div class="section-4-sku-information u-s-p-y-14">
                         <h6 class="information-heading u-s-m-b-8">Sku Information:</h6>
-                        <div class="left">
-                            <span>Product Code:</span>
-                            <span>{{ $productDetails['product_code'] }}</span>
-                        </div>
                         <div class="availability">
                             <span>Availability:</span>
                             @if ($totalStock > 0)
@@ -167,23 +163,7 @@
                     <form action="{{ url('cart/add') }}" method="Post" class="post-form">
                         @csrf
                         <input type="hidden" name="product_id" value="{{ $productDetails['id'] }}">
-                        <div class="section-5-product-variants u-s-p-y-14">
-                            @if (count($groupProducts) > 0)
-                            <div>
-                                <div><strong>Product Colors</strong></div>
-                                <div style="margin-top: 10px">
-                                    @foreach ($groupProducts as $product)
-                                    <a href="{{ url('product/' . $product['id']) }}">
-                                        <img style="width: 80px" src="{{ asset('front/images/product_images/small/' . $product['product_image']) }}">
-                                    </a>
-                                    @endforeach
-                                </div>
-                            </div>
-                            @endif
-                        </div>
                         <div class="section-6-social-media-quantity-actions u-s-p-y-14">
-
-
                             <div class="quantity-wrapper u-s-m-b-22">
                                 <span>Quantity:</span>
                                 <div class="quantity">

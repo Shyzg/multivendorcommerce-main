@@ -17,8 +17,8 @@
 
                     {{-- Laravel barcode/QR code generation package (to show barcodes/QR codes for both Product ID and Product Code): https://github.com/milon/barcode --}}
                     @php
-                        echo DNS1D::getBarcodeHTML($orderDetails['id'], 'C39'); // This is the product `id` Barcode
-                        // echo DNS2D::getBarcodeHTML($orderDetails['id'], 'QRCODE'); // This is the product `id` QR code
+                    echo DNS1D::getBarcodeHTML($orderDetails['id'], 'C39'); // This is the product `id` Barcode
+                    // echo DNS2D::getBarcodeHTML($orderDetails['id'], 'QRCODE'); // This is the product `id` QR code
                     @endphp
                 </h3>
             </div>
@@ -29,16 +29,16 @@
                         <strong>Billed To:</strong><br>
                         {{ $userDetails['name'] }}<br>
                         @if (!empty($userDetails['address']))
-                            {{ $userDetails['address'] }}<br>
+                        {{ $userDetails['address'] }}<br>
                         @endif
                         @if (!empty($userDetails['city']))
-                            {{ $userDetails['city'] }}<br>
+                        {{ $userDetails['city'] }}<br>
                         @endif
                         @if (!empty($userDetails['state']))
-                            {{ $userDetails['state'] }}<br>
+                        {{ $userDetails['state'] }}<br>
                         @endif
                         @if (!empty($userDetails['country']))
-                            {{ $userDetails['country'] }}<br>
+                        {{ $userDetails['country'] }}<br>
                         @endif
                         {{ $userDetails['mobile'] }}<br>
                     </address>
@@ -82,7 +82,6 @@
                         <table class="table table-condensed">
                             <thead>
                                 <tr>
-                                    <td><strong>Product Code</strong></td>
                                     <td class="text-center"><strong>Size</strong></td>
                                     <td class="text-center"><strong>Price</strong></td>
                                     <td class="text-center"><strong>Quantity</strong></td>
@@ -94,31 +93,23 @@
 
                                 {{-- Calculate the Subtotal --}}
                                 @php
-                                    $subTotal = 0;
+                                $subTotal = 0;
                                 @endphp
 
                                 @foreach ($orderDetails['orders_products'] as $product)
-                                    <tr>
-                                        <td>
-                                            {{ $product['product_code'] }}
+                                <tr>
+                                    <td class="text-center">{{ $product['product_size'] }}</td>
+                                    <td class="text-center">INR {{ $product['product_price'] }}</td>
+                                    <td class="text-center">{{ $product['product_qty'] }}</td>
+                                    <td class="text-right">INR
+                                        {{ $product['product_price'] * $product['product_qty'] }}
+                                    </td>
+                                </tr>
 
-                                            {{-- Laravel barcode/QR code generation package (to show barcodes/QR codes for both Product ID and Product Code): https://github.com/milon/barcode --}}
-                                            @php
-                                                echo DNS1D::getBarcodeHTML($product['product_code'], 'C39'); // This is the product `product_code` Barcode
-                                                // echo DNS2D::getBarcodeHTML($product['product_code'], 'QRCODE'); // This is the product `product_code` QR code
-                                            @endphp
-                                        </td>
-                                        <td class="text-center">{{ $product['product_size'] }}</td>
-                                        <td class="text-center">INR {{ $product['product_price'] }}</td>
-                                        <td class="text-center">{{ $product['product_qty'] }}</td>
-                                        <td class="text-right">INR
-                                            {{ $product['product_price'] * $product['product_qty'] }}</td>
-                                    </tr>
-
-                                    {{-- Continue: Calculate the Subtotal --}}
-                                    @php
-                                        $subTotal = $subTotal + $product['product_price'] * $product['product_qty'];
-                                    @endphp
+                                {{-- Continue: Calculate the Subtotal --}}
+                                @php
+                                $subTotal = $subTotal + $product['product_price'] * $product['product_qty'];
+                                @endphp
                                 @endforeach
 
                                 <tr>
@@ -148,7 +139,7 @@
                                         <br>
 
                                         @if ($orderDetails['payment_method'] == 'COD')
-                                            <font color=red>(Already Paid)</font>
+                                        <font color=red>(Already Paid)</font>
                                         @endif
                                     </td>
                                 </tr>

@@ -201,7 +201,6 @@
                             <table class="table table-striped table-borderless">
                                 <tr class="table-danger">
                                     <th>Product Image</th>
-                                    <th>Code</th>
                                     <th>Name</th>
                                     <th>Unit Price</th>
                                     <th>Product Qty</th>
@@ -224,7 +223,6 @@
                                             <img src="{{ asset('front/images/product_images/small/' . $getProductImage) }}">
                                         </a>
                                     </td>
-                                    <td>{{ $product['product_code'] }}</td>
                                     <td>{{ $product['product_name'] }}</td>
                                     <td>{{ $product['product_price'] }}</td>
                                     <td>{{ $product['product_qty'] }}</td>

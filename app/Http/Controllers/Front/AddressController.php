@@ -54,7 +54,7 @@ class AddressController extends Controller
                 }
 
                 $deliveryAddresses = DeliveryAddress::deliveryAddresses();
-                $countries = Country::where('status', 1)->get()->toArray();
+                $countries = Country::get()->toArray();
                 $cities =  City::get()->toArray();
                 $provinces = Province::get()->toArray();
 
@@ -78,7 +78,7 @@ class AddressController extends Controller
             DeliveryAddress::where('id', $data['addressid'])->delete();
 
             $deliveryAddresses = DeliveryAddress::deliveryAddresses();
-            $countries = Country::where('status', 1)->get()->toArray();
+            $countries = Country::get()->toArray();
             $cities =  City::get()->toArray();
             $provinces = Province::get()->toArray();
 

@@ -34,13 +34,12 @@ class ProductsController extends Controller
             $url          = $data['url'];
             $_GET['sort'] = $data['sort'];
             $categoryCount = Category::where([
-                'url'    => $url,
-                'status' => 1
+                'url'    => $url
             ])->count();
 
             if ($categoryCount > 0) {
                 $categoryDetails = Category::categoryDetails($url);
-                $categoryProducts = Product::whereIn('category_id', $categoryDetails['catIds'])->where('status', 1);
+                $categoryProducts = Product::whereIn('category_id', $categoryDetails['catIds']);
 
                 if (isset($_GET['sort']) && !empty($_GET['sort'])) {
                     if ($_GET['sort'] == 'product_latest') {
@@ -89,7 +88,6 @@ class ProductsController extends Controller
                         'products.category_id',
                         'products.vendor_id',
                         'products.product_name',
-                        'products.product_code',
                         'products.product_price',
                         'products.product_discount',
                         'products.product_image',
@@ -111,7 +109,6 @@ class ProductsController extends Controller
                         'products.category_id',
                         'products.vendor_id',
                         'products.product_name',
-                        'products.product_code',
                         'products.product_price',
                         'products.product_discount',
                         'products.product_image',
@@ -133,7 +130,6 @@ class ProductsController extends Controller
                         'products.category_id',
                         'products.vendor_id',
                         'products.product_name',
-                        'products.product_code',
                         'products.product_price',
                         'products.product_discount',
                         'products.product_image',
@@ -155,7 +151,6 @@ class ProductsController extends Controller
                         'products.category_id',
                         'products.vendor_id',
                         'products.product_name',
-                        'products.product_code',
                         'products.product_price',
                         'products.product_discount',
                         'products.product_image',
@@ -177,7 +172,6 @@ class ProductsController extends Controller
                         'products.category_id',
                         'products.vendor_id',
                         'products.product_name',
-                        'products.product_code',
                         'products.product_price',
                         'products.product_discount',
                         'products.product_image',
@@ -189,7 +183,6 @@ class ProductsController extends Controller
                         'products.category_id'
                     )->where(function ($query) use ($search_product) {
                         $query->where('products.product_name',    'like', '%' . $search_product . '%')
-                            ->orWhere('products.product_code',    'like', '%' . $search_product . '%')
                             ->orWhere('products.description',     'like', '%' . $search_product . '%')
                             ->orWhere('categories.category_name', 'like', '%' . $search_product . '%');
                     })->where('products.status', 1);
@@ -205,13 +198,12 @@ class ProductsController extends Controller
             } else {
                 $url = \Illuminate\Support\Facades\Route::getFacadeRoot()->current()->uri();
                 $categoryCount = Category::where([
-                    'url'    => $url,
-                    'status' => 1
+                    'url'    => $url
                 ])->count();
 
                 if ($categoryCount > 0) {
                     $categoryDetails = Category::categoryDetails($url);
-                    $categoryProducts = Product::whereIn('category_id', $categoryDetails['catIds'])->where('status', 1);
+                    $categoryProducts = Product::whereIn('category_id', $categoryDetails['catIds']);
 
                     if (isset($_GET['sort']) && !empty($_GET['sort'])) {
                         if ($_GET['sort'] == 'product_latest') {
@@ -253,18 +245,9 @@ class ProductsController extends Controller
 
         Session::put('session_id', $session_id);
 
-        $groupProducts = array();
-
-        if (!empty($productDetails['group_code'])) {
-            $groupProducts = Product::select('id', 'product_image')->where('id', '!=', $id)->where([
-                'group_code' => $productDetails['group_code'],
-                'status'     => 1
-            ])->get()->toArray();
-        }
-
         $totalStock = ProductsAttribute::where('product_id', $id)->sum('stock');
 
-        return view('front.products.detail')->with(compact('productDetails', 'categoryDetails', 'totalStock', 'groupProducts'));
+        return view('front.products.detail')->with(compact('productDetails', 'categoryDetails', 'totalStock'));
     }
 
     public function getProductPrice(Request $request)
@@ -587,14 +570,6 @@ class ProductsController extends Controller
                 return redirect('/cart')->with('error_message', $message);
             }
 
-            $getCategoryStatus = Category::getCategoryStatus($item['product']['category_id']);
-
-            if ($getCategoryStatus == 0) {
-                $message = $item['product']['product_name'] . ' with size is not available. Please remove it from the Cart and choose another product.';
-
-                return redirect('/cart')->with('error_message', $message);
-            }
-
             if (empty($data['address_id'])) {
                 $message = 'Please select Delivery Address!';
 
@@ -673,7 +648,7 @@ class ProductsController extends Controller
                 $cartItem = new OrdersProduct;
                 $cartItem->order_id = $order_id;
                 $cartItem->user_id  = Auth::user()->id;
-                $getProductDetails = Product::select('product_code', 'product_name', 'admin_id', 'vendor_id')->where('id', $item['product_id'])->first()->toArray();
+                $getProductDetails = Product::select('product_name', 'admin_id', 'vendor_id')->where('id', $item['product_id'])->first()->toArray();
                 $cartItem->admin_id        = $getProductDetails['admin_id'];
                 $cartItem->vendor_id       = $getProductDetails['vendor_id'];
 
@@ -683,7 +658,6 @@ class ProductsController extends Controller
                 }
 
                 $cartItem->product_id      = $item['product_id'];
-                $cartItem->product_code    = $getProductDetails['product_code'];
                 $cartItem->product_name    = $getProductDetails['product_name'];
                 $cartItem->item_status    = 'In Progress';
                 $getDiscountAttributePrice = Product::getDiscountAttributePrice($item['product_id']);

@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('country_code');
             $table->string('country_name');
-            $table->boolean('status')->default(true);
             $table->timestamps();
         });
     }

@@ -14,47 +14,39 @@ class CategoriesTableSeeder extends Seeder
      */
     public function run()
     {
-        //
-
-        // Databas Seeding
-        // Note: Check DatabaseSeeder.php
         $categoryRecords = [
             [
                 'id'                => 1,
-                'parent_id'         => 0, // 0 because like Men, Women categories that don't have a prent category
-                'section_id'        => 1, // 1 is the parent 'Cloting' section
+                'parent_id'         => 0,
+                'section_id'        => 1,
                 'category_name'     => 'Men',
                 'category_image'    => '',
                 'category_discount' => 0,
                 'description'       => '',
                 'url'               => 'men',
-                'status'            => 1,
             ],
             [
                 'id'                => 2,
-                'parent_id'         => 0, // 0 because like Men, Women categories that don't have a prent category
-                'section_id'        => 1, // 1 is the parent 'Cloting' section
+                'parent_id'         => 0,
+                'section_id'        => 1,
                 'category_name'     => 'Women',
                 'category_image'    => '',
                 'category_discount' => 0,
                 'description'       => '',
                 'url'               => 'women',
-                'status'            => 1,
             ],
             [
                 'id'                => 3,
-                'parent_id'         => 0, // 0 because like Men, Women categories that don't have a prent category
-                'section_id'        => 1, // 1 is the parent 'Cloting' section
+                'parent_id'         => 0,
+                'section_id'        => 1,
                 'category_name'     => 'Kids',
                 'category_image'    => '',
                 'category_discount' => 0,
                 'description'       => '',
                 'url'               => 'kids',
-                'status'            => 1,
             ],
         ];
 
-        // Note: Check DatabaseSeeder.php
         \App\Models\Category::insert($categoryRecords);
     }
 }

@@ -18,38 +18,12 @@ class CouponsController extends Controller
         $vendor_id = Auth::guard('admin')->user()->vendor_id;
 
         if ($adminType == 'vendor') {
-            $vendorStatus = Auth::guard('admin')->user()->status;
-
-            if ($vendorStatus == 0) {
-                return redirect('admin/update-vendor-details/personal')->with('error_message', 'Your Vendor Account is not approved yet. Please make sure to fill your valid personal, business and bank details');
-            }
-
             $coupons = Coupon::where('vendor_id', $vendor_id)->get()->toArray();
         } else {
             $coupons = Coupon::get()->toArray();
         }
 
         return view('admin.coupons.coupons')->with(compact('coupons'));
-    }
-
-    public function updateCouponStatus(Request $request)
-    {
-        if ($request->ajax()) {
-            $data = $request->all();
-
-            if ($data['status'] == 'Active') {
-                $status = 0;
-            } else {
-                $status = 1;
-            }
-
-            Coupon::where('id', $data['coupon_id'])->update(['status' => $status]);
-
-            return response()->json([
-                'status'   => $status,
-                'coupon_id' => $data['coupon_id']
-            ]);
-        }
     }
 
     public function deleteCoupon($id)

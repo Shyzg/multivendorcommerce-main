@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Auth;
 use Intervention\Image\Facades\Image;
 use App\Models\Product;
 use App\Models\ProductsImage;
-use App\Models\ProductsFilter;
 use App\Models\ProductsAttribute;
 
 class ProductsController extends Controller
@@ -83,19 +82,15 @@ class ProductsController extends Controller
 
         if ($request->isMethod('post')) {
             $data = $request->all();
-
             $rules = [
                 'category_id'   => 'required',
                 'product_name'  => 'required',
-                'product_code'  => 'required|regex:/^\w+$/',
                 'product_price' => 'required|numeric'
             ];
             $customMessages = [
                 'category_id.required'   => 'Category is required',
                 'product_name.required'  => 'Product Name is required',
                 'product_name.regex'     => 'Valid Product Name is required',
-                'product_code.required'  => 'Product Code is required',
-                'product_code.regex'     => 'Valid Product Code is required',
                 'product_price.required' => 'Product Price is required',
                 'product_price.numeric'  => 'Valid Product Price is required'
             ];
@@ -122,7 +117,6 @@ class ProductsController extends Controller
             $categoryDetails = \App\Models\Category::find($data['category_id']);
             $product->section_id  = $categoryDetails['section_id'];
             $product->category_id = $data['category_id'];
-            $product->group_code  = $data['group_code'];
 
             if ($id == '') {
                 $adminType = Auth::guard('admin')->user()->type;
@@ -147,7 +141,6 @@ class ProductsController extends Controller
             }
 
             $product->product_name     = $data['product_name'];
-            $product->product_code     = $data['product_code'];
             $product->product_price    = $data['product_price'];
             $product->product_discount = $data['product_discount'];
             $product->product_weight   = $data['product_weight'];
@@ -206,7 +199,7 @@ class ProductsController extends Controller
     {
         Session::put('page', 'products');
 
-        $product = Product::select('id', 'product_name', 'product_code', 'product_price', 'product_image')->with('attributes')->find($id);
+        $product = Product::select('id', 'product_name', 'product_price', 'product_image')->with('attributes')->find($id);
 
         if ($request->isMethod('post')) {
             $data = $request->all();
@@ -280,7 +273,7 @@ class ProductsController extends Controller
     {
         Session::put('page', 'products');
 
-        $product = Product::select('id', 'product_name', 'product_code', 'product_price', 'product_image')->with('images')->find($id);
+        $product = Product::select('id', 'product_name', 'product_price', 'product_image')->with('images')->find($id);
 
         if ($request->isMethod('post')) {
             $data = $request->all();

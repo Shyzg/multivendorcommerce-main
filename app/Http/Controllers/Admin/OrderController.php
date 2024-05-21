@@ -13,7 +13,6 @@ use App\Models\OrdersLog;
 use App\Models\OrderStatus;
 use App\Models\OrderItemStatus;
 
-
 class OrderController extends Controller
 {
     public function orders()

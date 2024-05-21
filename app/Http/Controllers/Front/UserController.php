@@ -137,7 +137,7 @@ class UserController extends Controller
                 ]);
             }
         } else {
-            $countries = \App\Models\Country::where('status', 1)->get()->toArray();
+            $countries = \App\Models\Country::get()->toArray();
             $cities = \App\Models\City::get()->toArray();
             $province = \App\Models\Province::get()->toArray();
 

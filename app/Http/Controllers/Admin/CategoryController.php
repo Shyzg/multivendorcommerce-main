@@ -9,7 +9,6 @@ use Intervention\Image\Facades\Image;
 use App\Models\Category;
 use App\Models\Section;
 
-
 class CategoryController extends Controller
 {
     public function categories()
@@ -19,26 +18,6 @@ class CategoryController extends Controller
         $categories = Category::with(['section', 'parentCategory'])->get()->toArray();
 
         return view('admin.categories.categories')->with(compact('categories'));
-    }
-
-    public function updateCategoryStatus(Request $request)
-    {
-        if ($request->ajax()) {
-            $data = $request->all();
-
-            if ($data['status'] == 'Active') {
-                $status = 0;
-            } else {
-                $status = 1;
-            }
-
-            Category::where('id', $data['category_id'])->update(['status' => $status]);
-
-            return response()->json([
-                'status'      => $status,
-                'category_id' => $data['category_id']
-            ]);
-        }
     }
 
     public function addEditCategory(Request $request, $id = null)
@@ -103,7 +82,6 @@ class CategoryController extends Controller
             $category->category_discount = $data['category_discount'];
             $category->description       = $data['description'];
             $category->url               = $data['url'];
-            $category->status            = 1;
             $category->save();
 
             return redirect('admin/categories')->with('success_message', $message);
