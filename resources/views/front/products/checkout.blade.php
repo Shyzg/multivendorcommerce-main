@@ -24,7 +24,7 @@
                             <h4 class="section-h4">Delivery Addresses</h4>
                             @foreach ($deliveryAddresses as $address)
                             <div class="control-group" style="float: left; margin-right: 5px">
-                                <input type="radio" id="address{{ $address['id'] }}" name="address_id" value="{{ $address['id'] }}" shipping_charges="{{ $address['shipping_charges'] }}" total_price="{{ $total_price }}" coupon_amount="{{ \Illuminate\Support\Facades\Session::get('couponAmount') }}" codpincodeCount="{{ $address['codpincodeCount'] }}" prepaidpincodeCount="{{ $address['prepaidpincodeCount'] }}" checked>
+                                <input type="radio" id="address{{ $address['id'] }}" name="address_id" value="{{ $address['id'] }}" shipping_charges="{{ $address['shipping_charges'] }}" total_price="{{ $total_price }}" checked>
                             </div>
                             <div>
                                 <label class="control-label" for="address{{ $address['id'] }}">

@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('city')->nullable();
             $table->string('state')->nullable();
             $table->string('country')->nullable();
-            $table->string('pincode')->nullable();
             $table->string('mobile');
             $table->string('email')->unique();
             $table->timestamps();

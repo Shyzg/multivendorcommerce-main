@@ -15,7 +15,8 @@
                         {{-- Displaying The Validation Errors: https://laravel.com/docs/9.x/validation#quick-displaying-the-validation-errors AND https://laravel.com/docs/9.x/blade#validation-errors --}}
                         {{-- Determining If An Item Exists In The Session (using has() method): https://laravel.com/docs/9.x/session#determining-if-an-item-exists-in-the-session --}}
                         {{-- Our Bootstrap success message in case of updating admin password is successful: --}}
-                        @if (Session::has('success_message')) <!-- Check AdminController.php, updateAdminPassword() method -->
+                        @if (Session::has('success_message'))
+                        <!-- Check AdminController.php, updateAdminPassword() method -->
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                             <strong>Success:</strong> {{ Session::get('success_message') }}
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -36,14 +37,11 @@
                                         <th>City</th>
                                         <th>State</th>
                                         <th>Country</th>
-                                        <th>Pincode</th>
                                         <th>Mobile</th>
                                         <th>Email</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-
-
                                     @foreach ($users as $user)
                                     <tr>
                                         <td>{{ $user['id'] }}</td>
@@ -52,7 +50,6 @@
                                         <td>{{ $user['city'] }}</td>
                                         <td>{{ $user['state'] }}</td>
                                         <td>{{ $user['country'] }}</td>
-                                        <td>{{ $user['pincode'] }}</td>
                                         <td>{{ $user['mobile'] }}</td>
                                         <td>{{ $user['email'] }}</td>
                                     </tr>
@@ -71,7 +68,8 @@
     <!-- partial:../../partials/_footer.html -->
     <footer class="footer">
         <div class="d-sm-flex justify-content-center justify-content-sm-between">
-            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2022. All rights reserved.</span>
+            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2022. All rights
+                reserved.</span>
         </div>
     </footer>
     <!-- partial -->

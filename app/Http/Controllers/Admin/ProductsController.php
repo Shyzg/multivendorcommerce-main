@@ -173,9 +173,8 @@ class ProductsController extends Controller
         }
 
         $categories = \App\Models\Section::with('categories')->get()->toArray();
-        $brands = \App\Models\Brand::where('status', 1)->get()->toArray();
 
-        return view('admin.products.add_edit_product')->with(compact('title', 'product', 'categories', 'brands'));
+        return view('admin.products.add_edit_product')->with(compact('title', 'product', 'categories'));
     }
 
     public function deleteProductImage($id)
@@ -204,22 +203,6 @@ class ProductsController extends Controller
         return redirect()->back()->with('success_message', $message);
     }
 
-    public function deleteProductVideo($id)
-    {
-        $productVideo = Product::select('product_video')->where('id', $id)->first();
-        $product_video_path = 'front/videos/product_videos/';
-
-        if (file_exists($product_video_path . $productVideo->product_video)) {
-            unlink($product_video_path . $productVideo->product_video);
-        }
-
-        Product::where('id', $id)->update(['product_video' => '']);
-
-        $message = 'Product Video has been deleted successfully!';
-
-        return redirect()->back()->with('success_message', $message);
-    }
-
     public function addAttributes(Request $request, $id)
     {
         Session::put('page', 'products');
@@ -236,16 +219,9 @@ class ProductsController extends Controller
                         return redirect()->back()->with('error_message', 'SKU already exists! Please add another SKU!');
                     }
 
-                    $sizeCount = ProductsAttribute::where(['product_id' => $id, 'size' => $data['size'][$key]])->count();
-
-                    if ($sizeCount > 0) {
-                        return redirect()->back()->with('error_message', 'Size already exists! Please add another Size!');
-                    }
-
                     $attribute = new ProductsAttribute;
                     $attribute->product_id = $id;
                     $attribute->sku        = $value;
-                    $attribute->size       = $data['size'][$key];
                     $attribute->price      = $data['price'][$key];
                     $attribute->stock      = $data['stock'][$key];
                     $attribute->status     = 1;

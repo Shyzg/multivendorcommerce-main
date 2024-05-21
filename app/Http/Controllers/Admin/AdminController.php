@@ -13,7 +13,6 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Order;
 use App\Models\Coupon;
-use App\Models\Brand;
 use App\Models\User;
 use App\Models\Vendor;
 use App\Models\VendorsBusinessDetail;
@@ -31,10 +30,9 @@ class AdminController extends Controller
         $productsCount   = Product::count();
         $ordersCount     = Order::count();
         $couponsCount    = Coupon::count();
-        $brandsCount     = Brand::count();
         $usersCount      = User::count();
 
-        return view('admin/dashboard')->with(compact('sectionsCount', 'categoriesCount', 'productsCount', 'ordersCount', 'couponsCount', 'brandsCount', 'usersCount'));
+        return view('admin/dashboard')->with(compact('sectionsCount', 'categoriesCount', 'productsCount', 'ordersCount', 'couponsCount', 'usersCount'));
     }
 
     public function login(Request $request)
@@ -205,8 +203,7 @@ class AdminController extends Controller
                     'address' => $data['vendor_address'],
                     'city'    => $data['vendor_city'],
                     'state'   => $data['vendor_state'],
-                    'country' => $data['vendor_country'],
-                    'pincode' => $data['vendor_pincode'],
+                    'country' => $data['vendor_country']
                 ]);
 
                 return redirect()->back()->with('success_message', 'Vendor details updated successfully!');
@@ -262,7 +259,6 @@ class AdminController extends Controller
                         'shop_city'               => $data['shop_city'],
                         'shop_state'              => $data['shop_state'],
                         'shop_country'            => $data['shop_country'],
-                        'shop_pincode'            => $data['shop_pincode'],
                         'business_license_number' => $data['business_license_number'],
                         'gst_number'              => $data['gst_number'],
                         'pan_number'              => $data['pan_number'],
@@ -279,7 +275,6 @@ class AdminController extends Controller
                         'shop_city'               => $data['shop_city'],
                         'shop_state'              => $data['shop_state'],
                         'shop_country'            => $data['shop_country'],
-                        'shop_pincode'            => $data['shop_pincode'],
                         'business_license_number' => $data['business_license_number'],
                         'gst_number'              => $data['gst_number'],
                         'pan_number'              => $data['pan_number'],
@@ -305,17 +300,6 @@ class AdminController extends Controller
         return view('admin/settings/update_vendor_details')->with(compact('slug', 'vendorDetails', 'countries'));
     }
 
-    public function updateVendorCommission(Request $request)
-    {
-        if ($request->isMethod('post')) {
-            $data = $request->all();
-
-            Vendor::where('id', $data['vendor_id'])->update(['commission' => $data['commission']]);
-
-            return redirect()->back()->with('success_message', 'Vendor commission updated successfully!');
-        }
-    }
-
     public function admins($type = null)
     {
         $admins = Admin::query();
@@ -325,10 +309,6 @@ class AdminController extends Controller
             $title = ucfirst($type) . 's';
 
             Session::put('page', 'view_' . strtolower($title));
-        } else {
-            $title = 'All Admins/Subadmins/Vendors';
-
-            Session::put('page', 'view_all');
         }
 
         $admins = $admins->get()->toArray();

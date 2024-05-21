@@ -113,8 +113,7 @@ class UserController extends Controller
                 'state'   => 'required|string|max:100',
                 'address' => 'required|string|max:100',
                 'country' => 'required|string|max:100',
-                'mobile'  => 'required|numeric|digits:11',
-                'pincode' => 'required|digits:6',
+                'mobile'  => 'required|numeric|digits:11'
             ]);
 
             if ($validator->passes()) {
@@ -124,8 +123,7 @@ class UserController extends Controller
                     'city'    => $data['city'],
                     'state'   => $data['state'],
                     'country' => $data['country'],
-                    'pincode' => $data['pincode'],
-                    'address' => $data['address'],
+                    'address' => $data['address']
                 ]);
 
                 return response()->json([

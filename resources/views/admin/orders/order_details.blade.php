@@ -117,12 +117,6 @@
                             <label>{{ $userDetails['country'] }}</label>
                         </div>
                         @endif
-                        @if (!empty($userDetails['pincode']))
-                        <div class="form-group" style="height: 15px">
-                            <label style="font-weight: 550">Pincode: </label>
-                            <label>{{ $userDetails['pincode'] }}</label>
-                        </div>
-                        @endif
                         <div class="form-group" style="height: 15px">
                             <label style="font-weight: 550">Mobile: </label>
                             <label>{{ $userDetails['mobile'] }}</label>
@@ -164,12 +158,6 @@
                         <div class="form-group" style="height: 15px">
                             <label style="font-weight: 550">Country: </label>
                             <label>{{ $orderDetails['country'] }}</label>
-                        </div>
-                        @endif
-                        @if (!empty($orderDetails['pincode']))
-                        <div class="form-group" style="height: 15px">
-                            <label style="font-weight: 550">Pincode: </label>
-                            <label>{{ $orderDetails['pincode'] }}</label>
                         </div>
                         @endif
                         <div class="form-group" style="height: 15px">
@@ -221,7 +209,6 @@
                                     @if (\Illuminate\Support\Facades\Auth::guard('admin')->user()->type != 'vendor')
                                     <th>Product by</th>
                                     @endif
-                                    <th>Commission</th>
                                     <th>Final Amount</th>
                                     <th>Item Status</th>
                                 </tr>
@@ -265,14 +252,8 @@
                                     <td>Admin</td>
                                     @endif
                                     @endif
-                                    @if ($product['vendor_id'] > 0)
-                                    <td>{{ $commission = round(($total_price * $product['commission']) / 100, 2) }}
-                                    </td>
-                                    <td>{{ $total_price - $commission }}</td>
-                                    @else
                                     <td>0</td>
                                     <td>{{ $total_price }}</td>
-                                    @endif
                                     <td>
                                         <form action="{{ url('admin/update-order-item-status') }}" method="post">
                                             @csrf

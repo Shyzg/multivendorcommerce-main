@@ -15,14 +15,12 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-
             $table->integer('user_id');
             $table->string('name');
             $table->string('address');
             $table->string('city');
             $table->string('state');
             $table->string('country');
-            $table->string('pincode');
             $table->string('mobile');
             $table->string('email');
             $table->float('shipping_charges');
@@ -32,7 +30,6 @@ return new class extends Migration
             $table->string('payment_method');
             $table->string('payment_gateway');
             $table->float('grand_total');
-
             $table->timestamps();
         });
     }

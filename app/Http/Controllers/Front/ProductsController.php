@@ -40,7 +40,7 @@ class ProductsController extends Controller
 
             if ($categoryCount > 0) {
                 $categoryDetails = Category::categoryDetails($url);
-                $categoryProducts = Product::with('brand')->whereIn('category_id', $categoryDetails['catIds'])->where('status', 1);
+                $categoryProducts = Product::whereIn('category_id', $categoryDetails['catIds'])->where('status', 1);
                 $productFilters = ProductsFilter::productFilters();
 
                 foreach ($productFilters as $key => $filter) {
@@ -61,11 +61,6 @@ class ProductsController extends Controller
                     } elseif ($_GET['sort'] == 'name_a_z') {
                         $categoryProducts->orderBy('products.product_name', 'Asc');
                     }
-                }
-
-                if (isset($data['size']) && !empty($data['size'])) {
-                    $productIds = ProductsAttribute::select('product_id')->whereIn('size', $data['size'])->pluck('product_id')->toArray();
-                    $categoryProducts->whereIn('products.id', $productIds);
                 }
 
                 $productIds = array();
@@ -106,7 +101,7 @@ class ProductsController extends Controller
                         'products.product_discount',
                         'products.product_image',
                         'products.description'
-                    )->with('brand')->join(
+                    )->join(
                         'categories',
                         'categories.id',
                         '=',
@@ -128,7 +123,7 @@ class ProductsController extends Controller
                         'products.product_discount',
                         'products.product_image',
                         'products.description'
-                    )->with('brand')->join(
+                    )->join(
                         'categories',
                         'categories.id',
                         '=',
@@ -150,7 +145,7 @@ class ProductsController extends Controller
                         'products.product_discount',
                         'products.product_image',
                         'products.description'
-                    )->with('brand')->join(
+                    )->join(
                         'categories',
                         'categories.id',
                         '=',
@@ -172,7 +167,7 @@ class ProductsController extends Controller
                         'products.product_discount',
                         'products.product_image',
                         'products.description'
-                    )->with('brand')->join(
+                    )->join(
                         'categories',
                         'categories.id',
                         '=',
@@ -194,7 +189,7 @@ class ProductsController extends Controller
                         'products.product_discount',
                         'products.product_image',
                         'products.description'
-                    )->with('brand')->join(
+                    )->join(
                         'categories',
                         'categories.id',
                         '=',
@@ -223,7 +218,7 @@ class ProductsController extends Controller
 
                 if ($categoryCount > 0) {
                     $categoryDetails = Category::categoryDetails($url);
-                    $categoryProducts = Product::with('brand')->whereIn('category_id', $categoryDetails['catIds'])->where('status', 1);
+                    $categoryProducts = Product::whereIn('category_id', $categoryDetails['catIds'])->where('status', 1);
 
                     if (isset($_GET['sort']) && !empty($_GET['sort'])) {
                         if ($_GET['sort'] == 'product_latest') {
@@ -251,7 +246,7 @@ class ProductsController extends Controller
     public function detail($id)
     {
         $productDetails = Product::with([
-            'section', 'category', 'brand', 'attributes' => function ($query) {
+            'section', 'category', 'attributes' => function ($query) {
                 $query->where('stock', '>', 0)->where('status', 1);
             }, 'images', 'vendor'
         ])->find($id)->toArray();
@@ -283,7 +278,7 @@ class ProductsController extends Controller
     {
         if ($request->ajax()) {
             $data = $request->all();
-            $getDiscountAttributePrice = Product::getDiscountAttributePrice($data['product_id'], $data['size']);
+            $getDiscountAttributePrice = Product::getDiscountAttributePrice($data['product_id']);
 
             return $getDiscountAttributePrice;
         }
@@ -292,7 +287,7 @@ class ProductsController extends Controller
     public function vendorListing($vendorid)
     {
         $getVendorShop = Vendor::getVendorShop($vendorid);
-        $vendorProducts = Product::with('brand')->where('vendor_id', $vendorid)->where('status', 1);
+        $vendorProducts = Product::where('vendor_id', $vendorid)->where('status', 1);
         $vendorProducts = $vendorProducts->paginate(30);
 
         return view('front.products.vendor_listing')->with(compact('getVendorShop', 'vendorProducts'));
@@ -374,8 +369,7 @@ class ProductsController extends Controller
 
             $cartDetails = Cart::find($data['cartid']);
             $availableStock = ProductsAttribute::select('stock')->where([
-                'product_id' => $cartDetails['product_id'],
-                'size'       => $cartDetails['size']
+                'product_id' => $cartDetails['product_id']
             ])->first()->toArray();
 
             if ($data['qty'] > $availableStock['stock']) {
@@ -385,22 +379,6 @@ class ProductsController extends Controller
                     'status'     => false,
                     'message'    => 'Product Stock is not available',
                     'view'       => (string) \Illuminate\Support\Facades\View::make('front.products.cart_items')->with(compact('getCartItems'))
-                ]);
-            }
-
-            $availableSize =  ProductsAttribute::where([
-                'product_id' => $cartDetails['product_id'],
-                'size'       => $cartDetails['size'],
-                'status'     => 1
-            ])->count();
-
-            if ($availableSize == 0) {
-                $getCartItems = Cart::getCartItems();
-
-                return response()->json([
-                    'status'  => false,
-                    'message' => 'Product Size is not available. Please remove this Product and choose another one!',
-                    'view'    => (string) \Illuminate\Support\Facades\View::make('front.products.cart_items')->with(compact('getCartItems'))
                 ]);
             }
 
@@ -494,7 +472,7 @@ class ProductsController extends Controller
                         $message = 'This coupon code selected categories is not for one of the selected products category!';
                     }
 
-                    $attrPrice = Product::getDiscountAttributePrice($item['product_id'], $item['size']);
+                    $attrPrice = Product::getDiscountAttributePrice($item['product_id']);
                     $total_amount = $total_amount + ($attrPrice['final_price'] * $item['quantity']);
                 }
 
@@ -586,8 +564,6 @@ class ProductsController extends Controller
         foreach ($deliveryAddresses as $key => $value) {
             $shippingCharges = ShippingCharge::getShippingCharges($total_weight, 'Indonesia');
             $deliveryAddresses[$key]['shipping_charges'] = $shippingCharges;
-            $deliveryAddresses[$key]['codpincodeCount'] = DB::table('cod_pincodes')->where('pincode', $value['pincode'])->count();
-            $deliveryAddresses[$key]['prepaidpincodeCount'] = DB::table('prepaid_pincodes')->where('pincode', $value['pincode'])->count();
         }
 
         if ($request->isMethod('post')) {
@@ -688,7 +664,6 @@ class ProductsController extends Controller
             $order->city             = $deliveryAddress['city'];
             $order->state            = $deliveryAddress['state'];
             $order->country          = $deliveryAddress['country'];
-            $order->pincode          = $deliveryAddress['pincode'];
             $order->mobile           = $deliveryAddress['mobile'];
             $order->email            = Auth::user()->email;
             $order->shipping_charges = $data['shipping_charges'];
@@ -778,21 +753,6 @@ class ProductsController extends Controller
             return view('front.products.thanks');
         } else {
             return redirect('cart');
-        }
-    }
-
-    public function checkPincode(Request $request)
-    {
-        if ($request->ajax()) {
-            $data = $request->all();
-            $codPincodeCount = DB::table('cod_pincodes')->where('pincode', $data['pincode'])->count();
-            $prepaidPincodeCount = DB::table('prepaid_pincodes')->where('pincode', $data['pincode'])->count();
-
-            if ($codPincodeCount == 0 && $prepaidPincodeCount == 0) {
-                echo 'This pincode is not available for delivery';
-            } else {
-                echo 'This pincode is available for delivery';
-            }
         }
     }
 }

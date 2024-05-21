@@ -117,10 +117,6 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="vendor_pincode">Pincode</label>
-                                <input type="text" class="form-control" id="vendor_pincode" placeholder="Enter Pincode" name="vendor_pincode" value="{{ $vendorDetails['pincode'] }}"> {{-- $vendorDetails was passed from AdminController --}}
-                            </div>
-                            <div class="form-group">
                                 <label for="vendor_mobile">Mobile</label>
                                 <input type="text" class="form-control" id="vendor_mobile" placeholder="Enter 10 Digit Mobile Number" name="vendor_mobile" value="{{ Auth::guard('admin')->user()->mobile }}" maxlength="10" minlength="10"> {{-- Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances --}}
                             </div>
@@ -224,10 +220,6 @@
                                     @endforeach
 
                                 </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="shop_pincode">Shop Pincode</label>
-                                <input type="text" class="form-control" id="shop_pincode" placeholder="Enter Shop Pincode" name="shop_pincode" @if (isset($vendorDetails['shop_pincode'])) value="{{ $vendorDetails['shop_pincode'] }}" @endif> {{-- $vendorDetails was passed from AdminController --}}
                             </div>
                             <div class="form-group">
                                 <label for="shop_mobile">Shop Mobile</label>

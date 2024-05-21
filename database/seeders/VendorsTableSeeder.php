@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class VendorsTableSeeder extends Seeder
@@ -14,9 +13,6 @@ class VendorsTableSeeder extends Seeder
      */
     public function run()
     {
-        //
-        // Databas Seeding
-        // Note: Check DatabaseSeeder.php
         $vendorRecords = [
             [
                 'id'      => 1,
@@ -25,13 +21,11 @@ class VendorsTableSeeder extends Seeder
                 'city'    => 'Maadi',
                 'state'   => 'Cairo',
                 'country' => 'Egypt',
-                'pincode' => '110001',
                 'mobile'  => '9700000000',
                 'email'   => 'yasser@admin.com'
             ],
         ];
 
-        // Note: Check DatabaseSeeder.php
         \App\Models\Vendor::insert($vendorRecords);
     }
 }

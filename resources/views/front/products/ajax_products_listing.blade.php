@@ -13,10 +13,13 @@
                             $product_image_path = 'front/images/product_images/small/' . $product['product_image'];
                         @endphp
 
-                        @if (!empty($product['product_image']) && file_exists($product_image_path)) {{-- if the product image exists in BOTH database table AND filesystem (on server) --}}
+                        @if (!empty($product['product_image']) && file_exists($product_image_path))
+                            {{-- if the product image exists in BOTH database table AND filesystem (on server) --}}
                             <img class="img-fluid" src="{{ asset($product_image_path) }}" alt="Product">
-                        @else {{-- show the dummy image --}}
-                            <img class="img-fluid" src="{{ asset('front/images/product_images/small/no-image.png') }}" alt="Product">
+                        @else
+                            {{-- show the dummy image --}}
+                            <img class="img-fluid" src="{{ asset('front/images/product_images/small/no-image.png') }}"
+                                alt="Product">
                         @endif
 
 
@@ -34,15 +37,6 @@
                             <li class="has-separator">
                                 <a href="shop-v1-root-category.html">{{ $product['product_code'] }}</a>
                             </li>
-                            {{-- <li class="has-separator">
-
-
-
-                                <a href="listing.html">{{ $product['product_color'] }}</a>
-                            </li> --}}
-                            {{-- <li>
-                                <a href="listing.html">{{ $product['brand']['name'] }}</a>
-                            </li> --}}
                         </ul>
                         <h6 class="item-title">
                             <a href="{{ url('product/' . $product['id']) }}">{{ $product['product_name'] }}</a>
@@ -63,7 +57,8 @@
                     @endphp
 
 
-                    @if ($getDiscountPrice > 0) {{-- If there's a discount on the price, show the price before (the original price) and after (the new price) the discount --}}
+                    @if ($getDiscountPrice > 0)
+                        {{-- If there's a discount on the price, show the price before (the original price) and after (the new price) the discount --}}
                         <div class="price-template">
                             <div class="item-new-price">
                                 EGP{{ $getDiscountPrice }}
@@ -72,7 +67,8 @@
                                 EGP{{ $product['product_price'] }}
                             </div>
                         </div>
-                    @else {{-- if there's no discount on the price, show the original price --}}
+                    @else
+                        {{-- if there's no discount on the price, show the original price --}}
                         <div class="price-template">
                             <div class="item-new-price">
                                 EGP{{ $product['product_price'] }}
@@ -86,9 +82,9 @@
 
 
 
-                
+
                 @php
-                    $isProductNew = \App\Models\Product::isProductNew($product['id'])
+                    $isProductNew = \App\Models\Product::isProductNew($product['id']);
                 @endphp
                 @if ($isProductNew == 'Yes')
                     <div class="tag new">
@@ -97,7 +93,7 @@
                 @endif
 
 
-                
+
             </div>
         </div>
     @endforeach

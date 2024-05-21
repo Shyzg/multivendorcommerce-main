@@ -1,6 +1,5 @@
 @extends('admin.layout.layout')
 
-
 @section('content')
 <div class="main-panel">
     <div class="content-wrapper">
@@ -9,7 +8,8 @@
                 <div class="row">
                     <div class="col-12 col-xl-8 mb-4 mb-xl-0">
                         <h3 class="font-weight-bold">Vendor Details</h3>
-                        <h6 class="font-weight-normal mb-0"><a href="{{ url('admin/admins/vendor') }}">Back to Vendors</a></h6>
+                        <h6 class="font-weight-normal mb-0"><a href="{{ url('admin/admins/vendor') }}">Back to Vendors</a>
+                        </h6>
                     </div>
                     <div class="col-12 col-xl-4">
                         <div class="justify-content-end d-flex">
@@ -44,7 +44,8 @@
                         </div>
                         <div class="form-group">
                             <label for="vendor_address">Address</label>
-                            <input type="text" class="form-control" value="{{ $vendorDetails['vendor_personal']['address'] }}" readonly> {{-- $vendorDetails was passed from AdminController --}}
+                            <input type="text" class="form-control" value="{{ $vendorDetails['vendor_personal']['address'] }}" readonly>
+                            {{-- $vendorDetails was passed from AdminController --}}
                         </div>
                         <div class="form-group">
                             <label for="vendor_city">City</label>
@@ -56,11 +57,8 @@
                         </div>
                         <div class="form-group">
                             <label for="vendor_country">Country</label>
-                            <input type="text" class="form-control" value="{{ $vendorDetails['vendor_personal']['country'] }}" readonly> {{-- $vendorDetails was passed from AdminController --}}
-                        </div>
-                        <div class="form-group">
-                            <label for="vendor_pincode">Pincode</label>
-                            <input type="text" class="form-control" value="{{ $vendorDetails['vendor_personal']['pincode'] }}" readonly> {{-- $vendorDetails was passed from AdminController --}}
+                            <input type="text" class="form-control" value="{{ $vendorDetails['vendor_personal']['country'] }}" readonly>
+                            {{-- $vendorDetails was passed from AdminController --}}
                         </div>
                         <div class="form-group">
                             <label for="vendor_mobile">Mobile</label>
@@ -101,10 +99,6 @@
                             <input type="text" class="form-control" @if (isset($vendorDetails['vendor_business']['shop_country'])) value="{{ $vendorDetails['vendor_business']['shop_country'] }}" @endif readonly> {{-- $vendorDetails was passed from AdminController --}}
                         </div>
                         <div class="form-group">
-                            <label for="vendor_pincode">Shop Pincode</label>
-                            <input type="text" class="form-control" @if (isset($vendorDetails['vendor_business']['shop_pincode'])) value="{{ $vendorDetails['vendor_business']['shop_pincode'] }}" @endif readonly> {{-- $vendorDetails was passed from AdminController --}}
-                        </div>
-                        <div class="form-group">
                             <label for="vendor_mobile">Shop Mobile</label>
                             <input type="text" class="form-control" @if (isset($vendorDetails['vendor_business']['shop_mobile'])) value="{{ $vendorDetails['vendor_business']['shop_mobile'] }}" @endif readonly>
                         </div>
@@ -142,72 +136,8 @@
                     </div>
                 </div>
             </div>
-
-            {{-- Commissions module: Every vendor must pay a certain commission (that may vary from a vendor to another) for the website owner (admin) on every item sold, and it's defined by the website owner (admin) --}}
-            <div class="col-md-6 grid-margin stretch-card">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title">Commission Information</h4>
-
-
-                        {{-- Our Bootstrap error code in case of wrong current password or the new password and confirm password are not matching: --}}
-                        {{-- Determining If An Item Exists In The Session (using has() method): https://laravel.com/docs/9.x/session#determining-if-an-item-exists-in-the-session --}}
-                        @if (Session::has('error_message')) <!-- Check AdminController.php, updateAdminPassword() method -->
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <strong>Error:</strong> {{ Session::get('error_message') }}
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        @endif
-
-                        {{-- Displaying Laravel Validation Errors: https://laravel.com/docs/9.x/validation#quick-displaying-the-validation-errors --}}
-                        @if ($errors->any())
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-
-                            @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                            @endforeach
-
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        @endif
-
-
-                        {{-- Displaying The Validation Errors: https://laravel.com/docs/9.x/validation#quick-displaying-the-validation-errors AND https://laravel.com/docs/9.x/blade#validation-errors --}}
-                        {{-- Determining If An Item Exists In The Session (using has() method): https://laravel.com/docs/9.x/session#determining-if-an-item-exists-in-the-session --}}
-                        {{-- Our Bootstrap success message in case of updating admin password is successful: --}}
-                        @if (Session::has('success_message')) <!-- Check AdminController.php, updateAdminPassword() method -->
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            <strong>Success:</strong> {{ Session::get('success_message') }}
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        @endif
-
-                        <div class="form-group">
-                            <label for="vendor_name">Commission per order item (%)</label>
-                            <form method="post" action="{{ url('admin/update-vendor-commission') }}">
-                                @csrf {{-- Preventing CSRF Requests: https://laravel.com/docs/9.x/csrf#preventing-csrf-requests --}}
-
-                                <input type="hidden" name="vendor_id" value="{{ $vendorDetails['vendor_personal']['id'] }}">
-                                <input class="form-control" type="text" name="commission" @if (isset($vendorDetails['vendor_personal']['commission'])) value="{{ $vendorDetails['vendor_personal']['commission'] }}" @endif required> {{-- $vendorDetails was passed from AdminController --}}
-                                <br>
-                                <button type="submit">Update</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
         </div>
     </div>
-    <!-- content-wrapper ends -->
     @include('admin.layout.footer')
-    <!-- partial -->
 </div>
 @endsection

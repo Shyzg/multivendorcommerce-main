@@ -33,7 +33,6 @@ class AddressController extends Controller
                 'delivery_city'    => 'required|string|max:100',
                 'delivery_state'   => 'required|string|max:100',
                 'delivery_country' => 'required|string|max:100',
-                'delivery_pincode' => 'required|digits:6',
                 'delivery_mobile'  => 'required|numeric|digits:10'
             ]);
 
@@ -46,7 +45,6 @@ class AddressController extends Controller
                 $address['city']    = $data['delivery_city'];
                 $address['state']   = $data['delivery_state'];
                 $address['country'] = $data['delivery_country'];
-                $address['pincode'] = $data['delivery_pincode'];
                 $address['mobile']  = $data['delivery_mobile'];
 
                 if (!empty($data['delivery_id'])) {

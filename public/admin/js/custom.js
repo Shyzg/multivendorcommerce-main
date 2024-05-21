@@ -90,30 +90,6 @@ $(document).ready(function() {
         });
     });
 
-    // Updating Brand status (active/inactive) using AJAX in brands.blade.php    
-    $(document).on('click', '.updateBrandStatus', function() { // '.updateBrandStatus' is the anchor link <a> CSS class    // This is the same as    $('.updateBrandStatus').on('click', function() {
-        var status   = $(this).children('i').attr('status'); // Using HTML Custom Attributes
-        var brand_id = $(this).attr('brand_id'); // Using HTML Custom Attributes
-
-        
-        $.ajax({
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}, // X-CSRF-TOKEN: https://laravel.com/docs/9.x/csrf#csrf-x-csrf-token    
-            type   : 'post',
-            url    : '/admin/update-brand-status', // check the web.php for this route and check the BrandController for the updateBrandStatus() method
-            data   : {status: status, brand_id: brand_id}, // we pass the status and brand_id
-            success: function(resp) {
-                if (resp.status == 0) { // in case of success, reverse the status (active/inactive) and show the right icon in the frontend    // Or the same    if (resp['status'] == 0) {
-                    $('#brand-' + brand_id).html('<i style="font-size: 25px" class="mdi mdi-bookmark-outline" status="Inactive"></i>');
-                } else if (resp.status == 1) {
-                    $('#brand-' + brand_id).html('<i style="font-size: 25px" class="mdi mdi-bookmark-check" status="Active"></i>');
-                }
-            },
-            error  : function() {
-                alert('Error');
-            }
-        });
-    });
-
     // Updating Product status (active/inactive) using AJAX in products.blade.php    
     $(document).on('click', '.updateProductStatus', function() { // '.updateProductStatus' is the anchor link <a> CSS class    // This is the same as    $('.updateProductStatus').on('click', function() {
         var status     = $(this).children('i').attr('status'); // Using HTML Custom Attributes
@@ -318,33 +294,10 @@ $(document).ready(function() {
 
         // After the CDNs block in the country, I resorted to this solution:
         if (confirm('Are you sure you want to delete this?')) {
-            window.location = '/admin/delete-' + module + '/' + moduleid; // e.g.    '/admin/delete-sections/3'    or    '/admin/delete-category/5'    or    '/admin/delete-category-image/4'    or    /admin/delete-subscriber/43
+            window.location = '/admin/delete-' + module + '/' + moduleid;
         } else {
-            return false; // return true    means STOP THE EXECUTION! Don't Do Anything! You can't do what you want to do!
+            return false; 
         }
-
-        /*
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                Swal.fire(
-                    'Deleted!',
-                    'Your file has been deleted.',
-                    'success'
-                )
-
-                // We added this line by ourselves (to go to this route to delete the said module ...)
-                window.location = '/admin/delete-' + module + '/' + moduleid; // e.g.    '/admin/delete-sections/3'    or    '/admin/delete-category/5'    or    '/admin/delete-category-image/4'    or    /admin/delete-subscriber/43
-                }
-            })
-        */
     });
 
 

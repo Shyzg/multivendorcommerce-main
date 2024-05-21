@@ -14,7 +14,7 @@ class DeliveryAddressTableSeeder extends Seeder
      */
     public function run()
     {
-        
+
         // Note: Check DatabaseSeeder.php!
         $deliveryRecords = [
             [
@@ -25,7 +25,6 @@ class DeliveryAddressTableSeeder extends Seeder
                 'city'    => 'Cairo',
                 'state'   => 'Cairo',
                 'country' => 'Egypt',
-                'pincode' => 10001,
                 'mobile'  => 1255642718,
                 'status'  => 1
             ],
@@ -37,7 +36,6 @@ class DeliveryAddressTableSeeder extends Seeder
                 'city'    => 'Alexandria',
                 'state'   => 'Alexandria',
                 'country' => 'Egypt',
-                'pincode' => 141001,
                 'mobile'  => 1095632526,
                 'status'  => 1
             ],

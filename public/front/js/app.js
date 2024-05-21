@@ -431,47 +431,12 @@ $(function () {
         });
 
     };
-    /**
-     * Initialize owl-carousel for brand slider
-     */
-    const brandSlider = function () {
-        let thisInstance = $('.brand-slider-content');
-        let itemPerLine = thisInstance.data('item');
-        thisInstance.owlCarousel({
-            autoplay: true,
-			autoplayTimeout: 8000,
-            loop: false,
-            dots: false,
-            rewind: true,
-            nav: true,
-            navElement: 'div',
-            navClass: ['brand-slider-previous', 'brand-slider-next'],
-            navText: ['<i class="fas fa-angle-left"></i>', '<i class="fas fa-angle-right"></i>'],
-            responsive: {
-                0: {
-                    items: 1,
-                },
-                768: {
-                    items: 3,
-                },
-                991: {
-                    items: itemPerLine,
-                },
-                1200: {
-                    items: itemPerLine,
-                },
-            }
-        });
-    };
-
-
-
+    
     $(function () {
         sliderMain();
         productSlider();
         SpecificCategorySlider();
         onTabChangeRefreshPositionOfCarousel();
-        brandSlider();
     });
 })(jQuery, window, document);
 

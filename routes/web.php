@@ -35,11 +35,8 @@ Route::prefix('/admin')->namespace('App\Http\Controllers\Admin')->group(function
         // In the slug we can pass: 'personal' which means update vendor personal details, or 'business' which means update vendor business details
         Route::match(['get', 'post'], 'update-vendor-details/{slug}', 'AdminController@updateVendorDetails');
 
-        // Update the vendor's commission percentage (by the Admin) in `vendors` table (for every vendor on their own) in the Admin Panel in admin/admins/view_vendor_details.blade.php (Commissions module: Every vendor must pay a certain commission (that may vary from a vendor to another) for the website owner (admin) on every item sold, and it's defined by the website owner (admin))
-        Route::post('update-vendor-commission', 'AdminController@updateVendorCommission');
-
-        Route::get('admins/{type?}', 'AdminController@admins'); // In case the authenticated user (logged-in user) is superadmin, admin, subadmin, vendor these are the three Admin Management URLs depending on the slug. The slug is the `type` column in `admins` table which can only be: superadmin, admin, subadmin, or vendor    // Used an Optional Route Parameters (or Optional Route Parameters) using a '?' question mark sign, for in case that there's no any {type} passed, the page will show ALL superadmins, admins, subadmins and vendors at the same page
-        Route::get('view-vendor-details/{id}', 'AdminController@viewVendorDetails'); // View further 'vendor' details inside Admin Management table (if the authenticated user is superadmin, admin or subadmin)
+        Route::get('admins/{type?}', 'AdminController@admins');
+        Route::get('view-vendor-details/{id}', 'AdminController@viewVendorDetails');
 
         // Sections (Sections, Categories, Subcategories, Products, Attributes)
         Route::get('sections', 'SectionController@sections');
@@ -54,12 +51,6 @@ Route::prefix('/admin')->namespace('App\Http\Controllers\Admin')->group(function
         Route::get('append-categories-level', 'CategoryController@appendCategoryLevel'); // Show Categories <select> <option> depending on the chosen Section (show the relevant categories of the chosen section) using AJAX in admin/js/custom.js in append_categories_level.blade.php page
         Route::get('delete-category/{id}', 'CategoryController@deleteCategory'); // Delete a category in categories.blade.php
         Route::get('delete-category-image/{id}', 'CategoryController@deleteCategoryImage'); // Delete a category image in add_edit_category.blade.php from BOTH SERVER (FILESYSTEM) & DATABASE
-
-        // Brands
-        Route::get('brands', 'BrandController@brands');
-        Route::post('update-brand-status', 'BrandController@updateBrandStatus'); // Update Brands Status using AJAX in brands.blade.php
-        Route::get('delete-brand/{id}', 'BrandController@deleteBrand'); // Delete a brand in brands.blade.php
-        Route::match(['get', 'post'], 'add-edit-brand/{id?}', 'BrandController@addEditBrand'); // the slug {id?} is an Optional Parameter, so if it's passed, this means Edit/Update the brand, and if not passed, this means Add a Brand
 
         // Products
         Route::get('products', 'ProductsController@products'); // render products.blade.php in the Admin Panel
@@ -204,9 +195,6 @@ Route::namespace('App\Http\Controllers\Front')->group(function () {
 
     // Website Search Form (to search for all website products). Check the HTML Form in front/layout/header.blade.php
     Route::get('search-products', 'ProductsController@listing');
-
-    // PIN code Availability Check: check if the PIN code of the user's Delivery Address exists in our database (in both `cod_pincodes` and `prepaid_pincodes`) or not in front/products/detail.blade.php via AJAX. Check front/js/custom.js
-    Route::post('check-pincode', 'ProductsController@checkPincode');
 
     // Add Rating & Review on a product in front/products/detail.blade.php
     Route::post('add-rating', 'RatingController@addRating');

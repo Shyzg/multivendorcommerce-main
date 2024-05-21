@@ -542,7 +542,6 @@ $(document).ready(function() {
                 $('[name="delivery_city"]'   ).val(resp.address['city']);    // Select the <input> field in front/products/delivery_addresses.blade.php (which is 'include'-ed in front/products/checkout.blade.php), and change its value to the value coming from the server response to the AJAX request
                 $('[name="delivery_state"]'  ).val(resp.address['state']);   // Select the <input> field in front/products/delivery_addresses.blade.php (which is 'include'-ed in front/products/checkout.blade.php), and change its value to the value coming from the server response to the AJAX request
                 $('[name="delivery_country"]').val(resp.address['country']); // Select the <input> field in front/products/delivery_addresses.blade.php (which is 'include'-ed in front/products/checkout.blade.php), and change its value to the value coming from the server response to the AJAX request
-                $('[name="delivery_pincode"]').val(resp.address['pincode']); // Select the <input> field in front/products/delivery_addresses.blade.php (which is 'include'-ed in front/products/checkout.blade.php), and change its value to the value coming from the server response to the AJAX request
                 $('[name="delivery_mobile"]' ).val(resp.address['mobile']);  // Select the <input> field in front/products/delivery_addresses.blade.php (which is 'include'-ed in front/products/checkout.blade.php), and change its value to the value coming from the server response to the AJAX request
             },
             error  : function() { // if the AJAX request is unsuccessful
@@ -631,21 +630,6 @@ $(document).ready(function() {
         // Display the Shipping Charges
         $('.shipping_charges').html('EGP' + shipping_charges);
 
-        // Show the right Payment Methods radio buttons in front/products/checkout.blade.php based on Getting the results of checking if both the COD and Prepaid PIN codes of the user's Delviery Address exist in our both `cod_pincodes` and `prepaid_pincodes` database tables. Check the checkout() method in Front/ProductsController.php and front/products/checkout.blade.php    
-        var codpincodeCount     = $(this).attr('codpincodeCount');     // using Custom HTML data attributes (data-*)
-        var prepaidpincodeCount = $(this).attr('prepaidpincodeCount'); // using Custom HTML data attributes (data-*)
-        if (codpincodeCount > 0) {
-            $('.codMethod').show();
-        } else {
-            $('.codMethod').hide();
-        }
-
-        if (prepaidpincodeCount > 0) {
-            $('.prepaidMethod').show();
-        } else {
-            $('.prepaidMethod').hide();
-        }
-
         if (coupon_amount == '') {
             coupon_amount = 0;
         }
@@ -660,34 +644,4 @@ $(document).ready(function() {
         // Display the Grand Total
         $('.grand_total').html('EGP' + grand_total);
     });
-
-    // PIN code Availability Check: check if the PIN code of the user's Delivery Address exists in our database (in both `cod_pincodes` and `prepaid_pincodes`) or not in front/products/detail.blade.php via AJAX    
-    $('#checkPincode').click(function() {
-        // alert('test');
-
-        var pincode = $('#pincode').val(); // using Custom HTML data attributes (data-*)
-        // alert(pincode);
-        if (pincode == '') { // If the user doesn't enter their PIN code (if the PIN code is empty)
-            alert('Please enter Pincode');
-
-            return false; // Stop the function's execution and get out!
-        }
-
-
-
-        $.ajax({
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}, // X-CSRF-TOKEN: https://laravel.com/docs/9.x/csrf#csrf-x-csrf-token    
-            url    : '/check-pincode', // check this route in web.php
-            type   : 'post',
-            data   : {pincode: pincode}, // Sending name/value pairs to server with the AJAX request (AJAX call)
-            success: function(resp) { // if the AJAX request / AJAX call is successful
-                alert(resp);
-            },
-            error  : function() { // if the AJAX request is unsuccessful
-                alert('Error');
-            }
-        });
-
-    });
-
 });
