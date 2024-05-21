@@ -128,17 +128,6 @@ Route::prefix('/admin')->namespace('App\Http\Controllers\Admin')->group(function
 
         // Render admin/shipping/edit_shipping_charges.blade.php page in case of HTTP 'GET' request ('Edit/Update Shipping Charges'), or hadle the HTML Form submission in the same page in case of HTTP 'POST' request
         Route::match(['get', 'post'], 'edit-shipping-charges/{id}', 'ShippingController@editShippingCharges');
-
-
-        // User Ratings & Reviews
-        // Render admin/ratings/ratings.blade.php page in the Admin Panel
-        Route::get('ratings', 'RatingController@ratings');
-
-        // Update Rating Status (active/inactive) via AJAX in admin/ratings/ratings.blade.php, check admin/js/custom.js
-        Route::post('update-rating-status', 'RatingController@updateRatingStatus');
-
-        // Delete a Rating via AJAX in admin/ratings/ratings.blade.php, check admin/js/custom.js
-        Route::get('delete-rating/{id}', 'RatingController@deleteRating');
     });
 });
 

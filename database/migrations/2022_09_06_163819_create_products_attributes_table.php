@@ -15,14 +15,12 @@ return new class extends Migration
     {
         Schema::create('products_attributes', function (Blueprint $table) {
             $table->id();
-
             $table->integer('product_id');
             $table->string('size');
             $table->float('price');
             $table->integer('stock');
-            $table->string('sku'); // Stock Keeping Unit (example: CW21001)    // SKU is similar to Product Code then - hyphen then the initial of the product size (e.g. 'RC001-S')
-            $table->tinyInteger('status'); // 0 means inactive/disabled, 1 means active/enabled
-
+            $table->string('sku');
+            $table->tinyInteger('status');
             $table->timestamps();
         });
     }

@@ -10,8 +10,7 @@ $(document).ready(function() {
     $('#coupons').DataTable();     // in admin/coupons/coupons.blade.php              
     $('#users').DataTable();       // in admin/users/users.blade.php                  
     $('#orders').DataTable();      // in admin/orders/orders.blade.php                
-    $('#shipping').DataTable();    // in admin/shipping/shipping_charges.blade.php
-    $('#ratings').DataTable();     // in admin/ratings/ratings.blade.php              
+    $('#shipping').DataTable();    // in admin/shipping/shipping_charges.blade.php     
 
 
 
@@ -307,32 +306,6 @@ $(document).ready(function() {
             }
         });
     });
-
-    // Update Rating Status (active/inactive) via AJAX in admin/ratings/ratings.blade.php, check admin/js/custom.js    
-    $(document).on('click', '.updateRatingStatus', function() { // '.updateUserStatus' is the anchor link <a> CSS class    // This is the same as    $('.updateUserStatus').on('click', function() {
-        var status    = $(this).children('i').attr('status'); // Using HTML Custom Attributes
-        var rating_id = $(this).attr('rating_id'); // Using HTML Custom Attributes
-
-        
-        $.ajax({
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}, // X-CSRF-TOKEN: https://laravel.com/docs/9.x/csrf#csrf-x-csrf-token
-            type   : 'post',
-            url    : '/admin/update-rating-status', // check the web.php for this route and check the NewsletterController for the updateRatingStatus() method
-            data   : {status: status, rating_id: rating_id}, // we pass in the status and rating_id
-            success: function(resp) {
-                if (resp.status == 0) { // in case of success, reverse the status (active/inactive) and show the right icon in the frontend    // Or the same    if (resp['status'] == 0) {
-                    $('#rating-' + rating_id).html('<i style="font-size: 25px" class="mdi mdi-bookmark-outline" status="Inactive"></i>');
-                } else if (resp.status == 1) {
-                    $('#rating-' + rating_id).html('<i style="font-size: 25px" class="mdi mdi-bookmark-check" status="Active"></i>');
-                }
-            },
-            error  : function() {
-                alert('Error');
-            }
-        });
-    });
-
-
 
     // This method will be GLOBAL/COMMON and SHARED with many things that are going to be deleted in different pages, but they ALL must have both the HTML custom attributs: module and module_id to use them here to redirect to the relevant proper route (Check down a little bit    window.location = ....)
     // Confirm Deletion using SweetAlert JavaScript package/plugin

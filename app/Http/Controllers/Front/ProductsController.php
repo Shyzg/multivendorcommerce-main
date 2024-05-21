@@ -256,7 +256,6 @@ class ProductsController extends Controller
             }, 'images', 'vendor'
         ])->find($id)->toArray();
         $categoryDetails = Category::categoryDetails($productDetails['category']['url'] ?? null);
-        $similarProducts = Product::with('brand')->where('category_id', $productDetails['category']['id'])->where('id', '!=', $id)->limit(4)->inRandomOrder()->get()->toArray();
 
         if (empty(Session::get('session_id'))) {
             $session_id = md5(uniqid(rand(), true));
@@ -266,20 +265,6 @@ class ProductsController extends Controller
 
         Session::put('session_id', $session_id);
 
-        $countRecentlyViewedProducts = DB::table('recently_viewed_products')->where([
-            'product_id' => $id,
-            'session_id' => $session_id
-        ])->count();
-
-        if ($countRecentlyViewedProducts == 0) {
-            DB::table('recently_viewed_products')->INSERT([
-                'product_id' => $id,
-                'session_id' => $session_id
-            ]);
-        }
-
-        $recentProductsIds = DB::table('recently_viewed_products')->select('product_id')->where('product_id', '!=', $id)->where('session_id', $session_id)->inRandomOrder()->get()->take(4)->pluck('product_id');
-        $recentlyViewedProducts = Product::with('brand')->whereIn('id', $recentProductsIds)->get()->toArray();
         $groupProducts = array();
 
         if (!empty($productDetails['group_code'])) {
@@ -289,56 +274,9 @@ class ProductsController extends Controller
             ])->get()->toArray();
         }
 
-        $ratings = Rating::with('user')->where([
-            'product_id' => $id,
-            'status'     => 1
-        ])->get()->toArray();
-        $ratingSum = Rating::where([
-            'product_id' => $id,
-            'status'     => 1
-        ])->sum('rating');
-        $ratingCount = Rating::where([
-            'product_id' => $id,
-            'status'     => 1
-        ])->count();
-
-        if ($ratingCount > 0) {
-            $avgRating     = round($ratingSum / $ratingCount, 2);
-            $avgStarRating = round($ratingSum / $ratingCount);
-        } else {
-            $avgRating     = 0;
-            $avgStarRating = 0;
-        }
-
-        $ratingOneStarCount = Rating::where([
-            'product_id' => $id,
-            'status'     => 1,
-            'rating'     => 1
-        ])->count();
-        $ratingTwoStarCount = Rating::where([
-            'product_id' => $id,
-            'status'     => 1,
-            'rating'     => 2
-        ])->count();
-        $ratingThreeStarCount = Rating::where([
-            'product_id' => $id,
-            'status'     => 1,
-            'rating'     => 3
-        ])->count();
-        $ratingFourStarCount = Rating::where([
-            'product_id' => $id,
-            'status'     => 1,
-            'rating'     => 4
-        ])->count();
-        $ratingFiveStarCount = Rating::where([
-            'product_id' => $id,
-            'status'     => 1,
-            'rating'     => 5
-        ])->count();
-
         $totalStock = ProductsAttribute::where('product_id', $id)->sum('stock');
 
-        return view('front.products.detail')->with(compact('productDetails', 'categoryDetails', 'totalStock', 'similarProducts', 'recentlyViewedProducts', 'groupProducts', 'ratings', 'avgRating', 'avgStarRating', 'ratingOneStarCount', 'ratingTwoStarCount', 'ratingThreeStarCount', 'ratingFourStarCount', 'ratingFiveStarCount'));
+        return view('front.products.detail')->with(compact('productDetails', 'categoryDetails', 'totalStock', 'groupProducts'));
     }
 
     public function getProductPrice(Request $request)
