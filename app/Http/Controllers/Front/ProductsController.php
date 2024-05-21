@@ -263,7 +263,7 @@ class ProductsController extends Controller
     public function vendorListing($vendorid)
     {
         $getVendorShop = Vendor::getVendorShop($vendorid);
-        $vendorProducts = Product::where('vendor_id', $vendorid)->where('status', 1);
+        $vendorProducts = Product::where('vendor_id', $vendorid);
         $vendorProducts = $vendorProducts->paginate(30);
 
         return view('front.products.vendor_listing')->with(compact('getVendorShop', 'vendorProducts'));
@@ -513,7 +513,7 @@ class ProductsController extends Controller
 
     public function checkout(Request $request)
     {
-        $countries = Country::where('status', 1)->get()->toArray();
+        $countries = Country::get()->toArray();
         $cities =  City::get()->toArray();
         $provinces = Province::get()->toArray();
         $getCartItems = Cart::getCartItems();

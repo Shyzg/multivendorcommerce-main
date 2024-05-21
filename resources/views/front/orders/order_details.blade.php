@@ -87,7 +87,6 @@
                 <tr class="table-danger">
                     <th>Product Image</th>
                     <th>Product Name</th>
-                    <th>Product Size</th>
                     <th>Product Qty</th>
                 </tr>
 
@@ -102,17 +101,17 @@
                         </a>
                     </td>
                     <td>{{ $product['product_name'] }}</td>
-                    <td>{{ $product['product_size'] }}</td>
                     <td>{{ $product['product_qty'] }}</td>
                 </tr>
 
 
                 @if ($product['courier_name'] != '')
                 <tr>
-                    <td colspan="6">Courier Name: {{ $product['courier_name'] }}, Tracking Number: {{ $product['tracking_number'] }}</td>
+                    <td colspan="6">Courier Name: {{ $product['courier_name'] }}, Tracking Number:
+                        {{ $product['tracking_number'] }}
+                    </td>
                 </tr>
                 @endif
-
                 @endforeach
             </table>
 

@@ -69,7 +69,6 @@
                         <table class="table table-condensed">
                             <thead>
                                 <tr>
-                                    <td class="text-center"><strong>Size</strong></td>
                                     <td class="text-center"><strong>Price</strong></td>
                                     <td class="text-center"><strong>Quantity</strong></td>
                                     <td class="text-right"><strong>Totals</strong></td>
@@ -85,7 +84,6 @@
 
                                 @foreach ($orderDetails['orders_products'] as $product)
                                 <tr>
-                                    <td class="text-center">{{ $product['product_size'] }}</td>
                                     <td class="text-center">INR {{ $product['product_price'] }}</td>
                                     <td class="text-center">{{ $product['product_qty'] }}</td>
                                     <td class="text-right">INR
