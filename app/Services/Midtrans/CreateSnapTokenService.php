@@ -4,22 +4,21 @@ namespace App\Services\Midtrans;
 
 use Midtrans\Snap;
 use App\Models\OrdersProduct;
-use Illuminate\Support\Facades\Log;
 
-class CreateSnapTokenService extends Midtrans 
+class CreateSnapTokenService extends Midtrans
 {
     protected $order;
 
-    public function __construct($order) 
+    public function __construct($order)
     {
         parent::__construct();
 
         $this->order = $order;
     }
 
-    public function getSnapToken() 
+    public function getSnapToken()
     {
-        
+
         $item_details = OrdersProduct::where('order_id', $this->order->id)->get();
         $details = [];
         foreach ($item_details as $key => $value) {
@@ -32,29 +31,27 @@ class CreateSnapTokenService extends Midtrans
         }
 
         $transactionDetails = [
-                'transaction_details' => [
-                    'order_id' => $this->order->id,
-                    'gross_amount' => round($this->order->grand_total),
-                ],
-                'item_details' => $details , 
-                'customer_details' => [
-                    'first_name' => $this->order->name,
-                    'email' => $this->order->email,
-                    'phone' => $this->order->phone
-                ]
-            ];
+            'transaction_details' => [
+                'order_id' => $this->order->id,
+                'gross_amount' => round($this->order->grand_total),
+            ],
+            'item_details' => $details,
+            'customer_details' => [
+                'first_name' => $this->order->name,
+                'email' => $this->order->email,
+                'phone' => $this->order->phone
+            ]
+        ];
 
-            $transactionDetails['item_details'][] = [
-                'id' => 'shipping',
-                'price' => $this->order->shipping_charges,
-                'quantity' => 1,
-                'name' => 'Shipping Charges',
-            ];
+        $transactionDetails['item_details'][] = [
+            'id' => 'shipping',
+            'price' => $this->order->shipping_charges,
+            'quantity' => 1,
+            'name' => 'Shipping Charges',
+        ];
 
-            $snapToken = Snap::getSnapToken($transactionDetails);
+        $snapToken = Snap::getSnapToken($transactionDetails);
 
-            return $snapToken;
+        return $snapToken;
     }
 }
-
-?>

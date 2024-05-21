@@ -6,19 +6,17 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
-
 use App\Models\Coupon;
-
-
 
 class CouponsController extends Controller
 {
     // Render admin/coupons/coupons.blade.php page in the Admin Panel    
-    public function coupons() {
+    public function coupons()
+    {
         // Correcting issues in the Skydash Admin Panel Sidebar using Session
         Session::put('page', 'coupons');
 
-        
+
         // Get ONLY the coupons that BELONG TO the 'vendor' to show them up in (not ALL coupons show up) in coupons.blade.php, and also make sure that the 'vendor' account is active/enabled/approved (`status` is 1) before they can access the products page    
         $adminType = Auth::guard('admin')->user()->type;      // `type`      is the column in `admins` table    // Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances    // Retrieving The Authenticated User and getting their `type`      column in `admins` table    // https://laravel.com/docs/9.x/authentication#retrieving-the-authenticated-user
         $vendor_id = Auth::guard('admin')->user()->vendor_id; // `vendor_id` is the column in `admins` table    // Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances    // Retrieving The Authenticated User and getting their `vendor_id` column in `admins` table    // https://laravel.com/docs/9.x/authentication#retrieving-the-authenticated-user
@@ -42,7 +40,8 @@ class CouponsController extends Controller
     }
 
     // Update Coupon Status (active/inactive) via AJAX in admin/coupons/coupons.blade.php, check admin/js/custom.js    
-    public function updateCouponStatus(Request $request) {
+    public function updateCouponStatus(Request $request)
+    {
         if ($request->ajax()) { // if the request is coming via an AJAX call
             $data = $request->all(); // Getting the name/value pairs array that are sent from the AJAX request (AJAX call)
             // dd($data);
@@ -65,16 +64,18 @@ class CouponsController extends Controller
     }
 
     // Delete a Coupon via AJAX in admin/coupons/coupons.blade.php, check admin/js/custom.js    
-    public function deleteCoupon($id) {
+    public function deleteCoupon($id)
+    {
         Coupon::where('id', $id)->delete();
-        
+
         $message = 'Coupon has been deleted successfully!';
-        
+
         return redirect()->back()->with('success_message', $message);
     }
 
     // Render admin/coupons/add_edit_coupon.blade.php page with 'GET' request ('Edit/Upate the Coupon') if the {id?} Optional Parameter is passed, or if it's not passed, it's a GET request too to 'Add a Coupon', or it's a POST request for the HTML Form submission in the same page    
-    public function addEditCoupon(Request $request, $id = null) { // the slug (Route Parameter) {id?} is an Optional Parameter, so if it's passed, this means 'Edit/Update the Coupon', and if not passed, this means' Add a Coupon'    // GET request to render the add_edit_coupon.blade.php view (whether Add or Edit depending on passing or not passing the Optional Parameter {id?}), and POST request to submit the <form> in that same page    // {id?} Optional Parameters: https://laravel.com/docs/9.x/routing#parameters-optional-parameters    
+    public function addEditCoupon(Request $request, $id = null)
+    { // the slug (Route Parameter) {id?} is an Optional Parameter, so if it's passed, this means 'Edit/Update the Coupon', and if not passed, this means' Add a Coupon'    // GET request to render the add_edit_coupon.blade.php view (whether Add or Edit depending on passing or not passing the Optional Parameter {id?}), and POST request to submit the <form> in that same page    // {id?} Optional Parameters: https://laravel.com/docs/9.x/routing#parameters-optional-parameters    
         // Correcting issues in the Skydash Admin Panel Sidebar using Session
         Session::put('page', 'coupons');
 
@@ -90,7 +91,6 @@ class CouponsController extends Controller
             $selUsers  = array();
 
             $message = 'Coupon added successfully!';
-
         } else { // if the $id is passed in the route/URL parameters (Optional Parameters {id?}), this means 'Edit/Update the Coupon'
             // Edit/Update the Coupon
             $title = 'Edit Coupon';
@@ -211,5 +211,4 @@ class CouponsController extends Controller
 
         return view('admin.coupons.add_edit_coupon')->with(compact('title', 'coupon', 'categories', 'brands', 'users', 'selCats', 'selBrands', 'selUsers'));
     }
-
 }
