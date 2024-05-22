@@ -24,6 +24,12 @@
                     <li class="nav-item">
                         <a class="nav-link" data-toggle="tab" href="#men-featured-products">Featured Products</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#food-featured-products">Food Products</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#drink-featured-products">Drink Products</a>
+                    </li>
                 </ul>
             </div>
             <div class="wrapper-content">
@@ -201,6 +207,120 @@
                             <div class="slider-fouc">
                                 <div class="products-slider owl-carousel" data-item="4">
                                     @foreach ($featuredProducts as $product)
+                                        @php
+                                            $product_image_path =
+                                                'front/images/product_images/small/' . $product['product_image'];
+                                        @endphp
+                                        <div class="item">
+                                            <div class="image-container">
+                                                <a class="item-img-wrapper-link"
+                                                    href="{{ url('product/' . $product['id']) }}">
+                                                    @if (!empty($product['product_image']) && file_exists($product_image_path))
+                                                        <img class="img-fluid" src="{{ asset($product_image_path) }}"
+                                                            alt="Product">
+                                                    @else
+                                                        {{-- show the dummy image --}}
+                                                        <img class="img-fluid"
+                                                            src="{{ asset('front/images/product_images/small/no-image.png') }}"
+                                                            alt="Product">
+                                                    @endif
+                                                </a>
+                                            </div>
+                                            <div class="item-content">
+                                                <div class="what-product-is">
+                                                    <h6 class="item-title">
+                                                        <a
+                                                            href="{{ url('product/' . $product['id']) }}">{{ $product['product_name'] }}</a>
+                                                    </h6>
+                                                </div>
+                                                @php
+                                                    $getDiscountPrice = \App\Models\Product::getDiscountPrice(
+                                                        $product['id'],
+                                                    );
+                                                @endphp
+                                                @if ($getDiscountPrice > 0)
+                                                    <div class="price-template">
+                                                        <div class="item-new-price">
+                                                            IDR {{ $getDiscountPrice }}
+                                                        </div>
+                                                        <div class="item-old-price">
+                                                            IDR {{ $product['product_price'] }}
+                                                        </div>
+                                                    </div>
+                                                @else
+                                                    <div class="price-template">
+                                                        <div class="item-new-price">
+                                                            IDR {{ $product['product_price'] }}
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="food-featured-products">
+                            <div class="slider-fouc">
+                                <div class="products-slider owl-carousel" data-item="5">
+                                    @foreach ($makanan as $product)
+                                        @php
+                                            $product_image_path =
+                                                'front/images/product_images/small/' . $product['product_image'];
+                                        @endphp
+                                        <div class="item">
+                                            <div class="image-container">
+                                                <a class="item-img-wrapper-link"
+                                                    href="{{ url('product/' . $product['id']) }}">
+                                                    @if (!empty($product['product_image']) && file_exists($product_image_path))
+                                                        <img class="img-fluid" src="{{ asset($product_image_path) }}"
+                                                            alt="Product">
+                                                    @else
+                                                        {{-- show the dummy image --}}
+                                                        <img class="img-fluid"
+                                                            src="{{ asset('front/images/product_images/small/no-image.png') }}"
+                                                            alt="Product">
+                                                    @endif
+                                                </a>
+                                            </div>
+                                            <div class="item-content">
+                                                <div class="what-product-is">
+                                                    <h6 class="item-title">
+                                                        <a
+                                                            href="{{ url('product/' . $product['id']) }}">{{ $product['product_name'] }}</a>
+                                                    </h6>
+                                                </div>
+                                                @php
+                                                    $getDiscountPrice = \App\Models\Product::getDiscountPrice(
+                                                        $product['id'],
+                                                    );
+                                                @endphp
+                                                @if ($getDiscountPrice > 0)
+                                                    <div class="price-template">
+                                                        <div class="item-new-price">
+                                                            IDR {{ $getDiscountPrice }}
+                                                        </div>
+                                                        <div class="item-old-price">
+                                                            IDR {{ $product['product_price'] }}
+                                                        </div>
+                                                    </div>
+                                                @else
+                                                    <div class="price-template">
+                                                        <div class="item-new-price">
+                                                            IDR {{ $product['product_price'] }}
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="drink-featured-products">
+                            <div class="slider-fouc">
+                                <div class="products-slider owl-carousel" data-item="6">
+                                    @foreach ($minuman as $product)
                                         @php
                                             $product_image_path =
                                                 'front/images/product_images/small/' . $product['product_image'];
