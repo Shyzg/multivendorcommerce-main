@@ -646,8 +646,8 @@ class ProductsController extends Controller
                 $cartItem->vendor_id       = $getProductDetails['vendor_id'];
 
                 if ($getProductDetails['vendor_id'] > 0) {
-                    $vendorCommission = Vendor::getVendorCommission($getProductDetails['vendor_id']);
-                    $cartItem->commission  = $vendorCommission;
+                    // $vendorCommission = Vendor::getVendorCommission($getProductDetails['vendor_id']);
+                    $cartItem->commission  = null;
                 }
 
                 $cartItem->product_id      = $item['product_id'];
@@ -688,8 +688,11 @@ class ProductsController extends Controller
                 }
 
                 $order->save();
+                
                 DB::commit();
             }
+            
+            $destroyCart = Cart::destroyCartItems();
 
             $orderDetails = Order::with('orders_products')->where('id', $order_id)->first()->toArray();
 

@@ -48,4 +48,13 @@ class Cart extends Model
 
         return $getCartItems;
     }
+
+    public static function destroyCartItems() {
+        
+        if (Auth::check()) {
+            return $getCartItems = Cart::where('user_id' , Auth::user()->id)->delete();
+        }
+
+        return false;
+    }
 }
