@@ -11,11 +11,9 @@ use App\Models\Category;
 use App\Models\DeliveryAddress;
 use App\Models\Product;
 use App\Models\ProductsAttribute;
-use App\Models\Rating;
 use App\Models\Cart;
 use App\Models\Coupon;
 use App\Models\Order;
-use App\Models\ProductsFilter;
 use App\Models\Vendor;
 use App\Models\User;
 use App\Models\Country;
@@ -602,13 +600,8 @@ class ProductsController extends Controller
 
             $deliveryAddress = DeliveryAddress::where('id', $data['address_id'])->first()->toArray();
 
-            if ($data['payment_gateway'] == 'COD') {
-                $payment_method = 'COD';
-                $order_status   = 'New';
-            } else {
-                $payment_method = 'Prepaid';
-                $order_status   = 'Pending';
-            }
+            $payment_method = 'Prepaid';
+            $order_status   = 'Pending';
 
             DB::beginTransaction();
 

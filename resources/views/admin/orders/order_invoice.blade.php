@@ -121,11 +121,6 @@
                                     <td class="no-line text-right"><strong>Grand Total</strong></td>
                                     <td class="no-line text-right">
                                         <strong>INR {{ $orderDetails['grand_total'] }}</strong>
-                                        <br>
-
-                                        @if ($orderDetails['payment_method'] == 'COD')
-                                        <font color=red>(Already Paid)</font>
-                                        @endif
                                     </td>
                                 </tr>
                             </tbody>

@@ -185,13 +185,6 @@ Route::namespace('App\Http\Controllers\Front')->group(function () {
     // Website Search Form (to search for all website products). Check the HTML Form in front/layout/header.blade.php
     Route::get('search-products', 'ProductsController@listing');
 
-    // Add Rating & Review on a product in front/products/detail.blade.php
-    Route::post('add-rating', 'RatingController@addRating');
-
-
-
-
-    // Protecting the routes of user (user must be authenticated/logged in) (to prevent access to these links while being unauthenticated/not being logged in (logged out))
     Route::group(['middleware' => ['auth']], function () {
         // Render User Account page with 'GET' request (front/users/user_account.blade.php), or the HTML Form submission in the same page with 'POST' request using AJAX (to update user details). Check front/js/custom.js
         Route::match(['GET', 'POST'], 'user/account', 'UserController@userAccount');
@@ -213,12 +206,10 @@ Route::namespace('App\Http\Controllers\Front')->group(function () {
 
         // Remove Delivery Addresse via AJAX (Page refresh and fill in the <input> fields with the authenticated/logged-in user Delivery Addresses details from the `delivery_addresses` database table when clicking on the Remove button) in front/products/delivery_addresses.blade.php (which is 'include'-ed in front/products/checkout.blade.php) via AJAX, check front/js/custom.js
         Route::post('remove-delivery-address', 'AddressController@removeDeliveryAddress');
-
         // Rendering Thanks page (after placing an order)
         Route::get('thanks', 'ProductsController@thanks');
-
         // Render User 'My Orders' page
-        Route::get('user/orders/{id?}', 'OrderController@orders'); // If the slug {id?} (Optional Parameters) is passed in, this means go to the front/orders/order_details.blade.php page, and if not, this means go to the front/orders/orders.blade.php page
+        Route::get('user/orders/{id?}', 'OrderController@orders');
 
         Route::get('rajaongkir/checkongkir', [CheckOngkirController::class, 'checkOngkir'])->name('check-ongkir');
     });
