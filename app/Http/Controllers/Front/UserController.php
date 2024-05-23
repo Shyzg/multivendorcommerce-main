@@ -9,6 +9,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Cart;
+use App\Models\City;
+use App\Models\Country;
+use App\Models\Province;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -19,36 +25,33 @@ class UserController extends Controller
 
     public function userRegister(Request $request)
     {
-        if ($request->ajax()) {
+        if ($request->isMethod('post')) {
             $data = $request->all();
-            $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
+            $validator = Validator::make($request->all(), [
                 'name'     => 'required|string|max:100',
                 'mobile'   => 'required|numeric|digits:11',
                 'email'    => 'required|email|max:150|unique:users',
                 'password' => 'required|min:6'
             ]);
 
-            if ($validator->passes()) {
-                $user = new User;
-                $user->name     = $data['name'];
-                $user->mobile   = $data['mobile'];
-                $user->email    = $data['email'];
-                $user->password = bcrypt($data['password']);
-                $user->save();
-
-                $redirectTo = url('user/login-register');
-
-                return response()->json([
-                    'type'    => 'success',
-                    'url'     => $redirectTo,
-                    'message' => 'Berhasil mendaftarkan akun.'
-                ]);
-            } else {
-                return response()->json([
-                    'type'   => 'error',
-                    'errors' => $validator->messages()
-                ]);
+            if ($validator->fails()) {
+                return Redirect::back()->withErrors($validator);
             }
+
+            DB::beginTransaction();
+
+            $user = new User;
+            $user->name     = $data['name'];
+            $user->mobile   = $data['mobile'];
+            $user->email    = $data['email'];
+            $user->password = bcrypt($data['password']);
+            $user->save();
+
+            DB::commit();
+
+            $message = 'Berhasil mendaftarkan akun, silahkan login.';
+
+            return redirect()->back()->with('success_message', $message);
         }
     }
 
@@ -56,16 +59,13 @@ class UserController extends Controller
     {
         if ($request->ajax()) {
             $data = $request->all();
-            $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
+            $validator = Validator::make($request->all(), [
                 'email'    => 'required|email|max:150|exists:users',
                 'password' => 'required|min:6'
             ]);
 
             if ($validator->passes()) {
-                if (Auth::attempt([
-                    'email'    => $data['email'],
-                    'password' => $data['password']
-                ])) {
+                if (Auth::attempt(['email' => $data['email'], 'password' => $data['password']])) {
                     if (!empty(Session::get('session_id'))) {
                         $user_id    = Auth::user()->id;
                         $session_id = Session::get('session_id');
@@ -107,7 +107,7 @@ class UserController extends Controller
     {
         if ($request->ajax()) {
             $data = $request->all();
-            $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
+            $validator = Validator::make($request->all(), [
                 'name'    => 'required|string|max:100',
                 'city'    => 'required|string|max:100',
                 'state'   => 'required|string|max:100',
@@ -137,9 +137,9 @@ class UserController extends Controller
                 ]);
             }
         } else {
-            $countries = \App\Models\Country::get()->toArray();
-            $cities = \App\Models\City::get()->toArray();
-            $province = \App\Models\Province::get()->toArray();
+            $countries = Country::get()->toArray();
+            $cities = City::get()->toArray();
+            $province = Province::get()->toArray();
 
             return view('front.users.user_account')->with(compact('countries', 'cities', 'province'));
         }
@@ -149,7 +149,7 @@ class UserController extends Controller
     {
         if ($request->ajax()) {
             $data = $request->all();
-            $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
+            $validator = Validator::make($request->all(), [
                 'current_password'  => 'required',
                 'new_password'     => 'required|min:6',
                 'confirm_password' => 'required|min:6|same:new_password'

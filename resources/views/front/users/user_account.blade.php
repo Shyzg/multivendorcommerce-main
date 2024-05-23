@@ -1,6 +1,22 @@
 @extends('front.layout.layout')
 
 @section('content')
+<div class="page-style-a">
+    <div class="container">
+        <div class="page-intro">
+            <h2>My Account</h2>
+            <ul class="bread-crumb">
+                <li class="has-separator">
+                    <i class="ion ion-md-home"></i>
+                    <a href="index.html">Home</a>
+                </li>
+                <li class="is-marked">
+                    <a href="#">Account</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
 <div class="page-account u-s-p-t-80">
     <div class="container">
         @if (Session::has('success_message'))
@@ -60,7 +76,8 @@
                             </label>
                             <select class="text-field" id="user-city" name="city" style="color: #495057">
                                 <option value="">Select City</option>
-                                @foreach ($cities as $city) {{-- $countries was passed from UserController to view using compact() method --}}
+                                @foreach ($cities as $city)
+                                {{-- $countries was passed from UserController to view using compact() method --}}
                                 <option value="{{ $city['name'] }}" @if ($city['name']==\Illuminate\Support\Facades\Auth::user()->city) selected @endif>{{ $city['name'] }}</option>
                                 @endforeach
                             </select>
@@ -71,7 +88,8 @@
                             </label>
                             <select class="text-field" id="user-state" name="state" style="color: #495057">
                                 <option value="">Select State</option>
-                                @foreach ($province as $state) {{-- $countries was passed from UserController to view using compact() method --}}
+                                @foreach ($province as $state)
+                                {{-- $countries was passed from UserController to view using compact() method --}}
                                 <option value="{{ $state['name'] }}" @if ($state['name']==\Illuminate\Support\Facades\Auth::user()->state) selected @endif>{{ $state['name'] }}</option>
                                 @endforeach
                             </select>
@@ -83,7 +101,9 @@
                             <select class="text-field" id="user-country" name="country" style="color: #495057">
                                 <option value="">Select Country</option>
                                 @foreach ($countries as $country)
-                                <option value="{{ $country['country_name'] }}" @if ($country['country_name']==\Illuminate\Support\Facades\Auth::user()->country) selected @endif>{{ $country['country_name'] }}</option>
+                                <option value="{{ $country['country_name'] }}" @if ($country['country_name']==\Illuminate\Support\Facades\Auth::user()->country) selected @endif>
+                                    {{ $country['country_name'] }}
+                                </option>
                                 @endforeach
                             </select>
                             <p id="account-country"></p>

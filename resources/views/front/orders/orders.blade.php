@@ -1,12 +1,6 @@
-{{-- This page is rendered by orders() method inside Front/OrderController.php (depending on if the order id Optional Parameter (slug) is passed in or not) --}}
-
-
 @extends('front.layout.layout')
 
-
-
 @section('content')
-<!-- Page Introduction Wrapper -->
 <div class="page-style-a">
     <div class="container">
         <div class="page-intro">
@@ -14,7 +8,7 @@
             <ul class="bread-crumb">
                 <li class="has-separator">
                     <i class="ion ion-md-home"></i>
-                    <a href="index.html">Home</a>
+                    <a href="{{ url('/'); }}">Home</a>
                 </li>
                 <li class="is-marked">
                     <a href="#">Orders</a>
@@ -23,8 +17,6 @@
         </div>
     </div>
 </div>
-<!-- Page Introduction Wrapper /- -->
-<!-- Cart-Page -->
 <div class="page-cart u-s-p-t-80">
     <div class="container">
         <div class="row">

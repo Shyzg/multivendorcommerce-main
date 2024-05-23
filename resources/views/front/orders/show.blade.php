@@ -2,7 +2,6 @@
 
 
 @section('content')
-
     <style>
         html {
             font-size: 14px;
@@ -37,7 +36,6 @@
         .box-shadow {
             box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
         }
-
     </style>
 
     <div class="container pb-5 pt-5">
@@ -61,9 +59,9 @@
                             <tr>
                                 <td>Status Pembayaran</td>
                                 <td><b>
-                                        @if ($order->order_status == "Pending")
+                                        @if ($order->order_status == 'Pending')
                                             Pending
-                                        @elseif ($order->payment_status == "Paid")
+                                        @elseif ($order->payment_status == 'Paid')
                                             Paid
                                         @else
                                             Expire
@@ -84,7 +82,7 @@
                         <h5>Pembayaran</h5>
                     </div>
                     <div class="card-body">
-                        @if ($order->order_status == "Pending")
+                        @if ($order->order_status == 'Pending')
                             <button class="btn btn-primary" id="pay-button">Bayar Sekarang</button>
                         @else
                             Pembayaran berhasil
@@ -94,7 +92,7 @@
             </div>
         </div>
     </div>
-    
+
 
     <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}">
     </script>
@@ -108,24 +106,26 @@
                 onSuccess: function(result) {
                     /* You may add your own js here, this is just example */
                     // document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
-                    window.location.href = '/payments/finish?message=' + encodeURIComponent(JSON.stringify(result));
+                    window.location.href = '/payments/finish?message=' + encodeURIComponent(JSON
+                        .stringify(result));
                 },
                 // Optional
                 onPending: function(result) {
                     /* You may add your own js here, this is just example */
                     // document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
-                    window.location.href = '/payments/unfinish?message=' + encodeURIComponent(JSON.stringify(result));
-                    
+                    window.location.href = '/payments/unfinish?message=' + encodeURIComponent(JSON
+                        .stringify(result));
+
                 },
                 // Optional
                 onError: function(result) {
                     /* You may add your own js here, this is just example */
                     // document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
-                    window.location.href = '/payments/error?message=' + encodeURIComponent(JSON.stringify(result));
+                    window.location.href = '/payments/error?message=' + encodeURIComponent(JSON
+                        .stringify(result));
 
                 }
             });
         });
     </script>
-
 @endsection

@@ -50,6 +50,22 @@
         color: #c59b08;
     }
 </style>
+<div class="page-style-a">
+    <div class="container">
+        <div class="page-intro">
+            <h2>Detail</h2>
+            <ul class="bread-crumb">
+                <li class="has-separator">
+                    <i class="ion ion-md-home"></i>
+                    <a href="{{ url('/') }}">Home</a>
+                </li>
+                <li class="is-marked">
+                    <a href="javascript:;">Detail</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
 <div class="page-detail u-s-p-t-80">
     <div class="container">
         <div class="row">
@@ -123,15 +139,15 @@
                         <span class="getAttributePrice">
                             @if ($getDiscountPrice > 0)
                             <div class="price">
-                                <h4>EGP{{ $getDiscountPrice }}</h4>
+                                <h4>IDR {{ $getDiscountPrice }}</h4>
                             </div>
                             <div class="original-price">
                                 <span>Original Price:</span>
-                                <span>EGP{{ $productDetails['product_price'] }}</span>
+                                <span>IDR {{ $productDetails['product_price'] }}</span>
                             </div>
                             @else
                             <div class="price">
-                                <h4>EGP{{ $productDetails['product_price'] }}</h4>
+                                <h4>IDR {{ $productDetails['product_price'] }}</h4>
                             </div>
                             @endif
                         </span>

@@ -58,11 +58,11 @@
                         </div>
                         <div class="form-group" style="height: 15px">
                             <label style="font-weight: 550">Order Total: </label>
-                            <label>EGP{{ $orderDetails['grand_total'] }}</label>
+                            <label>IDR {{ $orderDetails['grand_total'] }}</label>
                         </div>
                         <div class="form-group" style="height: 15px">
                             <label style="font-weight: 550">Shipping Charges: </label>
-                            <label>EGP{{ $orderDetails['shipping_charges'] }}</label>
+                            <label>IDR {{ $orderDetails['shipping_charges'] }}</label>
                         </div>
                         @if (!empty($orderDetails['coupon_code']))
                         <div class="form-group" style="height: 15px">
@@ -71,7 +71,7 @@
                         </div>
                         <div class="form-group" style="height: 15px">
                             <label style="font-weight: 550">Coupon Amount: </label>
-                            <label>EGP{{ $orderDetails['coupon_amount'] }}</label>
+                            <label>IDR {{ $orderDetails['coupon_amount'] }}</label>
                         </div>
                         @endif
                         <div class="form-group" style="height: 15px">

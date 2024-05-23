@@ -36,11 +36,11 @@ $(document).ready(function() {
                 console.log(resp);
                 if (resp.discount > 0) { // if there's a discount    // this is the same as:    if (resp['discount'] > 0) {
                     $('.getAttributePrice').html(
-                        '<div class="price"><h4>EGP' + resp.final_price + '</h4></div><div class="original-price"><span>Original Price: </span><span>EGP' + resp.product_price + '</span></div>'
+                        '<div class="price"><h4>IDR ' + resp.final_price + '</h4></div><div class="original-price"><span>Original Price: </span><span>IDR ' + resp.product_price + '</span></div>'
                     ); // Note: resp.product_price    is the same as    resp['product_price']
                 } else { // if there's no discount
                     $('.getAttributePrice').html(
-                        '<div class="price"><h4>EGP' + resp.final_price + '</h4></div>'
+                        '<div class="price"><h4>IDR ' + resp.final_price + '</h4></div>'
                     ); // Note: resp.final_price    is the same as    resp['final_price']
                 }
             },
@@ -132,70 +132,6 @@ $(document).ready(function() {
         // Show our Preloader/Loader/Loading Page/Preloading Screen while the <form> is submitted    
         $('.loader').show();
     });
-
-
-
-    // User Registration <form> submission (in front/users/login_register.blade.php)    
-    $('#registerForm').submit(function() { // When the registration <form> is submitted
-
-        // Show our Preloader/Loader/Loading Page/Preloading Screen while the <form> is submitted    
-        $('.loader').show();
-
-
-        var formdata = $(this).serialize(); // serialize() method comes in handy when submitting an HTML Form using an AJAX request / Ajax call, as it collects all the name/value pairs from the HTML Form input fields like: <input>, <textarea>, <select><option>, ... HTML elements of the <form> (instead of the heavy work of assigning an identifier/handle for every <input> and <textarea>, ... using an HTML 'id' or CSS 'class', and then getting the value for every one of them like this:    $('#username).val();    )    // serialize() jQuery method: https://www.w3schools.com/jquery/ajax_serialize.asp
-
-
-        // return false; // DON'T SUBMIT THE FORM!!
-
-
-
-        $.ajax({
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}, // X-CSRF-TOKEN: https://laravel.com/docs/9.x/csrf#csrf-x-csrf-token    
-            url    : '/user/register', // check this route in web.php
-            type   : 'POST',
-            data   : formdata, // Sending name/value pairs to server with the AJAX request (AJAX call)
-            success: function(resp) { // if the AJAX request is successful
-                // Showing Validation Errors in the view (from the backend/server response of our AJAX request):
-                // console.log('tes')
-                if (resp.type == 'error') { // if there're Validation Errors (login fails), show the Validation Error Messages (each of them under its respective <input> field)    // 'type' is sent as a PHP array key (in the HTTP response from the server (backend)) from inside the userRegister() method in Front/UserController.php
-                    // Hide our Preloader/Loader/Loading Page/Preloading Screen when there's an error    
-                    $('.loader').hide();
-
-
-                    // Note: in HTML in front/users/login_register.blade.php, to conveniently display the errors by jQuery loop, the pattern must be like: register-x (e.g. register-mobile, regitster-email, ... in order for the jQuery loop to work. And x must be identical to the 'name' HTML attributes (e.g. the <input> with the    name='mobile'    HTML attribute must have a <p> with an id HTML attribute    id="register-mobile"    ) so that when the vaildation errors array are sent as a response to the AJAX request, they could conveniently/easily handled by the jQuery $.each() loop)
-                    $.each(resp.errors, function(i, error) { // 'i' is the attribute (the 'name' HTML attribute) ('i' is the JavaScript object keys or the PHP array (sent from backend/server response from method inside controller) keys/indexes, and 'error' is the Validation Error ('error' is the JavaScript object values or the PHP array (sent from backend/server response from method inside controller) values    // $.each(): https://api.jquery.com/jquery.each/    // 'errors' is sent as a PHP array key (in the HTTP response from the server (backend)) from inside the userRegister() method in Front/UserController.php
-                        // console.log(i);     // The JavaScript ojbect keys   (properties names)  (the PHP array (sent from backend/server response from method inside controller) keys/indexes)
-                        // console.log(error); // The JavaScript ojbect values (properties values) (the PHP array (sent from backend/server response from method inside controller) values)
-
-
-                        $('#register-' + i).attr('style', 'color: red'); // I already did this in the HTML page in the <p> tags in the HTML in front/users/login_register.blade.php (    <p id="register-name" style="color: red"></p>    )    // This is the same as:    $('#register-' + i).css('color', 'red');    // Change the CSS color of the <p> tags
-                        $('#register-' + i).html(error); // replace the <p> tags that we created inside the user registration <form> in front/users/login_register.blade.php depending on x in their 'id' HTML attributes 'register-x' (e.g. register-mobile, register-email, ...)
-
-
-                        // Make the Validation Error Messages disappear after a certain amount of time (don't stick)
-                        setTimeout(function() {
-                            $('#register-' + i).css({
-                                'display': 'none'
-                            });
-                        }, 3000);
-
-                    });
-
-                } else if (resp.type == 'success') { // if there're no validation errors (login is successful), redirect to the Cart page    // 'type' is sent as a PHP array key (in the HTTP response from the server (backend)) from inside the userRegister() method in Front/UserController.php
-                    // Hide our Preloader/Loader/Loading Page/Preloading Screen when the response is 'success'    
-                    $('.loader').hide();
-                    // console.log(resp.message)
-                    $('#register-success').attr('style', 'color: green'); // I already did this in the HTML page in the <p> tags in the HTML in front/users/login_register.blade.php (    <p id="login-name" style="color: red"></p>    )    // This is the same as:    $('#login-' + i).css('color', 'green');    // Change the CSS color of the <p> tags
-                    $('#register-success').html(resp.message); // replace the <p> tags that we created inside the user registration <form> in front/users/login_register.blade.php depending on x in their 'id' HTML attributes 'login-x' (e.g. login-mobile, login-email, ...)
-                }
-            },
-            error  : function() { // if the AJAX request is unsuccessful
-                alert('Error');
-            }
-        });
-    });
-
-
 
     // User Login <form> submission (in front/users/login_register.blade.php)    
     $('#loginForm').submit(function() { // When the login <form> is submitted
@@ -498,14 +434,14 @@ $(document).ready(function() {
 
                 
                 if (resp.couponAmount > 0) { // if there's a coupon code submitted and it's valid        // 'couponAmount' is sent as a PHP array key (in the HTTP response from the server (backend)) from inside the applyCoupon() method in Front/ProductsController.php
-                    $('.couponAmount').text('EGP' + resp.couponAmount); // 'couponAmount' is sent as a PHP array key (in the HTTP response from the server (backend)) from inside the applyCoupon() method in Front/ProductsController.php    
+                    $('.couponAmount').text('IDR ' + resp.couponAmount); // 'couponAmount' is sent as a PHP array key (in the HTTP response from the server (backend)) from inside the applyCoupon() method in Front/ProductsController.php    
                 } else {
-                    $('.couponAmount').text('EGP 0');
+                    $('.couponAmount').text('IDR  0');
                 }
 
                 
                 if (resp.grand_total > 0) { // if there's a coupon code submitted and it's valid        // 'grand_total' is sent as a PHP array key (in the HTTP response from the server (backend)) from inside the applyCoupon() method in Front/ProductsController.php
-                    $('.grand_total').text('EGP' + resp.grand_total); // 'grand_total' is sent as a PHP array key (in the HTTP response from the server (backend)) from inside the applyCoupon() method in Front/ProductsController.php    
+                    $('.grand_total').text('IDR ' + resp.grand_total); // 'grand_total' is sent as a PHP array key (in the HTTP response from the server (backend)) from inside the applyCoupon() method in Front/ProductsController.php    
                 }
             },
             error  : function() { // if the AJAX request is unsuccessful
@@ -628,20 +564,20 @@ $(document).ready(function() {
         // alert(shipping_charges);
 
         // Display the Shipping Charges
-        $('.shipping_charges').html('EGP' + shipping_charges);
+        $('.shipping_charges').html('IDR ' + shipping_charges);
 
         if (coupon_amount == '') {
             coupon_amount = 0;
         }
 
         // Display the Coupon Amount
-        $('.couponAmount').html('EGP' + coupon_amount);
+        $('.couponAmount').html('IDR ' + coupon_amount);
 
         // Calculate the Grand Total
         var grand_total = parseInt(total_price) + parseInt(shipping_charges) - parseInt(coupon_amount);
         // alert(grand_total);
 
         // Display the Grand Total
-        $('.grand_total').html('EGP' + grand_total);
+        $('.grand_total').html('IDR ' + grand_total);
     });
 });

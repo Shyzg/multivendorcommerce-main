@@ -74,154 +74,33 @@ class ProductsController extends Controller
                 abort(404);
             }
         } else {
-            if (isset($_REQUEST['search']) && !empty($_REQUEST['search'])) {
-                if ($_REQUEST['search'] == 'new-arrivals') {
-                    $search_product = $_REQUEST['search'];
-                    $categoryDetails['breadcrumbs']                      = 'New Arrival Products';
-                    $categoryDetails['categoryDetails']['category_name'] = 'New Arrival Products';
-                    $categoryDetails['categoryDetails']['description']   = 'New Arrival Products';
-                    $categoryProducts = Product::select(
-                        'products.id',
-                        'products.section_id',
-                        'products.category_id',
-                        'products.vendor_id',
-                        'products.product_name',
-                        'products.product_price',
-                        'products.product_discount',
-                        'products.product_image',
-                        'products.description'
-                    )->join(
-                        'categories',
-                        'categories.id',
-                        '=',
-                        'products.category_id'
-                    )->where('products.status', 1)->orderBy('id', 'Desc');
-                } elseif ($_REQUEST['search'] == 'best-sellers') {
-                    $search_product = $_REQUEST['search'];
-                    $categoryDetails['breadcrumbs']                      = 'Best Sellers Products';
-                    $categoryDetails['categoryDetails']['category_name'] = 'Best Sellers Products';
-                    $categoryDetails['categoryDetails']['description']   = 'Best Sellers Products';
-                    $categoryProducts = Product::select(
-                        'products.id',
-                        'products.section_id',
-                        'products.category_id',
-                        'products.vendor_id',
-                        'products.product_name',
-                        'products.product_price',
-                        'products.product_discount',
-                        'products.product_image',
-                        'products.description'
-                    )->join(
-                        'categories',
-                        'categories.id',
-                        '=',
-                        'products.category_id'
-                    )->where('products.status', 1)->where('products.is_bestseller', 'Yes');
-                } elseif ($_REQUEST['search'] == 'featured') {
-                    $search_product = $_REQUEST['search'];
-                    $categoryDetails['breadcrumbs']                      = 'Featured Products';
-                    $categoryDetails['categoryDetails']['category_name'] = 'Featured Products';
-                    $categoryDetails['categoryDetails']['description']   = 'Featured Products';
-                    $categoryProducts = Product::select(
-                        'products.id',
-                        'products.section_id',
-                        'products.category_id',
-                        'products.vendor_id',
-                        'products.product_name',
-                        'products.product_price',
-                        'products.product_discount',
-                        'products.product_image',
-                        'products.description'
-                    )->join(
-                        'categories',
-                        'categories.id',
-                        '=',
-                        'products.category_id'
-                    )->where('products.status', 1)->where('products.is_featured', 'Yes');
-                } elseif ($_REQUEST['search'] == 'discounted') {
-                    $search_product = $_REQUEST['search'];
-                    $categoryDetails['breadcrumbs']                      = 'Discounted Products';
-                    $categoryDetails['categoryDetails']['category_name'] = 'Discounted Products';
-                    $categoryDetails['categoryDetails']['description']   = 'Discounted Products';
-                    $categoryProducts = Product::select(
-                        'products.id',
-                        'products.section_id',
-                        'products.category_id',
-                        'products.vendor_id',
-                        'products.product_name',
-                        'products.product_price',
-                        'products.product_discount',
-                        'products.product_image',
-                        'products.description'
-                    )->join(
-                        'categories',
-                        'categories.id',
-                        '=',
-                        'products.category_id'
-                    )->where('products.status', 1)->where('products.product_discount', '>', 0);
-                } else {
-                    $search_product = $_REQUEST['search'];
-                    $categoryDetails['breadcrumbs']                      = $search_product;
-                    $categoryDetails['categoryDetails']['category_name'] = $search_product;
-                    $categoryDetails['categoryDetails']['description']   = 'Search Products for ' . $search_product;
-                    $categoryProducts = Product::select(
-                        'products.id',
-                        'products.section_id',
-                        'products.category_id',
-                        'products.vendor_id',
-                        'products.product_name',
-                        'products.product_price',
-                        'products.product_discount',
-                        'products.product_image',
-                        'products.description'
-                    )->join(
-                        'categories',
-                        'categories.id',
-                        '=',
-                        'products.category_id'
-                    )->where(function ($query) use ($search_product) {
-                        $query->where('products.product_name',    'like', '%' . $search_product . '%')
-                            ->orWhere('products.description',     'like', '%' . $search_product . '%')
-                            ->orWhere('categories.category_name', 'like', '%' . $search_product . '%');
-                    })->where('products.status', 1);
-                }
+            $url = \Illuminate\Support\Facades\Route::getFacadeRoot()->current()->uri();
+            $categoryCount = Category::where([
+                'url'    => $url
+            ])->count();
 
-                if (isset($_REQUEST['section_id']) && !empty($_REQUEST['section_id'])) {
-                    $categoryProducts = $categoryProducts->where('products.section_id', $_REQUEST['section_id']);
-                }
+            if ($categoryCount > 0) {
+                $categoryDetails = Category::categoryDetails($url);
+                $categoryProducts = Product::whereIn('category_id', $categoryDetails['catIds']);
 
-                $categoryProducts = $categoryProducts->get();
-
-                return view('front.products.listing')->with(compact('categoryDetails', 'categoryProducts'));
-            } else {
-                $url = \Illuminate\Support\Facades\Route::getFacadeRoot()->current()->uri();
-                $categoryCount = Category::where([
-                    'url'    => $url
-                ])->count();
-
-                if ($categoryCount > 0) {
-                    $categoryDetails = Category::categoryDetails($url);
-                    $categoryProducts = Product::whereIn('category_id', $categoryDetails['catIds']);
-
-                    if (isset($_GET['sort']) && !empty($_GET['sort'])) {
-                        if ($_GET['sort'] == 'product_latest') {
-                            $categoryProducts->orderBy('products.id', 'Desc');
-                        } elseif ($_GET['sort'] == 'price_lowest') {
-                            $categoryProducts->orderBy('products.product_price', 'Asc');
-                        } elseif ($_GET['sort'] == 'price_highest') {
-                            $categoryProducts->orderBy('products.product_price', 'Desc');
-                        } elseif ($_GET['sort'] == 'name_z_a') {
-                            $categoryProducts->orderBy('products.product_name', 'Desc');
-                        } elseif ($_GET['sort'] == 'name_a_z') {
-                            $categoryProducts->orderBy('products.product_name', 'Asc');
-                        }
+                if (isset($_GET['sort']) && !empty($_GET['sort'])) {
+                    if ($_GET['sort'] == 'product_latest') {
+                        $categoryProducts->orderBy('products.id', 'Desc');
+                    } elseif ($_GET['sort'] == 'price_lowest') {
+                        $categoryProducts->orderBy('products.product_price', 'Asc');
+                    } elseif ($_GET['sort'] == 'price_highest') {
+                        $categoryProducts->orderBy('products.product_price', 'Desc');
+                    } elseif ($_GET['sort'] == 'name_z_a') {
+                        $categoryProducts->orderBy('products.product_name', 'Desc');
+                    } elseif ($_GET['sort'] == 'name_a_z') {
+                        $categoryProducts->orderBy('products.product_name', 'Asc');
                     }
-
-                    $categoryProducts = $categoryProducts->paginate(30);
-                    return view('front.products.listing')->with(compact('categoryDetails', 'categoryProducts', 'url'));
-                } else {
-                    abort(404);
                 }
+
+                $categoryProducts = $categoryProducts->paginate(30);
+                return view('front.products.listing')->with(compact('categoryDetails', 'categoryProducts', 'url'));
+            } else {
+                abort(404);
             }
         }
     }
@@ -645,11 +524,6 @@ class ProductsController extends Controller
                 $cartItem->admin_id        = $getProductDetails['admin_id'];
                 $cartItem->vendor_id       = $getProductDetails['vendor_id'];
 
-                if ($getProductDetails['vendor_id'] > 0) {
-                    // $vendorCommission = Vendor::getVendorCommission($getProductDetails['vendor_id']);
-                    $cartItem->commission  = null;
-                }
-
                 $cartItem->product_id      = $item['product_id'];
                 $cartItem->product_name    = $getProductDetails['product_name'];
                 $cartItem->item_status    = 'In Progress';
@@ -688,10 +562,10 @@ class ProductsController extends Controller
                 }
 
                 $order->save();
-                
+
                 DB::commit();
             }
-            
+
             $destroyCart = Cart::destroyCartItems();
 
             $orderDetails = Order::with('orders_products')->where('id', $order_id)->first()->toArray();

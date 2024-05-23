@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Vendor;
 use App\Models\Admin;
+use Illuminate\Support\Facades\Redirect;
 
 class VendorController extends Controller
 {
@@ -35,7 +36,7 @@ class VendorController extends Controller
             $validator = Validator::make($data, $rules, $customMessages);
 
             if ($validator->fails()) {
-                return \Illuminate\Support\Facades\Redirect::back()->withErrors($validator);
+                return Redirect::back()->withErrors($validator);
             }
 
             DB::beginTransaction();
@@ -57,14 +58,14 @@ class VendorController extends Controller
             $admin->mobile    = $data['mobile'];
             $admin->email     = $data['email'];
             $admin->password  = bcrypt($data['password']);
-            date_default_timezone_set('Africa/Cairo');
+            date_default_timezone_set('Asia/Jakarta');
             $admin->created_at = date('Y-m-d H:i:s');
             $admin->updated_at = date('Y-m-d H:i:s');
             $admin->save();
 
             DB::commit();
 
-            $message = 'Thanks for registering as Vendor.';
+            $message = 'Berhasil mendaftarkan akun sebagai vendor, silahkan login.';
 
             return redirect()->back()->with('success_message', $message);
         }
