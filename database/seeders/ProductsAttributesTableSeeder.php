@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\ProductsAttribute;
 use Illuminate\Database\Seeder;
 
 class ProductsAttributesTableSeeder extends Seeder
@@ -18,29 +18,12 @@ class ProductsAttributesTableSeeder extends Seeder
             [
                 'id'         => 1,
                 'product_id' => 1,
-                'price'      => 1000,
                 'stock'      => 10,
-                'sku'        => 'RC001-S',
+                'sku'        => 'MKN1',
                 'status'     => 1
-            ],
-            [
-                'id'         => 2,
-                'product_id' => 1,
-                'price'      => 1100,
-                'stock'      => 15,
-                'sku'        => 'RC001-M',
-                'status'     => 1
-            ],
-            [
-                'id'         => 3,
-                'product_id' => 2,
-                'price'      => 1200,
-                'stock'      => 20,
-                'sku'        => 'RC001-L',
-                'status'     => 1
-            ],
+            ]
         ];
 
-        \App\Models\ProductsAttribute::insert($productAttributesRecords);
+        ProductsAttribute::insert($productAttributesRecords);
     }
 }

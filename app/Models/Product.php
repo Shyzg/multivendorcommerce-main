@@ -5,78 +5,72 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-use App\Models\Category;
-
 class Product extends Model
 {
     use HasFactory;
 
-
-
-    // Every 'product' belongs to a 'section'
+    // Setiap 'product' memiliki relasi antara table 'section'
     public function section()
     {
-        return $this->belongsTo('App\Models\Section', 'section_id'); // 'section_id' is the foreign key
+        // Foreign key untuk 'section_id' 
+        return $this->belongsTo(Section::class, 'section_id');
     }
 
-    // Every 'product' belongs to a 'category'
+    // Setiap 'product' memiliki relasi antara table 'category'
     public function category()
     {
-        return $this->belongsTo('App\Models\Category', 'category_id'); // 'category_id' is the foreign key
+        // Foreign key untuk 'category_id'
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
-    // Every product has many attributes
+    // Setiap 'product' memiliki banyak 'attribute'
     public function attributes()
     {
-        return $this->hasMany('App\Models\ProductsAttribute');
+        return $this->hasMany(ProductsAttribute::class);
     }
 
-    // Every product has many images
+    // Setiap 'product' memiliki banyak 'image'
     public function images()
     {
-        return $this->hasMany('App\Models\ProductsImage');
+        return $this->hasMany(ProductsImage::class);
     }
 
-
-    // Relationship of a Product `products` table with Vendor `vendors` table (every product belongs to a vendor)    
+    // Setiap 'product' memiliki relasi antara table `vendors` table
     public function vendor()
     {
-        return $this->belongsTo('App\Models\Vendor', 'vendor_id')->with('vendorbusinessdetails'); // 'vendor_id' is the Foreign Key of the Relationship    
+        // Foreign key untuk 'vendor_id'
+        return $this->belongsTo(Vendor::class, 'vendor_id')->with('vendorbusinessdetails');
     }
 
-
-
-    // A static method (to be able to be called directly without instantiating an object in index.blade.php) to determine the final price of a product because a product can have a discount from TWO things: either a `CATEGORY` discount or `PRODUCT` discout    
     public static function getDiscountPrice($product_id)
-    { // this method is called in front/index.blade.php
-        // Get the product PRICE, DISCOUNT and CATEGORY ID
+    {
+        // Ambil 'product_price', 'product_discount', dan 'category_id' untuk di tampilkan di front/index.blade.php
         $productDetails = Product::select('product_price', 'product_discount', 'category_id')->where('id', $product_id)->first();
-        $productDetails = json_decode(json_encode($productDetails), true); // convert the object to an array    
+        // Konversi object kedalam array
+        $productDetails = json_decode(json_encode($productDetails), true);
 
-        // Get the product category discount `category_discount` from `categories` table using its `category_id` in `products` table
+        // Ambil 'product' dan potongan harga dari 'category_discount' di table `categories` menggungakan `category_id` di table `products`
         $categoryDetails = Category::select('category_discount')->where('id', $productDetails['category_id'])->first();
-        $categoryDetails = json_decode(json_encode($categoryDetails), true); // convert the object to an array    
+        // Konversi object kedalam array
+        $categoryDetails = json_decode(json_encode($categoryDetails), true);
 
-
-        if ($productDetails['product_discount'] > 0) { // if there's a 'product_discount' (in `products` table) (i.e. discount is not zero 0)
-            // if there's a PRODUCT discount on the product itself
+        if ($productDetails['product_discount'] > 0) {
+            // Kalau ada 'product_discount' di dalam table 'products' yang nilainya bukan 0
             $discounted_price = $productDetails['product_price'] - ($productDetails['product_price'] * $productDetails['product_discount'] / 100);
-        } else if ($categoryDetails['category_discount'] > 0) { // if there's a `category_discount` (in `categories` table) (i.e. discount is not zero 0) (if there's a discount on the whole category of that product)
-            // if there's NO a PRODUCT discount, but there's a CATEGORY discount
+        } else if ($categoryDetails['category_discount'] > 0) {
+            // Kalau ada 'category_discount di dalam table 'categories' yang nilainya bukan 0
             $discounted_price = $productDetails['product_price'] - ($productDetails['product_price'] * $categoryDetails['category_discount'] / 100);
         } else { // there's no discount on neither `product_discount` (in `products` table) nor `category_discount` (in `categories` table)
+            // Kalau gaada 'product_discount' dan 'category_discount di dalam table 'products' dan 'categories' yang nilainya bukan 0
             $discounted_price = 0;
         }
-
 
         return $discounted_price;
     }
 
-
-
     public static function getDiscountAttributePrice($product_id)
     {
-        $proAttrPrice = \App\Models\Product::where([ // from `products_attributes` table
+        $proAttrPrice = Product::where([ // from `products_attributes` table
             'id' => $product_id
         ])->first()->toArray();
         // dd($proAttrPrice);
@@ -112,46 +106,37 @@ class Product extends Model
         );
     }
 
-
-
     public static function isProductNew($product_id)
     {
-        // Get the last (latest) three 3 added products ids
+        // Ambil 3 terakhir dari product yang baru ditambahlam
         $productIds = Product::select('id')->where('status', 1)->orderBy('id', 'Desc')->limit(3)->pluck('id');
         $productIds = json_decode(json_encode($productIds, true));
 
-        if (in_array($product_id, $productIds)) { // if the passed in $product_id is in the array of the last (latest) 3 added products ids
+        if (in_array($product_id, $productIds)) {
+            // Jika berhasil melewati $product_id di dalam array yang baru ditambahkan
             $isProductNew = 'Yes';
         } else {
             $isProductNew = 'No';
         }
 
-
         return $isProductNew;
     }
 
-
-
-
     public static function getProductImage($product_id)
-    { // this method is used in front/orders/order_details.blade.php
+    {
+        // Fungsi ini di gunakan di front/orders/order_details.blade.php
         $getProductImage = Product::select('product_image')->where('id', $product_id)->first()->toArray();
-
 
         return $getProductImage['product_image'];
     }
 
-
-    // Note: We need to prevent orders (upon checkout and payment) of the 'disabled' products (`status` = 0), where the product ITSELF can be disabled in admin/products/products.blade.php (by checking the `products` database table) or a product's attribute (`stock`) can be disabled in 'admin/attributes/add_edit_attributes.blade.php' (by checking the `products_attributes` database table). We also prevent orders of the out of stock / sold-out products (by checking the `products_attributes` database table)
     public static function getProductStatus($product_id)
     {
         $getProductStatus = Product::select('status')->where('id', $product_id)->first();
 
-
         return $getProductStatus->status;
     }
 
-    // Delete a product from Cart if it's 'disabled' (`status` = 0) or it's out of stock (sold out)    
     public static function deleteCartProduct($product_id)
     {
         Cart::where('product_id', $product_id)->delete();

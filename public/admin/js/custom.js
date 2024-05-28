@@ -1,26 +1,17 @@
 $(document).ready(function() {
-
-    // DataTables jQuery library
-    // Calling the DataTable class for all pages
-    $('#sections').DataTable();    // in sections.blade.php
-    $('#categories').DataTable();  // in categories.blade.php
-    $('#brands').DataTable();      // in brands.blade.php
-    $('#products').DataTable();    // in products.blade.php
-    $('#filters').DataTable();     // in filters.blade.php
-    $('#coupons').DataTable();     // in admin/coupons/coupons.blade.php              
-    $('#users').DataTable();       // in admin/users/users.blade.php                  
-    $('#orders').DataTable();      // in admin/orders/orders.blade.php                
-    $('#shipping').DataTable();    // in admin/shipping/shipping_charges.blade.php     
-
-
-
-    // Correcting issues in the Skydash Admin Panel Sidebar
+    $('#sections').DataTable();
+    $('#categories').DataTable();
+    $('#brands').DataTable();
+    $('#products').DataTable();
+    $('#filters').DataTable();
+    $('#coupons').DataTable();            
+    $('#users').DataTable();      
+    $('#vendors').DataTable();   
+    $('#orders').DataTable();            
+    $('#shipping').DataTable(); 
     $('.nav-item').removeClass('active');
     $('.nav-link').removeClass('active');
 
-
-
-    // Check if the Admin Password is correct using AJAX in update_admin_password.blade.php page    
     $('#current_password').keyup(function() {
         // console.log(this);
         var current_password = $(this).val();
@@ -276,35 +267,12 @@ $(document).ready(function() {
         }
     });
 
-
-
-    // Show Categories <select> <option> depending on the selected (chosen) Section (show the relevant categories of the chosen section) in append_categories_level.blade.php page        // https://www.w3schools.com/jquery/event_change.asp
-    $('#section_id').change(function() { // When the sections <select> <option> HTML element in add_edit_category.blade.php is selected or changed
-        // console.log(this);
-        var section_id = $(this).val();
-        // console.log(section_id);
-
-
-        $.ajax({
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}, // X-CSRF-TOKEN: https://laravel.com/docs/9.x/csrf#csrf-x-csrf-token    
-            type   : 'get',
-            url    : '/admin/append-categories-level',
-            data   : {section_id: section_id}, // name/value pairs sent to server
-            success: function(resp) {
-                $('#appendCategoriesLevel').html(resp); // $('#appendCategoriesLeve') is the <div> in add_edit_category.blade.php
-            },
-            error  : function() {alert('Error');}
-        });
-    });
-
-
-
     // Add Remove Input Fields Dynamically using jQuery: https://www.codexworld.com/add-remove-input-fields-dynamically-using-jquery/    
     // Products attributes add//remove input fields dynamically using jQuery
     var maxField = 10; //Input fields increment limitation
     var addButton = $('.add_button'); //Add button selector
     var wrapper = $('.field_wrapper'); //Input field wrapper
-    var fieldHTML = '<div><div style="height:10px"></div><input type="text" name="size[]" placeholder="Size" style="width:100px">&nbsp;<input type="text" name="sku[]" placeholder="SKU" style="width:100px">&nbsp;<input type="text" name="price[]" placeholder="Price" style="width:100px">&nbsp;<input type="text" name="stock[]" placeholder="Stock" style="width:100px">&nbsp;<a href="javascript:void(0);" class="remove_button">Remove</a></div>'; //New input field html 
+    var fieldHTML = '<div><div style="height:10px"></div><input type="text" name="sku[]" placeholder="SKU" style="width:100px">&nbsp;<input type="text" name="stock[]" placeholder="Stock" style="width:100px">&nbsp;<a href="javascript:void(0);" class="remove_button">Remove</a></div>'; //New input field html 
     var x = 1; //Initial field counter is 1
     
     // Once add button is clicked

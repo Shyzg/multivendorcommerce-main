@@ -1,6 +1,5 @@
 @extends('admin.layout.layout')
 
-
 @section('content')
 <div class="main-panel">
     <div class="content-wrapper">
@@ -8,9 +7,9 @@
             <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">{{ $title }}</h4>
+                        <h4 class="card-title">Admins</h4>
                         <div class="table-responsive pt-3">
-                            <table class="table table-bordered">
+                            <table id="vendors" class="table table-bordered">
                                 <thead>
                                     <tr>
                                         <th>Admin ID</th>
@@ -54,13 +53,5 @@
             </div>
         </div>
     </div>
-    <!-- content-wrapper ends -->
-    <!-- partial:../../partials/_footer.html -->
-    <footer class="footer">
-        <div class="d-sm-flex justify-content-center justify-content-sm-between">
-            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2022. All rights reserved.</span>
-        </div>
-    </footer>
-    <!-- partial -->
 </div>
 @endsection

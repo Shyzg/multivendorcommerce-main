@@ -77,13 +77,10 @@
                                 {{-- <input type="text" class="form-control" id="category_id" placeholder="Enter Category Name" name="category_id" @if (!empty($product['name'])) value="{{ $product['category_id'] }}" @else value="{{ old('category_id') }}" @endif> --}} {{-- Repopulating Forms (using old() method): https://laravel.com/docs/9.x/validation#repopulating-forms --}}
                                 <select name="category_id" id="category_id" class="form-control text-dark">
                                     <option value="">Select Category</option>
-                                    @foreach ($categories as $section) {{-- $categories are ALL the `sections` with their related 'parent' categories (if any (if exist)) and their subcategories or `child` categories (if any (if exist)) --}} {{-- Check ProductsController.php --}}
-                                    <optgroup label="{{ $section['name'] }}"> {{-- sections --}}
-                                        @foreach ($section['categories'] as $category) {{-- parent categories --}} {{-- Check ProductsController.php --}}
-                                        <option value="{{ $category['id'] }}" @if (!empty($product['category_id']==$category['id'])) selected @endif>{{ $category['category_name'] }}</option> {{-- parent categories --}}
-                                        @foreach ($category['sub_categories'] as $subcategory) {{-- subcategories or child categories --}} {{-- Check ProductsController.php --}}
-                                        <option value="{{ $subcategory['id'] }}" @if (!empty($product['category_id']==$subcategory['id'])) selected @endif>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;{{ $subcategory['category_name'] }}</option> {{-- subcategories or child categories --}}
-                                        @endforeach
+                                    @foreach ($categories as $section)
+                                    <optgroup label="{{ $section['name'] }}">
+                                        @foreach ($section['categories'] as $category)
+                                        <option value="{{ $category['id'] }}" @if (!empty($product['category_id']==$category['id'])) selected @endif>{{ $category['category_name'] }}</option>
                                         @endforeach
                                     </optgroup>
                                     @endforeach

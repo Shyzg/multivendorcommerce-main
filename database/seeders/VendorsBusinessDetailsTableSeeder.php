@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\VendorsBusinessDetail;
 use Illuminate\Database\Seeder;
 
 class VendorsBusinessDetailsTableSeeder extends Seeder
@@ -17,17 +18,17 @@ class VendorsBusinessDetailsTableSeeder extends Seeder
             [
                 'id'                      => 1,
                 'vendor_id'               => 1,
-                'shop_name'               => 'John Electronics Store',
-                'shop_address'            => '12 Mahmoud Saeed St.',
-                'shop_city'               => 'New Cairo',
-                'shop_state'              => 'Cairo',
-                'shop_country'            => 'Egypt',
+                'shop_name'               => 'HaverCrunch',
+                'shop_address'            => 'Puri Lidah Kulon Indah D-10',
+                'shop_city'               => 'Kota Surabaya',
+                'shop_state'              => 'Jawa Timur',
+                'shop_country'            => 'Indonesia',
                 'shop_mobile'             => '1253247745',
                 'shop_website'            => 'amazon.com.eg',
                 'shop_email'              => 'john@admin.com'
             ],
         ];
 
-        \App\Models\VendorsBusinessDetail::insert($vendorsBusinessDetailsRecords);
+        VendorsBusinessDetail::insert($vendorsBusinessDetailsRecords);
     }
 }

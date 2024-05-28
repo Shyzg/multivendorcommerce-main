@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Category;
 use Illuminate\Database\Seeder;
 
 class CategoriesTableSeeder extends Seeder
@@ -17,36 +17,24 @@ class CategoriesTableSeeder extends Seeder
         $categoryRecords = [
             [
                 'id'                => 1,
-                'parent_id'         => 0,
                 'section_id'        => 1,
-                'category_name'     => 'Men',
+                'category_name'     => 'Makanan',
                 'category_image'    => '',
                 'category_discount' => 0,
                 'description'       => '',
-                'url'               => 'men',
+                'url'               => 'makanan',
             ],
             [
                 'id'                => 2,
-                'parent_id'         => 0,
                 'section_id'        => 1,
-                'category_name'     => 'Women',
+                'category_name'     => 'Minuman',
                 'category_image'    => '',
                 'category_discount' => 0,
                 'description'       => '',
-                'url'               => 'women',
-            ],
-            [
-                'id'                => 3,
-                'parent_id'         => 0,
-                'section_id'        => 1,
-                'category_name'     => 'Kids',
-                'category_image'    => '',
-                'category_discount' => 0,
-                'description'       => '',
-                'url'               => 'kids',
-            ],
+                'url'               => 'minuman',
+            ]
         ];
 
-        \App\Models\Category::insert($categoryRecords);
+        Category::insert($categoryRecords);
     }
 }

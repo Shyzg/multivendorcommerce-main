@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\OrderStatus;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -14,8 +15,6 @@ class OrderStatusTableSeeder extends Seeder
      */
     public function run()
     {
-        
-        // Note: Check DatabaseSeeder.php!
         $orderStatusRecords = [
             [
                 'id'     => 1,
@@ -44,7 +43,7 @@ class OrderStatusTableSeeder extends Seeder
             ],
             [
                 'id'     => 6,
-                'name'   => 'Partially Shipped', // if one order has products from different vendors, and one vendor has shipped their product to the customer while other vendor (or vendors) didn't!
+                'name'   => 'Partially Shipped',
                 'status' => 1
             ],
             [
@@ -54,7 +53,7 @@ class OrderStatusTableSeeder extends Seeder
             ],
             [
                 'id'     => 8,
-                'name'   => 'Partially Delivered', // if one order has products from different vendors, and one vendor has shipped and DELIVERED their product to the customer while other vendor (or vendors) didn't!
+                'name'   => 'Partially Delivered',
                 'status' => 1
             ],
             [
@@ -64,7 +63,6 @@ class OrderStatusTableSeeder extends Seeder
             ]
         ];
 
-        // Note: Check DatabaseSeeder.php!
-        \App\Models\OrderStatus::insert($orderStatusRecords);
+        OrderStatus::insert($orderStatusRecords);
     }
 }

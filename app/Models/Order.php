@@ -11,18 +11,16 @@ class Order extends Model
 
     public function orders_products()
     {
-        return $this->hasMany('App\Models\OrdersProduct', 'order_id'); // 'order_id' (column of `orders_products` table) is the Foreign Key of the Relationship
+        // 'order_id' (column of `orders_products` table) is the Foreign Key of the Relationship
+        return $this->hasMany('App\Models\OrdersProduct', 'order_id');
     }
-
-
-
-
 
     // Shiprocket API Integration! Shiprocket needs an "order_items" key/name in the JSON request, so we create this relationship method specifically for this matter (in order for the $getResults array in pushOrder() method in APIController.php to have the key/name of "order_items")
     // Relationship of an Order `orders` table with Order_Products `orders_products` table (every Order has many Order_Products)    
     public function order_items()
     {
-        return $this->hasMany('App\Models\OrdersProduct', 'order_id'); // 'order_id' (column of `orders_products` table) is the Foreign Key of the Relationship
+        // 'order_id' (column of `orders_products` table) is the Foreign Key of the Relationship
+        return $this->hasMany('App\Models\OrdersProduct', 'order_id');
     }
 
     // Shiprocket API Integration!    
@@ -31,33 +29,30 @@ class Order extends Model
         $orderDetails = Order::with('order_items')->where('id', $order_id)->first()->toArray(); // Eager Loading: https://laravel.com/docs/9.x/eloquent-relationships#eager-loading    // 'order_items' is the relationship method name in Order.php model
         // dd($orderDetails);
 
-        // Prepare the Shiprocket's JSON request: We copy the "Create Order" JSON request keys/names from Shiprocket Documentation: https://apidocs.shiprocket.in/#639199eb-4fed-4770-9057-c8b3e32b2cd6, and place (append) them as array keys in $orderDetails array:
-        $orderDetails['order_id']              = $orderDetails['id'];         // 'order_id'                is the Shiprocket's JSON request key/name, while 'id'         is our `orders` table column name
-        $orderDetails['order_date']            = $orderDetails['created_at']; // 'order_date'              is the Shiprocket's JSON request key/name, while 'created_at' is our `orders` table column name
-        $orderDetails['pickup_location']       = "Test";    // We created a Pickup Location (We called it "Test") while creating the Shiprocket account for the first time.
-        $orderDetails['channel_id']            = "1855855"; // We generated a channel_id using the Channels API
+        $orderDetails['order_id']              = $orderDetails['id'];
+        $orderDetails['order_date']            = $orderDetails['created_at'];
+        $orderDetails['pickup_location']       = "Test";
+        $orderDetails['channel_id']            = "1855855";
         $orderDetails['comment']               = 'Test Order';
-        $orderDetails['billing_customer_name'] = $orderDetails['name'];       // 'billing_customer_name'   is the Shiprocket's JSON request key/name, while 'name'       is our `orders` table column name
+        $orderDetails['billing_customer_name'] = $orderDetails['name'];
         $orderDetails['billing_last_name']     = '';
-        $orderDetails['billing_address']       = $orderDetails['address'];    // 'billing_address'         is the Shiprocket's JSON request key/name, while 'address'    is our `orders` table column name
+        $orderDetails['billing_address']       = $orderDetails['address'];
         $orderDetails['billing_address_2']     = '';
-        $orderDetails['billing_city']          = $orderDetails['city'];       // 'billing_city'            is the Shiprocket's JSON request key/name, while 'city'       is our `orders` table column name
-        $orderDetails['billing_state']         = $orderDetails['state'];      // 'billing_state'           is the Shiprocket's JSON request key/name, while 'state'      is our `orders` table column name
-        $orderDetails['billing_country']       = $orderDetails['country'];    // 'billing_country'         is the Shiprocket's JSON request key/name, while 'country'    is our `orders` table column name
-        $orderDetails['billing_email']         = $orderDetails['email'];      // 'billing_email'           is the Shiprocket's JSON request key/name, while 'email'      is our `orders` table column name
-        $orderDetails['billing_phone']         = (int) $orderDetails['mobile']; // Type Casting: https://www.php.net/manual/en/language.types.type-juggling.php#language.types.typecasting     // 'billing_phone'           is the Shiprocket's JSON request key/name, while 'mobile'     is our `orders` table column name
-
-        $orderDetails['shipping_is_billing']   = true; // the customer's Shipping Address is the same as their Billing Address
-
-        $orderDetails['shipping_customer_name'] = $orderDetails['name'];       // 'shipping_customer_name' is the Shiprocket's JSON request key/name, while 'name'       is our `orders` table column name
+        $orderDetails['billing_city']          = $orderDetails['city'];
+        $orderDetails['billing_state']         = $orderDetails['state'];
+        $orderDetails['billing_country']       = $orderDetails['country'];
+        $orderDetails['billing_email']         = $orderDetails['email'];
+        $orderDetails['billing_phone']         = (int) $orderDetails['mobile'];
+        $orderDetails['shipping_is_billing']   = true;
+        $orderDetails['shipping_customer_name'] = $orderDetails['name'];
         $orderDetails['shipping_last_name']     = '';
-        $orderDetails['shipping_address']       = $orderDetails['address'];    // 'shipping_address'       is the Shiprocket's JSON request key/name, while 'address'    is our `orders` table column name
+        $orderDetails['shipping_address']       = $orderDetails['address'];
         $orderDetails['shipping_address_2']     = '';
-        $orderDetails['shipping_city']          = $orderDetails['city'];       // 'shipping_city'          is the Shiprocket's JSON request key/name, while 'city'       is our `orders` table column name
-        $orderDetails['shipping_state']         = $orderDetails['state'];      // 'shipping_state'         is the Shiprocket's JSON request key/name, while 'state'      is our `orders` table column name
-        $orderDetails['shipping_country']       = $orderDetails['country'];    // 'shipping_country'       is the Shiprocket's JSON request key/name, while 'country'    is our `orders` table column name
-        $orderDetails['shipping_email']         = $orderDetails['email'];      // 'shipping_email'         is the Shiprocket's JSON request key/name, while 'email'      is our `orders` table column name
-        $orderDetails['shipping_phone']         = (int) $orderDetails['mobile']; // Type Casting: https://www.php.net/manual/en/language.types.type-juggling.php#language.types.typecasting    // 'shipping_phone'         is the Shiprocket's JSON request key/name, while 'mobile'     is our `orders` table column name
+        $orderDetails['shipping_city']          = $orderDetails['city'];
+        $orderDetails['shipping_state']         = $orderDetails['state'];
+        $orderDetails['shipping_country']       = $orderDetails['country'];
+        $orderDetails['shipping_email']         = $orderDetails['email'];
+        $orderDetails['shipping_phone']         = (int) $orderDetails['mobile'];
 
         foreach ($orderDetails['order_items'] as $key => $item) {                         // 'order_items'   is the Shiprocket's JSON request key/name    // 'order_items' is the Relationship method name in Order.php model    // $key    denotes the 1st order, 2nd order, 3rd order, ...etc
             $orderDetails['order_items'][$key]['name']          = $item['product_name'];  // 'name'          is the Shiprocket's JSON request key/name, while 'product_name'  is our `orders_products` table column name

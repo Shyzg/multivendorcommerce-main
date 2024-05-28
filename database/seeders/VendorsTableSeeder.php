@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Vendor;
 use Illuminate\Database\Seeder;
 
 class VendorsTableSeeder extends Seeder
@@ -16,16 +17,16 @@ class VendorsTableSeeder extends Seeder
         $vendorRecords = [
             [
                 'id'      => 1,
-                'name'    => 'Yasser Fouaad - Vendor',
-                'address' => '17 El-Salam St.',
-                'city'    => 'Maadi',
-                'state'   => 'Cairo',
-                'country' => 'Egypt',
+                'name'    => 'Reza Mahendra',
+                'address' => 'Puri Lidah Kulon Indah D-10',
+                'city'    => 'Kota Surabaya',
+                'state'   => 'Jawa Timur',
+                'country' => 'Indonesia',
                 'mobile'  => '9700000000',
-                'email'   => 'yasser@admin.com'
+                'email'   => 'reza@gmail.com'
             ],
         ];
 
-        \App\Models\Vendor::insert($vendorRecords);
+        Vendor::insert($vendorRecords);
     }
 }

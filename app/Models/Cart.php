@@ -12,8 +12,6 @@ class Cart extends Model
 {
     use HasFactory;
 
-
-
     // Relationship of a Cart Item `carts` table with a Product `products` table (every cart item belongs to a product)    
     public function product()
     { // A Product `products` belongs to a Vendor `vendors`, and the Foreign Key of the Relationship is the `product_id` column

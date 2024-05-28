@@ -15,7 +15,7 @@ class CategoryController extends Controller
     {
         Session::put('page', 'categories');
 
-        $categories = Category::with(['section', 'parentCategory'])->get()->toArray();
+        $categories = Category::with(['section'])->get()->toArray();
 
         return view('admin.categories.categories')->with(compact('categories'));
     }
@@ -32,8 +32,7 @@ class CategoryController extends Controller
         } else {
             $title = 'Edit Category';
             $category = Category::find($id);
-            $getCategories = Category::with('subCategories')->where([
-                'parent_id'  => 0,
+            $getCategories = Category::where([
                 'section_id' => $category['section_id']
             ])->get();
             $message = 'Category updated successfully!';
@@ -77,7 +76,6 @@ class CategoryController extends Controller
             }
 
             $category->section_id        = $data['section_id'];
-            $category->parent_id         = $data['parent_id'];
             $category->category_name     = $data['category_name'];
             $category->category_discount = $data['category_discount'];
             $category->description       = $data['description'];
@@ -90,19 +88,6 @@ class CategoryController extends Controller
         $getSections = Section::get()->toArray();
 
         return view('admin.categories.add_edit_category')->with(compact('title', 'category', 'getSections', 'getCategories'));
-    }
-
-    public function appendCategoryLevel(Request $request)
-    {
-        if ($request->ajax()) {
-            $data = $request->all();
-            $getCategories = Category::with('subCategories')->where([
-                'parent_id'  => 0,
-                'section_id' => $data['section_id']
-            ])->get();
-
-            return view('admin.categories.append_categories_level')->with(compact('getCategories'));
-        }
     }
 
     public function deleteCategory($id)

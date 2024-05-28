@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::create('products_attributes', function (Blueprint $table) {
             $table->id();
             $table->integer('product_id');
-            $table->float('price');
             $table->integer('stock');
             $table->string('sku');
             $table->tinyInteger('status');

@@ -1,6 +1,5 @@
 @extends('admin.layout.layout')
 
-
 @section('content')
 <div class="main-panel">
     <div class="content-wrapper">
@@ -18,11 +17,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">{{ $title }}</h4>
-
-
-                        {{-- Our Bootstrap error code in case of wrong current password or the new password and confirm password are not matching: --}}
-                        {{-- Determining If An Item Exists In The Session (using has() method): https://laravel.com/docs/9.x/session#determining-if-an-item-exists-in-the-session --}}
-                        @if (Session::has('error_message')) <!-- Check AdminController.php, updateAdminPassword() method -->
+                        @if (Session::has('error_message'))
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             <strong>Error:</strong> {{ Session::get('error_message') }}
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -30,29 +25,17 @@
                             </button>
                         </div>
                         @endif
-
-
-
-                        {{-- Displaying Laravel Validation Errors: https://laravel.com/docs/9.x/validation#quick-displaying-the-validation-errors --}}
                         @if ($errors->any())
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-
                             @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                             @endforeach
-
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         @endif
-
-
-
-                        {{-- Displaying The Validation Errors: https://laravel.com/docs/9.x/validation#quick-displaying-the-validation-errors AND https://laravel.com/docs/9.x/blade#validation-errors --}}
-                        {{-- Determining If An Item Exists In The Session (using has() method): https://laravel.com/docs/9.x/session#determining-if-an-item-exists-in-the-session --}}
-                        {{-- Our Bootstrap success message in case of updating admin password is successful: --}}
-                        @if (Session::has('success_message')) <!-- Check AdminController.php, updateAdminPassword() method -->
+                        @if (Session::has('success_message'))
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                             <strong>Success:</strong> {{ Session::get('success_message') }}
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -60,16 +43,12 @@
                             </button>
                         </div>
                         @endif
-
-
-
-                        <form class="forms-sample" @if (empty($category['id'])) action="{{ url('admin/add-edit-category') }}" @else action="{{ url('admin/add-edit-category/' . $category['id']) }}" @endif method="post" enctype="multipart/form-data"> @csrf <!-- If the id is not passed in from the route, this measn 'Add a new Category', but if the id is passed in from the route, this means 'Edit the Category' --> <!-- Using the enctype="multipart/form-data" to allow uploading files (images) -->
+                        <form class="forms-sample" @if (empty($category['id'])) action="{{ url('admin/add-edit-category') }}" @else action="{{ url('admin/add-edit-category/' . $category['id']) }}" @endif method="post" enctype="multipart/form-data">
+                            @csrf
                             <div class="form-group">
                                 <label for="category_name">Category Name</label>
                                 <input type="text" class="form-control" id="category_name" placeholder="Enter Category Name" name="category_name" @if (!empty($category['category_name'])) value="{{ $category['category_name'] }}" @else value="{{ old('category_name') }}" @endif>
                             </div>
-
-
                             <div class="form-group">
                                 <label for="section_id">Select Section</label>
                                 <select name="section_id" id="section_id" class="form-control" style="color: #000">
@@ -79,14 +58,6 @@
                                     @endforeach
                                 </select>
                             </div>
-
-
-
-                            <div id="appendCategoriesLevel"> {{-- We create this <div> in a separate file in order for the appendCategoryLevel() method inside the CategoryController to be able to return the whole file as a response to the AJAX call in admin/js/custom.js to show the proper/relevant categories <select> box <option> depending on the chosen Section --}}
-                                @include('admin.categories.append_categories_level')
-                            </div>
-
-
 
                             <div class="form-group">
                                 <label for="category_image">Category Image</label>

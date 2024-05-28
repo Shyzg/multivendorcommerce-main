@@ -214,7 +214,6 @@ class ProductsController extends Controller
                     $attribute = new ProductsAttribute;
                     $attribute->product_id = $id;
                     $attribute->sku        = $value;
-                    $attribute->price      = $data['price'][$key];
                     $attribute->stock      = $data['stock'][$key];
                     $attribute->status     = 1;
                     $attribute->save();
@@ -259,7 +258,6 @@ class ProductsController extends Controller
                     ProductsAttribute::where([
                         'id' => $data['attributeId'][$key]
                     ])->update([
-                        'price' => $data['price'][$key],
                         'stock' => $data['stock'][$key]
                     ]);
                 }

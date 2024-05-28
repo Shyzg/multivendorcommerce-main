@@ -24,7 +24,6 @@ class ProductsAttribute extends Model
             'product_id' => $product_id
         ])->first();
 
-
         return $getAttributeStatus->status;
     }
 }

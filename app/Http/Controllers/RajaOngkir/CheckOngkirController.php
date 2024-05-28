@@ -18,8 +18,7 @@ class CheckOngkirController extends Controller
                 'destination'   => $request->destination,
                 'weight'        => 100,
                 'courier'       => $request->courier
-            ])
-                ->json()['rajaongkir']['results'][0]['costs'];
+            ])->json()['rajaongkir']['results'][0]['costs'];
 
             return response()->json($response);
         } catch (\Throwable $th) {

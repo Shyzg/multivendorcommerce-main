@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\DeliveryAddress;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -14,34 +15,20 @@ class DeliveryAddressTableSeeder extends Seeder
      */
     public function run()
     {
-
-        // Note: Check DatabaseSeeder.php!
         $deliveryRecords = [
             [
                 'id'      => 1,
                 'user_id' => 1,
-                'name'    => 'Ahmed Yahya',
-                'address' => '37 Salah Salem',
-                'city'    => 'Cairo',
-                'state'   => 'Cairo',
-                'country' => 'Egypt',
+                'name'    => 'Shyzago Nakamoto',
+                'address' => 'Puri Lidah Kulon Indah D-10',
+                'city'    => 'Kota Surabaya',
+                'state'   => 'Jawa Timur',
+                'country' => 'Indonesia',
                 'mobile'  => 1255642718,
                 'status'  => 1
-            ],
-            [
-                'id'      => 2,
-                'user_id' => 1, // the same user_id in the previous record which means the the delivery address is for the same person
-                'name'    => 'Ahmed Yahya',
-                'address' => '15 Fouaad St.',
-                'city'    => 'Alexandria',
-                'state'   => 'Alexandria',
-                'country' => 'Egypt',
-                'mobile'  => 1095632526,
-                'status'  => 1
-            ],
+            ]
         ];
 
-        // Note: Check DatabaseSeeder.php!
-        \App\Models\DeliveryAddress::insert($deliveryRecords);
+        DeliveryAddress::insert($deliveryRecords);
     }
 }

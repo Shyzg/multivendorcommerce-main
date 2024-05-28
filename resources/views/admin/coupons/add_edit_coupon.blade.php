@@ -108,16 +108,11 @@
 
                             <div class="form-group">
                                 <label for="categories">Select Category:</label>
-                                <select name="categories[]" class="form-control text-dark" multiple> {{-- "multiple" HTML attribute: https://www.w3schools.com/tags/att_multiple.asp --}} {{-- We used the Square Brackets [] in name="categories[]" is an array because we used the "multiple" HTML attribute to be able to choose multiple categories (more than one category) at the same time --}}
-                                    @foreach ($categories as $section) {{-- $categories are ALL the `sections` with their related 'parent' categories (if any (if exist)) and their subcategories or `child` categories (if any (if exist)) --}} {{-- Check CouponsController.php --}}
-                                    <optgroup label="{{ $section['name'] }}"> {{-- sections --}}
-                                        @foreach ($section['categories'] as $category) {{-- parent categories --}} {{-- Check CouponsController.php --}}
-
-                                        <option value="{{ $category['id'] }}" @if (in_array($category['id'], $selCats)) selected @endif>&nbsp;&nbsp;&nbsp;--&nbsp;{{ $category['category_name'] }}</option> {{-- parent categories --}}
-                                        @foreach ($category['sub_categories'] as $subcategory) {{-- subcategories or child categories --}} {{-- Check CouponsController.php --}}
-                                        <option value="{{ $subcategory['id'] }}" @if (in_array($subcategory['id'], $selCats)) selected @endif>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;{{ $subcategory['category_name'] }}</option> {{-- subcategories or child categories --}}
-                                        @endforeach
-
+                                <select name="categories[]" class="form-control text-dark" multiple>
+                                    @foreach ($categories as $section)
+                                    <optgroup label="{{ $section['name'] }}">
+                                        @foreach ($section['categories'] as $category)
+                                        <option value="{{ $category['id'] }}" @if (in_array($category['id'], $selCats)) selected @endif>&nbsp;&nbsp;&nbsp;--&nbsp;{{ $category['category_name'] }}</option>
                                         @endforeach
                                     </optgroup>
                                     @endforeach

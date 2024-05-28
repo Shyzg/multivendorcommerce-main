@@ -9,20 +9,17 @@ class Vendor extends Model
 {
     use HasFactory;
 
-
-    // Relationship of a Vendor `vendors` with VendorsBusinessDetail `vendors_business_details` (every product belongs to a vendor)    
+    // Relasi antara table 'vendors' dengan 'vendors_business_details'
     public function vendorbusinessdetails()
     {
-        return $this->belongsTo('App\Models\VendorsBusinessDetail', 'id', 'vendor_id'); // 'vendor_id' is the Foreign Key of the Relationship    // Defining The Inverse Of The Relationship: https://laravel.com/docs/9.x/eloquent-relationships#one-to-one-defining-the-inverse-of-the-relationship
+        // Foreign key untuk 'vendor_id'
+        return $this->belongsTo('App\Models\VendorsBusinessDetail', 'id', 'vendor_id');
     }
 
-
-
-
     public static function getVendorShop($vendorid)
-    { // this method is called (used) in vendorListing() method in Front/ProductsController.php
+    {
+        // Digunakan untuk menampilkan dalam fungsi vendorListing() di Front/ProductsController.php
         $getVendorShop = \App\Models\VendorsBusinessDetail::select('shop_name')->where('vendor_id', $vendorid)->first()->toArray();
-
 
         return $getVendorShop['shop_name'];
     }

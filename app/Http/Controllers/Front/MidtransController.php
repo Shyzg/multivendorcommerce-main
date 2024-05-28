@@ -10,7 +10,7 @@ class MidtransController extends Controller
     public function midtrans()
     {
         if (Session::has('order_id')) {
-            return view('front.iyzipay.iyzipay');
+            return view();
         } else {
             return redirect('cart');
         }

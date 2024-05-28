@@ -9,21 +9,17 @@ class Section extends Model
 {
     use HasFactory;
 
-
-
-    // A one section has many categories (One To Many): https://laravel.com/docs/9.x/eloquent-relationships#one-to-many
+    // Satu 'section' memiliki banyak 'categories'
     public function categories()
     {
-        return $this->hasMany('App\Models\Category', 'section_id')->where([ // 'section_id' is the foreign key in the `categories` table
-            'parent_id' => 0
-        ])->with('subCategories'); // Using the subCategories() relationship in the Category.php Model itself to get the 'subcategories' where `parent_id` is NOT 0 zero (utilizing another relationship in the same model inside a relationship)        
+        // Foreign key 'section_id' didalam table `categories`
+        return $this->hasMany(Category::class, 'section_id');
     }
 
-
-
     public static function sections()
-    { // A STATIC function to use it in header.blade.php inside 'layout' folder inside 'front' folder    
-        $getSections = Section::with('categories')->get()->toArray(); // Getting the 'enabled' sections ONLY and their child categories (using the 'categories' relationship method) which, in turn, include their 'subcategories`
+    {
+        $getSections = Section::with('categories')->get()->toArray();
+
         return $getSections;
     }
 }

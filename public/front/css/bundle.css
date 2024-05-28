@@ -932,18 +932,6 @@ body {
     z-index: 999997;
 }
 
-/* Banner-Hover-Effect-component */
-/**
- * Different types of Banner hover effect
- * Remember effects will only be shown when we hover on banners. First
- * `.banner-hover` class will have added on 'div or anchor'.
- */
-.banner-hover {
-    position: relative;
-    display: block;
-    cursor: pointer;
-}
-
 /** Effect 1 v1-gray:
  * Border Scaling from all x y axis
  */
@@ -1828,29 +1816,6 @@ body {
     border: none;
 }
 
-/* Rating Box component */
-/**
- * Product Rating Stars
- * Width of a 1-Star = 16 - 1 = 15px
- */
-.star {
-    background: url(../images/rating-star/rating-star.png) 0 -16px repeat-x;
-    display: inline-block;
-    height: 16px;
-    position: relative;
-    top: 4px;
-    width: 75px;
-    margin-right: 6px;
-}
-
-.star span {
-    background: url(../images/rating-star/rating-star.png) 0 0 repeat-x;
-    height: 16px;
-    left: 0;
-    position: absolute;
-    top: 0;
-}
-
 /* Section-Maker component */
 /* Sub-component-1 */
 .sec-maker-header {
@@ -2730,14 +2695,6 @@ body {
     margin-bottom: 6px;
 }
 
-/*--------------------------------------------------------------
-9.0 Home-Page:
---------------------------------------------------------------*/
-/* 9.2 Banner-Layer */
-.banner-layer {
-    padding: 48px 0;
-}
-
 /* 9.3 Error-Not-Product */
 .product-not-found {
     display: flex;
@@ -2830,10 +2787,6 @@ body {
 
 .about-me-image {
     text-align: center;
-}
-
-.about-me-image .banner-hover {
-    display: inline-block;
 }
 
 /*--------------------------------------------------------------

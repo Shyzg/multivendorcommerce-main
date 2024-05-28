@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\City;
 use App\Models\Province;
@@ -21,8 +20,8 @@ class CitySeeder extends Seeder
             $cities = Http::withOptions(['verify' => false])->withHeaders([
                 'key' => env('RAJAONGKIR_API_KEY')
             ])
-            ->get('https://api.rajaongkir.com/starter/city?province=' . $province->id)
-            ->json()['rajaongkir']['results'];
+                ->get('https://api.rajaongkir.com/starter/city?province=' . $province->id)
+                ->json()['rajaongkir']['results'];
 
             $insert_city = [];
 
@@ -42,7 +41,6 @@ class CitySeeder extends Seeder
             }
 
             $insert_city = collect($insert_city);
-
             $city_chunks = $insert_city->chunk(100);
 
             foreach ($city_chunks as $chunk) {

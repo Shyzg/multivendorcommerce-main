@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\OrderItemStatus;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -14,8 +15,6 @@ class OrderItemStatusTableSeeder extends Seeder
      */
     public function run()
     {
-        
-        // Note: Check DatabaseSeeder.php!
         $orderItemStatusRecords = [
             [
                 'id'     => 1,
@@ -39,7 +38,6 @@ class OrderItemStatusTableSeeder extends Seeder
             ]
         ];
 
-        // Note: Check DatabaseSeeder.php!
-        \App\Models\OrderItemStatus::insert($orderItemStatusRecords);
+        OrderItemStatus::insert($orderItemStatusRecords);
     }
 }
