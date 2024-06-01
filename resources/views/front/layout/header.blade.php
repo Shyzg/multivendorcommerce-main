@@ -1,4 +1,9 @@
-<?php $sections = \App\Models\Section::sections(); ?>
+<?php
+
+use App\Models\Section;
+
+$sections = Section::sections();
+?>
 <header>
     <div class="full-layer-outer-header">
         <div class="container clearfix">
@@ -12,11 +17,16 @@
             <nav>
                 <ul class="secondary-nav g-nav">
                     <li>
-                        <a>Login/Register
+                        <a>
+                            @if (Auth::check())
+                            Welcome {{ Auth::user()->name }}
+                            @else
+                            Login/Register
+                            @endif
                             <i class="fas fa-chevron-down u-s-m-l-9"></i>
                         </a>
                         <ul class="g-dropdown" style="width:200px">
-                            @if (\Illuminate\Support\Facades\Auth::check())
+                            @if (Auth::check())
                             <li>
                                 <a href="{{ url('user/account') }}">
                                     <i class="fas fa-sign-in-alt u-s-m-r-9"></i>
@@ -39,13 +49,13 @@
                             <li>
                                 <a href="{{ url('user/login-register') }}">
                                     <i class="fas fa-sign-in-alt u-s-m-r-9"></i>
-                                    Customer Login
+                                    As Customer
                                 </a>
                             </li>
                             <li>
                                 <a href="{{ url('vendor/login-register') }}">
                                     <i class="fas fa-sign-in-alt u-s-m-r-9"></i>
-                                    Vendor Login
+                                    As Vendor
                                 </a>
                             </li>
                             @endif

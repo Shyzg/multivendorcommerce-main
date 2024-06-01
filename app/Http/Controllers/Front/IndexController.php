@@ -15,22 +15,23 @@ class IndexController extends Controller
             'is_bestseller' => 'Yes',
             'status'        => 1
         ])->inRandomOrder()->get()->toArray();
+
         $discountedProducts = Product::where('product_discount', '>', 0)->where('status', 1)->limit(6)->inRandomOrder()->get()->toArray();
+
         $featuredProducts   = Product::where([
             'is_featured' => 'Yes',
             'status'      => 1
         ])->limit(6)->get()->toArray();
 
         $makanan = Product::with(['category'])
-        ->whereHas('category', function ($query) {
-            $query->where('category_name', 'Makanan');
-        })->get()->toArray();
+            ->whereHas('category', function ($query) {
+                $query->where('category_name', 'Makanan');
+            })->get()->toArray();
 
         $minuman = Product::with(['category'])
-        ->whereHas('category', function ($query) {
-            $query->where('category_name', 'Minuman');
-        })->get()->toArray();
-     
+            ->whereHas('category', function ($query) {
+                $query->where('category_name', 'Minuman');
+            })->get()->toArray();
 
         return view('front.index')->with(compact('newProducts', 'bestSellers', 'discountedProducts', 'featuredProducts', 'makanan', 'minuman'));
     }

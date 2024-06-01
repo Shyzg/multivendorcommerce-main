@@ -57,7 +57,7 @@
             <ul class="bread-crumb">
                 <li class="has-separator">
                     <i class="ion ion-md-home"></i>
-                    <a href="{{ url('/') }}">Home</a>
+                    <a href="{{ url('/'); }}">Home</a>
                 </li>
                 <li class="is-marked">
                     <a href="javascript:;">Detail</a>
@@ -196,5 +196,4 @@
         </div>
     </div>
 </div>
-<!-- Single-Product-Full-Width-Page /- -->
 @endsection

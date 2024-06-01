@@ -18,7 +18,6 @@
                                         <th>Email</th>
                                         <th>Ordered Products</th>
                                         <th>Order Amount</th>
-                                        <th>Order Status</th>
                                         <th>Payment Method</th>
                                         <th>Actions</th>
                                     </tr>
@@ -38,7 +37,6 @@
                                             @endforeach
                                         </td>
                                         <td>{{ $order['grand_total'] }}</td>
-                                        <td>{{ $order['order_status'] }}</td>
                                         <td>{{ $order['payment_method'] }}</td>
                                         <td>
                                             <a title="View Order Details" href="{{ url('admin/orders/' . $order['id']) }}">

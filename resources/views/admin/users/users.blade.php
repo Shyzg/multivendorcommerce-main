@@ -28,6 +28,7 @@
                                         <th>Country</th>
                                         <th>Mobile</th>
                                         <th>Email</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -41,6 +42,11 @@
                                         <td>{{ $user['country'] }}</td>
                                         <td>{{ $user['mobile'] }}</td>
                                         <td>{{ $user['email'] }}</td>
+                                        <td>
+                                            <a href="JavaScript:void(0)" class="confirmDelete" module="user" moduleid="{{ $user['id'] }}">
+                                                <i style="font-size: 25px" class="mdi mdi-file-excel-box"></i>
+                                            </a>
+                                        </td>
                                     </tr>
                                     @endforeach
                                 </tbody>

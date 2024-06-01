@@ -22,7 +22,7 @@ class ProductsTableSeeder extends Seeder
                 'vendor_id'        => 1,
                 'admin_id'         => 2,
                 'admin_type'       => 'vendor',
-                'product_name'     => 'Makanan Racun',
+                'product_name'     => 'Makanan Sehat Alpha',
                 'product_price'    => 15000,
                 'product_discount' => 10,
                 'product_weight'   => 500,

@@ -87,19 +87,10 @@
                             <label for="vendor_mobile">Shop Mobile</label>
                             <input type="text" class="form-control" @if (isset($vendorDetails['vendor_business']['shop_mobile'])) value="{{ $vendorDetails['vendor_business']['shop_mobile'] }}" @endif readonly>
                         </div>
-                        <div class="form-group">
-                            <label for="vendor_mobile">Shop Website</label>
-                            <input type="text" class="form-control" @if (isset($vendorDetails['vendor_business']['shop_website'])) value="{{ $vendorDetails['vendor_business']['shop_website'] }}" @endif readonly>
-                        </div>
-                        <div class="form-group">
-                            <label>Shop Email</label>
-                            <input class="form-control" @if (isset($vendorDetails['vendor_business']['shop_email'])) value="{{ $vendorDetails['vendor_business']['shop_email'] }}" @endif readonly> <!-- Check updateAdminPassword() method in AdminController.php -->
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    @include('admin.layout.footer')
 </div>
 @endsection

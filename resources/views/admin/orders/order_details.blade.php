@@ -53,10 +53,6 @@
                             <label>{{ date('Y-m-d h:i:s', strtotime($orderDetails['created_at'])) }}</label>
                         </div>
                         <div class="form-group" style="height: 15px">
-                            <label style="font-weight: 550">Order Status: </label>
-                            <label>{{ $orderDetails['order_status'] }}</label>
-                        </div>
-                        <div class="form-group" style="height: 15px">
                             <label style="font-weight: 550">Order Total: </label>
                             <label>IDR {{ $orderDetails['grand_total'] }}</label>
                         </div>
@@ -167,32 +163,6 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 grid-margin stretch-card">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title">Update Order Status</h4>
-                        @if (Auth::guard('admin')->user()->type != 'vendor')
-                        <form action="{{ url('admin/update-order-status') }}" method="post">
-                            @csrf
-                            <input type="hidden" name="order_id" value="{{ $orderDetails['id'] }}">
-                            <select name="order_status" id="order_status" required>
-                                <option value="" selected>Select</option>
-                                @foreach ($orderStatuses as $status)
-                                <option value="{{ $status['name'] }}" @if (!empty($orderDetails['order_status']) && $orderDetails['order_status']==$status['name']) selected @endif>{{ $status['name'] }}
-                                </option>
-                                @endforeach
-                            </select>
-                            <input type="text" name="courier_name" id="courier_name" placeholder="Courier Name">
-                            <input type="text" name="tracking_number" id="tracking_number" placeholder="Tracking Number">
-                            <button type="submit">Update</button>
-                        </form>
-                        <br>
-                        @else
-                        This feature is restricted.
-                        @endif
-                    </div>
-                </div>
-            </div>
             <div class="col-md-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
@@ -278,6 +248,5 @@
             </div>
         </div>
     </div>
-    @include('admin.layout.footer')
 </div>
 @endsection

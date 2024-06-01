@@ -12,13 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('shipping_charges', function (Blueprint $table) {
-            
             $table->id();
-
             $table->string('country');
-            $table->float('rate'); // the shipping rate (cost/charges/price) of that specific country (Every country has its own shipping charges rate)
+            $table->float('rate');
             $table->tinyInteger('status');
-
             $table->timestamps();
         });
     }

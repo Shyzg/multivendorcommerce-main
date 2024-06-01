@@ -18,10 +18,7 @@ class Category extends Model
     {
         $categoryDetails = Category::select('id', 'category_name', 'url', 'description')->where('url', $url)->first()->toArray();
         $catIds[] = $categoryDetails['id'];
-
-        $breadcrumbs = '
-                <li class="is-marked"><a href="' . url($categoryDetails['url']) . '">' . $categoryDetails['category_name'] . '</a></li>';
-
+        $breadcrumbs = '<li class="is-marked"><a href="' . url($categoryDetails['url']) . '">' . $categoryDetails['category_name'] . '</a></li>';
         $resp = array(
             'catIds'          => $catIds,
             'categoryDetails' => $categoryDetails,

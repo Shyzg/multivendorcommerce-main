@@ -28,8 +28,8 @@ class UserController extends Controller
         if ($request->isMethod('post')) {
             $data = $request->all();
             $validator = Validator::make($request->all(), [
-                'name'     => 'required|string|max:100',
-                'mobile'   => 'required|numeric|digits:11',
+                'name'     => 'required|string|min:2|max:128',
+                'mobile'   => 'required|numeric|min_digits:10|max_digits:12',
                 'email'    => 'required|email|max:150|unique:users',
                 'password' => 'required|min:6'
             ]);
@@ -82,7 +82,7 @@ class UserController extends Controller
                 } else {
                     return response()->json([
                         'type'    => 'incorrect',
-                        'message' => 'Incorrect Email or Password! Wrong Credentials!'
+                        'message' => 'Email atau Password tidak benar'
                     ]);
                 }
             } else {
@@ -113,7 +113,7 @@ class UserController extends Controller
                 'state'   => 'required|string|max:100',
                 'address' => 'required|string|max:100',
                 'country' => 'required|string|max:100',
-                'mobile'  => 'required|numeric|digits:11'
+                'mobile'  => 'required|numeric|digits:12'
             ]);
 
             if ($validator->passes()) {
@@ -137,9 +137,9 @@ class UserController extends Controller
                 ]);
             }
         } else {
-            $countries = Country::get()->toArray();
-            $cities = City::get()->toArray();
-            $province = Province::get()->toArray();
+            $countries = Country::get();
+            $cities = City::get();
+            $province = Province::get();
 
             return view('front.users.user_account')->with(compact('countries', 'cities', 'province'));
         }

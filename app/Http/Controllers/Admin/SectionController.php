@@ -19,35 +19,6 @@ class SectionController extends Controller
         return view('admin.sections.sections')->with(compact('sections'));
     }
 
-    public function updateSectionStatus(Request $request)
-    {
-        if ($request->ajax()) {
-            $data = $request->all();
-
-            if ($data['status'] == 'Active') {
-                $status = 0;
-            } else {
-                $status = 1;
-            }
-
-            Section::where('id', $data['section_id'])->update(['status' => $status]);
-
-            return response()->json([
-                'status'     => $status,
-                'section_id' => $data['section_id']
-            ]);
-        }
-    }
-
-    public function deleteSection($id)
-    {
-        Section::where('id', $id)->delete();
-
-        $message = 'Section has been deleted successfully!';
-
-        return redirect()->back()->with('success_message', $message);
-    }
-
     public function addEditSection(Request $request, $id = null)
     {
         Session::put('page', 'sections');
@@ -78,10 +49,18 @@ class SectionController extends Controller
             $section->status = 1;
             $section->save();
 
-
             return redirect('admin/products')->with('success_message', $message);
         }
 
         return view('admin.sections.add_edit_section')->with(compact('title', 'section'));
+    }
+
+    public function deleteSection($id)
+    {
+        Section::where('id', $id)->delete();
+
+        $message = 'Section has been deleted successfully!';
+
+        return redirect()->back()->with('success_message', $message);
     }
 }

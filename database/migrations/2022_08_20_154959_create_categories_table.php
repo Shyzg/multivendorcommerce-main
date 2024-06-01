@@ -17,7 +17,6 @@ return new class extends Migration
             $table->id();
             $table->integer('section_id');
             $table->string('category_name');
-            $table->string('category_image');
             $table->double('category_discount')->default(0);
             $table->text('description')->nullable();
             $table->string('url');

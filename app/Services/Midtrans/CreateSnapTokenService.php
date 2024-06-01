@@ -32,7 +32,7 @@ class CreateSnapTokenService extends Midtrans
 
         $transactionDetails = [
             'transaction_details' => [
-                'order_id' => $this->order->id,
+                'order_id' => $this->generateRandomString(10) . "-" . $this->order->id,
                 'gross_amount' => round($this->order->grand_total),
             ],
             'item_details' => $details,
@@ -53,5 +53,16 @@ class CreateSnapTokenService extends Midtrans
         $snapToken = Snap::getSnapToken($transactionDetails);
 
         return $snapToken;
+    }
+
+    function generateRandomString($length = 10)
+    {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[random_int(0, $charactersLength - 1)];
+        }
+        return $randomString;
     }
 }

@@ -93,8 +93,8 @@
                     </td>
                     <td>
                         <span class="calc-text couponAmount">
-                            @if (\Illuminate\Support\Facades\Session::has('couponAmount'))
-                            IDR {{ \Illuminate\Support\Facades\Session::get('couponAmount') }}
+                            @if (Session::has('couponAmount'))
+                            IDR {{ Session::get('couponAmount') }}
                             @else
                             IDR 0
                             @endif
@@ -103,10 +103,10 @@
                 </tr>
                 <tr>
                     <td>
-                        <h3 class="calc-h3 u-s-m-b-0">Grand Total</h3> {{-- Total Price after Coupon discounts (if any) --}}
+                        <h3 class="calc-h3 u-s-m-b-0">Grand Total</h3>
                     </td>
                     <td>
-                        <span class="calc-text grand_total">IDR {{ $total_price - \Illuminate\Support\Facades\Session::get('couponAmount') }}</span>
+                        <span class="calc-text grand_total">IDR {{ $total_price - Session::get('couponAmount') }}</span>
                     </td>
                 </tr>
             </tbody>

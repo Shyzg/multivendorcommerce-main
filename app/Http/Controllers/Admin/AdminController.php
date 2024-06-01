@@ -23,6 +23,7 @@ class AdminController extends Controller
 {
     public function dashboard()
     {
+        // Fungsi session ini digunakan untuk menyimpan dalam sesi menggunakan method put() dengan kata key 'page' yang berisikan nilai 'dashboard', jadi ketika key 'page' dipanggil dan memiliki nilai 'dashboard' dapat menampilkan beberapa data yang dipanggil dibawah
         Session::put('page', 'dashboard');
 
         $sectionsCount   = Section::count();
@@ -32,7 +33,17 @@ class AdminController extends Controller
         $couponsCount    = Coupon::count();
         $usersCount      = User::count();
 
+        // Mengembalikan variable berupa array yang ada diatas kedalam halaman dashboard admin
         return view('admin/dashboard')->with(compact('sectionsCount', 'categoriesCount', 'productsCount', 'ordersCount', 'couponsCount', 'usersCount'));
+    }
+
+    public function admins()
+    {
+        $admins = Admin::get();
+
+        Session::put('page', 'admins');
+
+        return view('admin.admins.admins')->with(compact('admins'));
     }
 
     public function login(Request $request)
@@ -49,12 +60,16 @@ class AdminController extends Controller
                 'password.required' => 'Password is required!',
             ];
 
+            // Melakukan validasi data yang dikirim apakah benar, jika tidak akan menampilkan pesan error
             $this->validate($request, $rules, $customMessages);
 
+            // Melakukan autentikasi user/admin/vendor
             if (Auth::guard('admin')->attempt(['email' => $data['email'], 'password' => $data['password']])) {
+                // Kalau benar proses autentikasi valid dengan yang ada di database akan mengarahkan kedalam dashboard admin
                 return redirect('/admin/dashboard');
             } else {
-                return redirect()->back()->with('error_message', 'Invalid Email or Password');
+                // Kalau data yang dimasukkan atau dikirim tidak valid dengan yang ada di database akan menampilkan pesan error
+                return redirect()->back()->with('error_message', 'Email atau Password tidak benar');
             }
         }
 
@@ -72,25 +87,31 @@ class AdminController extends Controller
     {
         Session::put('page', 'update_admin_password');
 
+        // Mengambil data untuk memperbarui password admin pada form yang ada di update_admin_password.blade.php
         if ($request->isMethod('post')) {
             $data = $request->all();
 
+            // Memeriksa terlebih dahulu apakah password yang dimasukkan user/admin  sama dengan password yang sedang digunakan sekarang
             if (Hash::check($data['current_password'], Auth::guard('admin')->user()->password)) {
+                // Memeriksa apakah password baru yang dimasukkan oleh user/admin sama antara 'new_password' dan 'confirm_password'
                 if ($data['confirm_password'] == $data['new_password']) {
                     Admin::where('id', Auth::guard('admin')->user()->id)->update([
                         'password' => bcrypt($data['new_password'])
                     ]);
 
+                    // Jika sama maka akan menampilkan pesan sukses
                     return redirect()->back()->with('success_message', 'Admin Password has been updated successfully!');
                 } else {
+                    // Jika tidak sama maka akan menampilkan pesan error
                     return redirect()->back()->with('error_message', 'New Password and Confirm Password does not match!');
                 }
             } else {
+                // Jika password admin yang sedang digunakan tidak valid akan menampilkan pesan error
                 return redirect()->back()->with('error_message', 'Your current admin password is Incorrect!');
             }
         }
 
-        $adminDetails = Admin::where('email', Auth::guard('admin')->user()->email)->first()->toArray();
+        $adminDetails = Admin::where('email', Auth::guard('admin')->user()->email)->first();
 
         return view('admin/settings/update_admin_password')->with(compact('adminDetails'));
     }
@@ -125,14 +146,19 @@ class AdminController extends Controller
 
             $this->validate($request, $rules, $customMessages);
 
+            // Jika admin mengunggah file berupa foto atau image, maka akan dilakukan proses pengunggahan pada folder admin/images/photos
             if ($request->hasFile('admin_image')) {
                 $image_tmp = $request->file('admin_image');
 
                 if ($image_tmp->isValid()) {
+                    // Mengambil ekstensi foto atau gambar
                     $extension = $image_tmp->getClientOriginalExtension();
+                    // Generate angka acak sebagai nama file foto agar tidak mengalami penimbunan foto
                     $imageName = rand(111, 99999) . '.' . $extension;
+                    // Memasukkan file yang diunggah kedalam folder 'public'
                     $imagePath = 'admin/images/photos/' . $imageName;
 
+                    // Melakukan penyimpanan menggunakan package laravel yaitu IntervationImage
                     Image::make($image_tmp)->save($imagePath);
                 }
             } else if (!empty($data['current_admin_image'])) {
@@ -141,6 +167,7 @@ class AdminController extends Controller
                 $imageName = '';
             }
 
+            // Memperbarui detil admin
             Admin::where('id', Auth::guard('admin')->user()->id)->update([
                 'name'   => $data['admin_name'],
                 'mobile' => $data['admin_mobile'],
@@ -155,6 +182,7 @@ class AdminController extends Controller
 
     public function updateVendorDetails($slug, Request $request)
     {
+        // $slug hanya dapat digunakan pada halaman personal_details atau business_details
         if ($slug == 'personal') {
             Session::put('page', 'update_personal_details');
 
@@ -206,10 +234,10 @@ class AdminController extends Controller
                     'country' => $data['vendor_country']
                 ]);
 
-                return redirect()->back()->with('success_message', 'Vendor details updated successfully!');
+                return redirect()->back()->with('success_message', 'Detail vendor berhasil diperbarui');
             }
 
-            $vendorDetails = Vendor::where('id', Auth::guard('admin')->user()->vendor_id)->first()->toArray();
+            $vendorDetails = Vendor::where('id', Auth::guard('admin')->user()->vendor_id)->first();
         } else if ($slug == 'business') {
             Session::put('page', 'update_business_details');
 
@@ -256,30 +284,21 @@ class AdminController extends Controller
                     ]);
                 }
 
-                return redirect()->back()->with('success_message', 'Vendor details updated successfully!');
+                return redirect()->back()->with('success_message', 'Detail bisnis vendor berhasil diperbarui');
             }
 
             $vendorCount = VendorsBusinessDetail::where('vendor_id', Auth::guard('admin')->user()->vendor_id)->count();
 
             if ($vendorCount > 0) {
-                $vendorDetails = VendorsBusinessDetail::where('vendor_id', Auth::guard('admin')->user()->vendor_id)->first()->toArray();
+                $vendorDetails = VendorsBusinessDetail::where('vendor_id', Auth::guard('admin')->user()->vendor_id)->first();
             } else {
                 $vendorDetails = array();
             }
         }
 
-        $countries = Country::get()->toArray();
+        $countries = Country::get();
 
         return view('admin/settings/update_vendor_details')->with(compact('slug', 'vendorDetails', 'countries'));
-    }
-
-    public function admins()
-    {
-        $admins = Admin::get()->toArray();
-
-        Session::put('page', 'admins');
-
-        return view('admin.admins.admins')->with(compact('admins'));
     }
 
     public function viewVendorDetails($id)

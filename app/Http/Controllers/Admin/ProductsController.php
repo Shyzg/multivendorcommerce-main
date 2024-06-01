@@ -32,7 +32,7 @@ class ProductsController extends Controller
             $produtcs = $products->where('vendor_id', $vendor_id);
         }
 
-        $products = $products->get()->toArray();
+        $products = $products->get();
 
         return view('admin.products.products')->with(compact('products'));
     }
@@ -55,15 +55,6 @@ class ProductsController extends Controller
                 'product_id' => $data['product_id']
             ]);
         }
-    }
-
-    public function deleteProduct($id)
-    {
-        Product::where('id', $id)->delete();
-
-        $message = 'Product has been deleted successfully!';
-
-        return redirect()->back()->with('success_message', $message);
     }
 
     public function addEditProduct(Request $request, $id = null)
@@ -164,9 +155,18 @@ class ProductsController extends Controller
             return redirect('admin/products')->with('success_message', $message);
         }
 
-        $categories = \App\Models\Section::with('categories')->get()->toArray();
+        $categories = \App\Models\Section::with('categories')->get();
 
         return view('admin.products.add_edit_product')->with(compact('title', 'product', 'categories'));
+    }
+
+    public function deleteProduct($id)
+    {
+        Product::where('id', $id)->delete();
+
+        $message = 'Product has been deleted successfully!';
+
+        return redirect()->back()->with('success_message', $message);
     }
 
     public function deleteProductImage($id)
@@ -226,26 +226,6 @@ class ProductsController extends Controller
         return view('admin.attributes.add_edit_attributes')->with(compact('product'));
     }
 
-    public function updateAttributeStatus(Request $request)
-    {
-        if ($request->ajax()) {
-            $data = $request->all();
-
-            if ($data['status'] == 'Active') {
-                $status = 0;
-            } else {
-                $status = 1;
-            }
-
-            ProductsAttribute::where('id', $data['attribute_id'])->update(['status' => $status]);
-
-            return response()->json([
-                'status'       => $status,
-                'attribute_id' => $data['attribute_id']
-            ]);
-        }
-    }
-
     public function editAttributes(Request $request)
     {
         Session::put('page', 'products');
@@ -264,6 +244,26 @@ class ProductsController extends Controller
             }
 
             return redirect()->back()->with('success_message', 'Product Attributes have been updated successfully!');
+        }
+    }
+
+    public function updateAttributeStatus(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = $request->all();
+
+            if ($data['status'] == 'Active') {
+                $status = 0;
+            } else {
+                $status = 1;
+            }
+
+            ProductsAttribute::where('id', $data['attribute_id'])->update(['status' => $status]);
+
+            return response()->json([
+                'status'       => $status,
+                'attribute_id' => $data['attribute_id']
+            ]);
         }
     }
 
@@ -304,25 +304,6 @@ class ProductsController extends Controller
         }
 
         return view('admin.images.add_images')->with(compact('product'));
-    }
-
-    public function updateImageStatus(Request $request)
-    {
-        if ($request->ajax()) {
-            $data = $request->all();
-            if ($data['status'] == 'Active') {
-                $status = 0;
-            } else {
-                $status = 1;
-            }
-
-            ProductsImage::where('id', $data['image_id'])->update(['status' => $status]);
-
-            return response()->json([
-                'status'   => $status,
-                'image_id' => $data['image_id']
-            ]);
-        }
     }
 
     public function deleteImage($id)

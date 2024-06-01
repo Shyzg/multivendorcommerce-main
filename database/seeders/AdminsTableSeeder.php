@@ -17,21 +17,21 @@ class AdminsTableSeeder extends Seeder
         $adminRecords = [
             [
                 'id'        => 1,
-                'name'      => 'Ahmed Yahya',
+                'name'      => 'Jero',
                 'type'      => 'superadmin',
                 'vendor_id' => 0,
-                'mobile'    => '9800000000',
+                'mobile'    => '082233527616',
                 'email'     => 'admin@admin.com',
                 'password'  => '$2a$12$xvkjSScUPRexfcJTAy9ATutIeGUuRgJrjDIdL/.xlrddEvRZINpeC',
                 'image'     => ''
             ],
             [
                 'id'        => 2,
-                'name'      => 'Jero',
+                'name'      => 'Reza',
                 'type'      => 'vendor',
                 'vendor_id' => 1,
-                'mobile'    => '9700000000',
-                'email'     => 'jero@gmail.com',
+                'mobile'    => '082233521234',
+                'email'     => 'reza@gmail.com',
                 'password'  => '$2a$12$xvkjSScUPRexfcJTAy9ATutIeGUuRgJrjDIdL/.xlrddEvRZINpeC',
                 'image'     => ''
             ],

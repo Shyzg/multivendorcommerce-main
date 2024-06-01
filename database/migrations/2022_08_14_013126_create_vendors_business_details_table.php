@@ -22,8 +22,6 @@ return new class extends Migration
             $table->string('shop_state')->nullable();
             $table->string('shop_country')->nullable();
             $table->string('shop_mobile')->nullable();
-            $table->string('shop_website')->nullable();
-            $table->string('shop_email')->nullable();
             $table->timestamps();
         });
     }

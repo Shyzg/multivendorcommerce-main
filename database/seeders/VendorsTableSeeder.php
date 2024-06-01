@@ -22,7 +22,7 @@ class VendorsTableSeeder extends Seeder
                 'city'    => 'Kota Surabaya',
                 'state'   => 'Jawa Timur',
                 'country' => 'Indonesia',
-                'mobile'  => '9700000000',
+                'mobile'  => '082233521234',
                 'email'   => 'reza@gmail.com'
             ],
         ];

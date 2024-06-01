@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 use App\Models\User;
-use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -13,8 +12,17 @@ class UserController extends Controller
     {
         Session::put('page', 'users');
 
-        $users = User::get()->toArray();
+        $users = User::get();
 
         return view('admin.users.users')->with(compact('users'));
+    }
+
+    public function deleteUser($id)
+    {
+        User::where('id', $id)->delete();
+
+        $message = 'Berhasil menghapus customer';
+
+        return redirect()->back()->with('success_message', $message);
     }
 }

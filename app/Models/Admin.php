@@ -13,11 +13,11 @@ class Admin extends Authenticatable
 
     public function vendorPersonal()
     {
-        return $this->belongsTo('App\Models\Vendor', 'vendor_id');
+        return $this->belongsTo(Vendor::class, 'vendor_id');
     }
 
     public function vendorBusiness()
     {
-        return $this->belongsTo('App\Models\VendorsBusinessDetail', 'vendor_id');
+        return $this->belongsTo(VendorsBusinessDetail::class, 'vendor_id');
     }
 }

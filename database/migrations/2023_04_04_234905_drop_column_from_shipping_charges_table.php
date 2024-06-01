@@ -12,8 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('shipping_charges', function (Blueprint $table) {
-            
-            $table->dropColumn('rate'); // We drop the `rate` column in order to apply the 'Advanced' Shipping Charges module instead of the 'Simple' one
+            $table->dropColumn('rate');
         });
     }
 
@@ -23,7 +22,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('shipping_charges', function (Blueprint $table) {
-            
         });
     }
 };

@@ -13,13 +13,13 @@ class Vendor extends Model
     public function vendorbusinessdetails()
     {
         // Foreign key untuk 'vendor_id'
-        return $this->belongsTo('App\Models\VendorsBusinessDetail', 'id', 'vendor_id');
+        return $this->belongsTo(VendorsBusinessDetail::class, 'id', 'vendor_id');
     }
 
     public static function getVendorShop($vendorid)
     {
         // Digunakan untuk menampilkan dalam fungsi vendorListing() di Front/ProductsController.php
-        $getVendorShop = \App\Models\VendorsBusinessDetail::select('shop_name')->where('vendor_id', $vendorid)->first()->toArray();
+        $getVendorShop = VendorsBusinessDetail::select('shop_name')->where('vendor_id', $vendorid)->first();
 
         return $getVendorShop['shop_name'];
     }

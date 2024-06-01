@@ -33,30 +33,6 @@ $(document).ready(function() {
         });
     });
 
-    // Updating section status (active/inactive) using AJAX in sections.blade.php    
-    $(document).on('click', '.updateSectionStatus', function() { // '.updateSectionStatus' is the anchor link <a> CSS class    // This is the same as    $('.updateSectionStatus').on('click', function() {
-        var status     = $(this).children('i').attr('status'); // Using HTML Custom Attributes
-        var section_id = $(this).attr('section_id'); // Using HTML Custom Attributes
-
-        
-        $.ajax({
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}, // X-CSRF-TOKEN: https://laravel.com/docs/9.x/csrf#csrf-x-csrf-token    
-            type   : 'post',
-            url    : '/admin/update-section-status', // check the web.php for this route and check the SectionController for the updateSectionStatus() method
-            data   : {status: status, section_id: section_id}, // we pass the status and section_id
-            success: function(resp) {
-                if (resp.status == 0) { // in case of success, reverse the status (active/inactive) and show the right icon in the frontend    // Or the same    if (resp['status'] == 0) {
-                    $('#section-' + section_id).html('<i style="font-size: 25px" class="mdi mdi-bookmark-outline" status="Inactive"></i>');
-                } else if (resp.status == 1) {
-                    $('#section-' + section_id).html('<i style="font-size: 25px" class="mdi mdi-bookmark-check" status="Active"></i>');
-                }
-            },
-            error  : function() {
-                alert('Error');
-            }
-        });
-    });
-
     // Updating Product status (active/inactive) using AJAX in products.blade.php    
     $(document).on('click', '.updateProductStatus', function() { // '.updateProductStatus' is the anchor link <a> CSS class    // This is the same as    $('.updateProductStatus').on('click', function() {
         var status     = $(this).children('i').attr('status'); // Using HTML Custom Attributes
@@ -97,30 +73,6 @@ $(document).ready(function() {
                     $('#attribute-' + attribute_id).html('<i style="font-size: 25px" class="mdi mdi-bookmark-outline" status="Inactive"></i>');
                 } else if (resp.status == 1) {
                     $('#attribute-' + attribute_id).html('<i style="font-size: 25px" class="mdi mdi-bookmark-check" status="Active"></i>');
-                }
-            },
-            error  : function() {
-                alert('Error');
-            }
-        });
-    });
-
-    // Updating Image status (active/inactive) using AJAX in add_images.blade.php    
-    $(document).on('click', '.updateImageStatus', function() { // '.updateImageStatus' is the anchor link <a> CSS class    // This is the same as    $('.updateAttributetatus').on('click', function() {
-        var status   = $(this).children('i').attr('status'); // Using HTML Custom Attributes
-        var image_id = $(this).attr('image_id'); // Using HTML Custom Attributes
-
-        
-        $.ajax({
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}, // X-CSRF-TOKEN: https://laravel.com/docs/9.x/csrf#csrf-x-csrf-token    
-            type   : 'post',
-            url    : '/admin/update-image-status', // check the web.php for this route and check the ProductsController for the updateImageStatus() method
-            data   : {status: status, image_id: image_id}, // we pass the status and image_id
-            success: function(resp) {
-                if (resp.status == 0) { // in case of success, reverse the status (active/inactive) and show the right icon in the frontend    // Or the same    if (resp['status'] == 0) {
-                    $('#image-' + image_id).html('<i style="font-size: 25px" class="mdi mdi-bookmark-outline" status="Inactive"></i>');
-                } else if (resp.status == 1) {
-                    $('#image-' + image_id).html('<i style="font-size: 25px" class="mdi mdi-bookmark-check" status="Active"></i>');
                 }
             },
             error  : function() {

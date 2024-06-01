@@ -59,7 +59,7 @@ class ProductsController extends Controller
                     foreach ($data['price'] as $key => $price) {
                         $priceArr = explode('-', $price);
                         if (isset($priceArr[0]) && isset($priceArr[1])) {
-                            $productIds[] = Product::select('id')->whereBetween('product_price', [$priceArr[0], $priceArr[1]])->pluck('id')->toArray();
+                            $productIds[] = Product::select('id')->whereBetween('product_price', [$priceArr[0], $priceArr[1]])->pluck('id');
                         }
                     }
 
@@ -105,13 +105,22 @@ class ProductsController extends Controller
         }
     }
 
+    public function vendorListing($vendorid)
+    {
+        $getVendorShop = Vendor::getVendorShop($vendorid);
+        $vendorProducts = Product::where('vendor_id', $vendorid);
+        $vendorProducts = $vendorProducts->paginate(30);
+
+        return view('front.products.vendor_listing')->with(compact('getVendorShop', 'vendorProducts'));
+    }
+
     public function detail($id)
     {
         $productDetails = Product::with([
             'section', 'category', 'attributes' => function ($query) {
                 $query->where('stock', '>', 0)->where('status', 1);
             }, 'images', 'vendor'
-        ])->find($id)->toArray();
+        ])->find($id);
         $categoryDetails = Category::categoryDetails($productDetails['category']['url'] ?? null);
 
         if (empty(Session::get('session_id'))) {
@@ -137,13 +146,11 @@ class ProductsController extends Controller
         }
     }
 
-    public function vendorListing($vendorid)
+    public function cart()
     {
-        $getVendorShop = Vendor::getVendorShop($vendorid);
-        $vendorProducts = Product::where('vendor_id', $vendorid);
-        $vendorProducts = $vendorProducts->paginate(30);
+        $getCartItems = Cart::getCartItems();
 
-        return view('front.products.vendor_listing')->with(compact('getVendorShop', 'vendorProducts'));
+        return view('front.products.cart')->with(compact('getCartItems'));
     }
 
     public function cartAdd(Request $request)
@@ -205,13 +212,6 @@ class ProductsController extends Controller
         }
     }
 
-    public function cart()
-    {
-        $getCartItems = Cart::getCartItems();
-
-        return view('front.products.cart')->with(compact('getCartItems'));
-    }
-
     public function cartUpdate(Request $request)
     {
         if ($request->ajax()) {
@@ -223,7 +223,7 @@ class ProductsController extends Controller
             $cartDetails = Cart::find($data['cartid']);
             $availableStock = ProductsAttribute::select('stock')->where([
                 'product_id' => $cartDetails['product_id']
-            ])->first()->toArray();
+            ])->first();
 
             if ($data['qty'] > $availableStock['stock']) {
                 $getCartItems = Cart::getCartItems();
@@ -333,7 +333,7 @@ class ProductsController extends Controller
                     $usersArr = explode(',', $couponDetails->users);
                     if (count($usersArr)) {
                         foreach ($usersArr as $key => $user) {
-                            $getUserId = User::select('id')->where('email', $user)->first()->toArray();
+                            $getUserId = User::select('id')->where('email', $user)->first();
                             $usersId[] = $getUserId['id'];
                         }
                         foreach ($getCartItems as $item) {
@@ -345,7 +345,7 @@ class ProductsController extends Controller
                 }
 
                 if ($couponDetails->vendor_id > 0) {
-                    $productIds = Product::select('id')->where('vendor_id', $couponDetails->vendor_id)->pluck('id')->toArray();
+                    $productIds = Product::select('id')->where('vendor_id', $couponDetails->vendor_id)->pluck('id');
 
                     foreach ($getCartItems as $item) {
                         if (!in_array($item['product']['id'], $productIds)) {
@@ -390,9 +390,9 @@ class ProductsController extends Controller
 
     public function checkout(Request $request)
     {
-        $countries = Country::get()->toArray();
-        $cities =  City::get()->toArray();
-        $provinces = Province::get()->toArray();
+        $countries = Country::get();
+        $cities =  City::get();
+        $provinces = Province::get();
         $getCartItems = Cart::getCartItems();
 
         if (count($getCartItems) == 0) {
@@ -412,7 +412,6 @@ class ProductsController extends Controller
         }
 
         $deliveryAddresses = DeliveryAddress::deliveryAddresses();
-        $getCityDestinationId = [];
 
         foreach ($deliveryAddresses as $key => $value) {
             $shippingCharges = ShippingCharge::getShippingCharges($total_weight, 'Indonesia');
@@ -471,16 +470,9 @@ class ProductsController extends Controller
                 return redirect()->back()->with('error_message', $message);
             }
 
-            if (empty($data['accept'])) {
-                $message = 'Please agree to T&C!';
-
-                return redirect()->back()->with('error_message', $message);
-            }
-
-            $deliveryAddress = DeliveryAddress::where('id', $data['address_id'])->first()->toArray();
+            $deliveryAddress = DeliveryAddress::where('id', $data['address_id'])->first();
 
             $payment_method = 'Prepaid';
-            $order_status   = 'Pending';
 
             DB::beginTransaction();
 
@@ -509,7 +501,6 @@ class ProductsController extends Controller
             $order->shipping_charges = $data['shipping_charges'];
             $order->coupon_code      = Session::get('couponCode');
             $order->coupon_amount    = Session::get('couponAmount');
-            $order->order_status     = $order_status;
             $order->payment_method   = $payment_method;
             $order->payment_gateway  = $data['payment_gateway'];
             $order->grand_total      =  $data['grand_total'];
@@ -520,10 +511,9 @@ class ProductsController extends Controller
                 $cartItem = new OrdersProduct;
                 $cartItem->order_id = $order_id;
                 $cartItem->user_id  = Auth::user()->id;
-                $getProductDetails = Product::select('product_name', 'admin_id', 'vendor_id')->where('id', $item['product_id'])->first()->toArray();
+                $getProductDetails = Product::select('product_name', 'admin_id', 'vendor_id')->where('id', $item['product_id'])->first();
                 $cartItem->admin_id        = $getProductDetails['admin_id'];
                 $cartItem->vendor_id       = $getProductDetails['vendor_id'];
-
                 $cartItem->product_id      = $item['product_id'];
                 $cartItem->product_name    = $getProductDetails['product_name'];
                 $cartItem->item_status    = 'In Progress';
@@ -567,8 +557,7 @@ class ProductsController extends Controller
             }
 
             $destroyCart = Cart::destroyCartItems();
-
-            $orderDetails = Order::with('orders_products')->where('id', $order_id)->first()->toArray();
+            $orderDetails = Order::with('orders_products')->where('id', $order_id)->first();
 
             if ($data['payment_gateway'] == 'midtrans') {
                 return view('front.orders.show', compact('order', 'snapToken'));

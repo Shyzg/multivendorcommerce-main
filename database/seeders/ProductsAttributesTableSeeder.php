@@ -19,7 +19,7 @@ class ProductsAttributesTableSeeder extends Seeder
                 'id'         => 1,
                 'product_id' => 1,
                 'stock'      => 10,
-                'sku'        => 'MKN1',
+                'sku'        => 'MSA1',
                 'status'     => 1
             ]
         ];

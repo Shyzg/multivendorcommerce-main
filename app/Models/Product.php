@@ -48,7 +48,6 @@ class Product extends Model
         $productDetails = Product::select('product_price', 'product_discount', 'category_id')->where('id', $product_id)->first();
         // Konversi object kedalam array
         $productDetails = json_decode(json_encode($productDetails), true);
-
         // Ambil 'product' dan potongan harga dari 'category_discount' di table `categories` menggungakan `category_id` di table `products`
         $categoryDetails = Category::select('category_discount')->where('id', $productDetails['category_id'])->first();
         // Konversi object kedalam array
@@ -60,7 +59,7 @@ class Product extends Model
         } else if ($categoryDetails['category_discount'] > 0) {
             // Kalau ada 'category_discount di dalam table 'categories' yang nilainya bukan 0
             $discounted_price = $productDetails['product_price'] - ($productDetails['product_price'] * $categoryDetails['category_discount'] / 100);
-        } else { // there's no discount on neither `product_discount` (in `products` table) nor `category_discount` (in `categories` table)
+        } else {
             // Kalau gaada 'product_discount' dan 'category_discount di dalam table 'products' dan 'categories' yang nilainya bukan 0
             $discounted_price = 0;
         }
@@ -70,14 +69,13 @@ class Product extends Model
 
     public static function getDiscountAttributePrice($product_id)
     {
-        $proAttrPrice = Product::where([ // from `products_attributes` table
+        $proAttrPrice = Product::where([
+            // from `products_attributes` table
             'id' => $product_id
-        ])->first()->toArray();
-        // dd($proAttrPrice);
+        ])->first();
         // Get the product DISCOUNT and CATEGORY ID of that product
         $proDetails = Product::select('product_discount', 'category_id')->where('id', $product_id)->first();
         $proDetails = json_decode(json_encode($proDetails), true); // convert the object to an array    
-
         // Get the product category discount `category_discount` from `categories` table using its `category_id` in `products` table
         $catDetails = Category::select('category_discount')->where('id', $proDetails['category_id'])->first();
         $catDetails = json_decode(json_encode($catDetails), true); // convert the object to an array    
@@ -86,18 +84,15 @@ class Product extends Model
             // if there's a PRODUCT discount on the product itself
             $final_price = $proAttrPrice['product_price'] - ($proAttrPrice['product_price'] * $proDetails['product_discount'] / 100);
             $discount = $proAttrPrice['product_price'] - $final_price; // the discount value = original price - price after discount
-
         } else if ($catDetails['category_discount'] > 0) { // if there's a `category_discount` (in `categories` table) (i.e. discount is not zero 0) (if there's a discount on the whole category of that product)
             // if there's NO a PRODUCT discount, but there's a CATEGORY discount
             $final_price = $proAttrPrice['product_price'] - ($proAttrPrice['product_price'] * $catDetails['category_discount'] / 100);
             $discount = $proAttrPrice['product_price'] - $final_price; // the discount value = original price - price after discount
-
             // Note: Didn't ACCOUNT FOR presence of discounts of BOTH `product_discount` (in `products` table) AND `category_discount` (in `categories` table) AT THE SAME TIME!!
         } else { // there's no discount on neither `product_discount` (in `products` table) nor `category_discount` (in `categories` table)
             $final_price = $proAttrPrice['product_price'];
             $discount = 0;
         }
-
 
         return array(
             'product_price' => $proAttrPrice['product_price'],

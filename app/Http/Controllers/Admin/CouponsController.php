@@ -7,9 +7,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Coupon;
+use App\Models\Section;
+use App\Models\User;
+use Illuminate\Support\Str;
 
 class CouponsController extends Controller
 {
+    // Menampilkan halaman coupon di dashboard admin pada views admin/coupons/coupons.blade.php
     public function coupons()
     {
         Session::put('page', 'coupons');
@@ -18,42 +22,31 @@ class CouponsController extends Controller
         $vendor_id = Auth::guard('admin')->user()->vendor_id;
 
         if ($adminType == 'vendor') {
-            $coupons = Coupon::where('vendor_id', $vendor_id)->get()->toArray();
+            $coupons = Coupon::where('vendor_id', $vendor_id)->get();
         } else {
-            $coupons = Coupon::get()->toArray();
+            $coupons = Coupon::get();
         }
 
         return view('admin.coupons.coupons')->with(compact('coupons'));
-    }
-
-    public function deleteCoupon($id)
-    {
-        Coupon::where('id', $id)->delete();
-
-        $message = 'Coupon has been deleted successfully!';
-
-        return redirect()->back()->with('success_message', $message);
     }
 
     public function addEditCoupon(Request $request, $id = null)
     {
         Session::put('page', 'coupons');
 
-
         if ($id == '') {
             $title = 'Add Coupon';
             $coupon = new Coupon;
             $selCats   = array();
             $selUsers  = array();
-            $message = 'Coupon added successfully!';
+            $message = 'Berhasil menambahkan coupon';
         } else {
             $title = 'Edit Coupon';
             $coupon = Coupon::find($id);
             $selCats   = explode(',', $coupon['categories']);
             $selUsers  = explode(',', $coupon['users']);
-            $message = 'Coupon updated successfully!';
+            $message = 'Berhasil memperbarui coupon';
         }
-
         if ($request->isMethod('post')) {
             $data = $request->all();
             $rules = [
@@ -81,20 +74,20 @@ class CouponsController extends Controller
             } else {
                 $categories = '';
             }
-
             if (isset($data['users'])) {
                 $users = implode(',', $data['users']);
             } else {
                 $users = '';
             }
-
             if ($data['coupon_option'] == 'Automatic') {
-                $coupon_code = \Illuminate\Support\Str::random(8);
+                // Akan otomatis memberikan kupon kode berupa string yang acak
+                $coupon_code = Str::random(8);
             } else {
                 $coupon_code = $data['coupon_code'];
             }
 
             $adminType = Auth::guard('admin')->user()->type;
+
             if ($adminType == 'vendor') {
                 $coupon->vendor_id = Auth::guard('admin')->user()->vendor_id;
             } else {
@@ -115,9 +108,18 @@ class CouponsController extends Controller
             return redirect('admin/coupons')->with('success_message', $message);
         }
 
-        $categories = \App\Models\Section::with('categories')->get()->toArray();
-        $users = \App\Models\User::select('email')->get();
+        $categories = Section::with('categories')->get()->toArray();
+        $users = User::select('email')->get();
 
         return view('admin.coupons.add_edit_coupon')->with(compact('title', 'coupon', 'categories', 'users', 'selCats', 'selUsers'));
+    }
+
+    public function deleteCoupon($id)
+    {
+        Coupon::where('id', $id)->delete();
+
+        $message = 'Berhasil menghapus coupon';
+
+        return redirect()->back()->with('success_message', $message);
     }
 }

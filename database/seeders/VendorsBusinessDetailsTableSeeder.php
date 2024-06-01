@@ -23,9 +23,7 @@ class VendorsBusinessDetailsTableSeeder extends Seeder
                 'shop_city'               => 'Kota Surabaya',
                 'shop_state'              => 'Jawa Timur',
                 'shop_country'            => 'Indonesia',
-                'shop_mobile'             => '1253247745',
-                'shop_website'            => 'amazon.com.eg',
-                'shop_email'              => 'john@admin.com'
+                'shop_mobile'             => '082233521234'
             ],
         ];
 

@@ -26,7 +26,6 @@ return new class extends Migration
             $table->float('shipping_charges');
             $table->string('coupon_code')->nullable();
             $table->float('coupon_amount')->nullable();
-            $table->string('order_status');
             $table->string('payment_method');
             $table->string('payment_gateway');
             $table->float('grand_total');

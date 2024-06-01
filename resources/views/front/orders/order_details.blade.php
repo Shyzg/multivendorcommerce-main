@@ -1,12 +1,6 @@
-{{-- This page is rendered by orders() method inside Front/OrderController.php (depending on if the order id Optional Parameter (slug) is passed in or not) --}}
-
-
 @extends('front.layout.layout')
 
-
-
 @section('content')
-<!-- Page Introduction Wrapper -->
 <div class="page-style-a">
     <div class="container">
         <div class="page-intro">
@@ -14,7 +8,7 @@
             <ul class="bread-crumb">
                 <li class="has-separator">
                     <i class="ion ion-md-home"></i>
-                    <a href="index.html">Home</a>
+                    <a href="{{ url('/'); }}">Home</a>
                 </li>
                 <li class="is-marked">
                     <a href="{{ url('user/orders') }}">Orders</a>
@@ -23,13 +17,9 @@
         </div>
     </div>
 </div>
-<!-- Page Introduction Wrapper /- -->
-<!-- Cart-Page -->
 <div class="page-cart u-s-p-t-80">
     <div class="container">
         <div class="row">
-
-            {{-- Orders info table --}}
             <table class="table table-striped table-borderless">
                 <tr class="table-danger">
                     <td colspan="2">
@@ -41,10 +31,6 @@
                     <td>{{ date('Y-m-d h:i:s', strtotime($orderDetails['created_at'])) }}</td>
                 </tr>
                 <tr>
-                    <td>Order Status</td>
-                    <td>{{ $orderDetails['order_status'] }}</td>
-                </tr>
-                <tr>
                     <td>Order Total</td>
                     <td>IDR {{ $orderDetails['grand_total'] }}</td>
                 </tr>
@@ -52,7 +38,6 @@
                     <td>Shipping Charges</td>
                     <td>IDR {{ $orderDetails['shipping_charges'] }}</td>
                 </tr>
-
                 @if ($orderDetails['coupon_code'] != '')
                 <tr>
                     <td>Coupon Code</td>
@@ -63,8 +48,6 @@
                     <td>IDR {{ $orderDetails['coupon_amount'] }}</td>
                 </tr>
                 @endif
-
-
                 @if ($orderDetails['courier_name'] != '')
                 <tr>
                     <td>Courier Name</td>
@@ -75,21 +58,18 @@
                     <td>{{ $orderDetails['tracking_number'] }}</td>
                 </tr>
                 @endif
-
                 <tr>
                     <td>Payment Method</td>
                     <td>{{ $orderDetails['payment_method'] }}</td>
                 </tr>
             </table>
-
-            {{-- Order products info table --}}
             <table class="table table-striped table-borderless">
                 <tr class="table-danger">
                     <th>Product Image</th>
                     <th>Product Name</th>
                     <th>Product Qty</th>
+                    <th>Status</th>
                 </tr>
-
                 @foreach ($orderDetails['orders_products'] as $product)
                 <tr>
                     <td>
@@ -102,9 +82,10 @@
                     </td>
                     <td>{{ $product['product_name'] }}</td>
                     <td>{{ $product['product_qty'] }}</td>
+                    <td>
+                        {{ $product['item_status'] }}
+                    </td>
                 </tr>
-
-
                 @if ($product['courier_name'] != '')
                 <tr>
                     <td colspan="6">Courier Name: {{ $product['courier_name'] }}, Tracking Number:
@@ -114,8 +95,6 @@
                 @endif
                 @endforeach
             </table>
-
-            {{-- Delivery Address info table --}}
             <table class="table table-striped table-borderless">
                 <tr class="table-danger">
                     <td colspan="2">
@@ -147,9 +126,7 @@
                     <td>{{ $orderDetails['mobile'] }}</td>
                 </tr>
             </table>
-
         </div>
     </div>
 </div>
-<!-- Cart-Page /- -->
 @endsection

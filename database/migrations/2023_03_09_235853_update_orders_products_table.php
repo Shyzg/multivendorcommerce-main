@@ -13,7 +13,6 @@ return new class extends Migration
      */
     public function up()
     {
-        // Add `courier_name` and `tracking_number` columns to `orders_products` table    
         Schema::table('orders_products', function ($table) {
             $table->string('courier_name')->after('item_status')->nullable();
             $table->string('tracking_number')->after('courier_name')->nullable();

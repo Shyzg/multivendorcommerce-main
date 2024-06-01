@@ -23,7 +23,7 @@
             <table class="table table-striped table-borderless">
                 <tr class="table-danger">
                     <th>Order ID</th>
-                    <th>Ordered Products</th> {{-- We'll display products codes --}}
+                    <th>Ordered Products</th>
                     <th>Payment Method</th>
                     <th>Grand Total</th>
                     <th>Created on</th>
@@ -32,7 +32,7 @@
                     <td>
                         <a href="{{ url('user/orders/' . $order['id']) }}">{{ $order['id'] }}</a>
                     </td>
-                    <td> {{-- We'll display products codes --}}
+                    <td>
                         @foreach ($order['orders_products'] as $product)
                         {{ $product['product_name'] }}
                         <br>
