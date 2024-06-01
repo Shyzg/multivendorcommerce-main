@@ -14,6 +14,7 @@ class CategoryController extends Controller
     // Menampilkan halaman categories di dashboard admin pada views admin/categories/categories.blade.php
     public function categories()
     {
+        // Menggunakan session untuk sebagai penanda halaman yang sedang digunakan pada sidebar
         Session::put('page', 'categories');
 
         $categories = Category::with('section')->get();
@@ -26,33 +27,30 @@ class CategoryController extends Controller
         Session::put('page', 'categories');
 
         if ($id == '') {
-            $title = 'Add Category';
+            $title = 'Tambah Kategori';
             $category = new Category();
             $getCategories = array();
             $message = 'Berhasil menambahkan category';
         } else {
-            $title = 'Edit Category';
+            $title = 'Ubah Kategori';
             $category = Category::find($id);
             $getCategories = Category::where([
                 'section_id' => $category['section_id']
             ])->get();
             $message = 'Berhasil memperbarui category';
         }
-
         if ($request->isMethod('post')) {
             $data = $request->all();
             $rules = [
-                'category_name' => 'required|regex:/^[\pL\s\-]+$/u',
+                'category_name' => 'required',
                 'section_id'    => 'required',
                 'url'           => 'required',
             ];
             $customMessages = [
-                'category_name.required' => 'Category Name is required',
-                'category_name.regex'    => 'Valid Category Name is required',
-                'section_id.required'    => 'Section is required',
-                'url.required'           => 'Category URL is required',
+                'category_name.required' => 'Nama kategori harus diisi',
+                'section_id.required'    => 'Section harus dipilih salah satu',
+                'url.required'           => 'URL harus diisi',
             ];
-
             $this->validate($request, $rules, $customMessages);
 
             if ($data['category_discount'] == '') {
@@ -62,7 +60,6 @@ class CategoryController extends Controller
             $category->section_id        = $data['section_id'];
             $category->category_name     = $data['category_name'];
             $category->category_discount = $data['category_discount'];
-            $category->description       = $data['description'];
             $category->url               = $data['url'];
             $category->save();
 

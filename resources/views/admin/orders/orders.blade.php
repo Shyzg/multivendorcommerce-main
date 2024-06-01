@@ -42,9 +42,6 @@
                                             <a title="View Order Details" href="{{ url('admin/orders/' . $order['id']) }}">
                                                 <i style="font-size: 25px" class="mdi mdi-file-document"></i>
                                             </a>
-                                            <a title="View Order Invoice" href="{{ url('admin/orders/invoice/' . $order['id']) }}" target="_blank">
-                                                <i style="font-size: 25px" class="mdi mdi-printer"></i>
-                                            </a>
                                         </td>
                                     </tr>
                                     @endif
@@ -57,10 +54,5 @@
             </div>
         </div>
     </div>
-    <footer class="footer">
-        <div class="d-sm-flex justify-content-center justify-content-sm-between">
-            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2022. All rights reserved.</span>
-        </div>
-    </footer>
 </div>
 @endsection

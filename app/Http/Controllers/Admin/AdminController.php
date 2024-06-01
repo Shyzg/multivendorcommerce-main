@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
+    // Menampilkan halaman coupon di dashboard admin pada views admin/dashboard
     public function dashboard()
     {
         // Fungsi session ini digunakan untuk menyimpan dalam sesi menggunakan method put() dengan kata key 'page' yang berisikan nilai 'dashboard', jadi ketika key 'page' dipanggil dan memiliki nilai 'dashboard' dapat menampilkan beberapa data yang dipanggil dibawah
@@ -55,9 +56,9 @@ class AdminController extends Controller
                 'password' => 'required',
             ];
             $customMessages = [
-                'email.required'    => 'Email Address is required!',
-                'email.email'       => 'Valid Email Address is required',
-                'password.required' => 'Password is required!',
+                'email.required'    => 'Email harus diisi',
+                'email.email'       => 'Masukkan alamat email dengan benar',
+                'password.required' => 'Kata sandi harus diisi',
             ];
 
             // Melakukan validasi data yang dikirim apakah benar, jika tidak akan menampilkan pesan error
@@ -69,7 +70,7 @@ class AdminController extends Controller
                 return redirect('/admin/dashboard');
             } else {
                 // Kalau data yang dimasukkan atau dikirim tidak valid dengan yang ada di database akan menampilkan pesan error
-                return redirect()->back()->with('error_message', 'Email atau Password tidak benar');
+                return redirect()->back()->with('error_message', 'Email atau kata sandi tidak benar');
             }
         }
 
@@ -100,14 +101,14 @@ class AdminController extends Controller
                     ]);
 
                     // Jika sama maka akan menampilkan pesan sukses
-                    return redirect()->back()->with('success_message', 'Admin Password has been updated successfully!');
+                    return redirect()->back()->with('success_message', 'Berhasil memperbarui password admin');
                 } else {
                     // Jika tidak sama maka akan menampilkan pesan error
-                    return redirect()->back()->with('error_message', 'New Password and Confirm Password does not match!');
+                    return redirect()->back()->with('error_message', 'Kata sandi baru dan konfirmasi kata sandi tidak sama');
                 }
             } else {
                 // Jika password admin yang sedang digunakan tidak valid akan menampilkan pesan error
-                return redirect()->back()->with('error_message', 'Your current admin password is Incorrect!');
+                return redirect()->back()->with('error_message', 'Kata sandi yang sedang digunakan saat ini tidak sesuai');
             }
         }
 
@@ -134,14 +135,13 @@ class AdminController extends Controller
         if ($request->isMethod('post')) {
             $data = $request->all();
             $rules = [
-                'admin_name'   => 'required|regex:/^[\pL\s\-]+$/u',
+                'admin_name'   => 'required',
                 'admin_mobile' => 'required|numeric',
             ];
             $customMessages = [
-                'admin_name.required'   => 'Name is required',
-                'admin_name.regex'      => 'Valid Name is required',
-                'admin_mobile.required' => 'Mobile is required',
-                'admin_mobile.numeric'  => 'Valid Mobile is required',
+                'admin_name.required'   => 'Nama harus diisi',
+                'admin_mobile.required' => 'Nomor handphone harus diisi',
+                'admin_mobile.numeric'  => 'Nomor handphone harus diiskan dengan angka',
             ];
 
             $this->validate($request, $rules, $customMessages);
@@ -167,14 +167,14 @@ class AdminController extends Controller
                 $imageName = '';
             }
 
-            // Memperbarui detil admin
+            // Memperbarui detail admin
             Admin::where('id', Auth::guard('admin')->user()->id)->update([
                 'name'   => $data['admin_name'],
                 'mobile' => $data['admin_mobile'],
                 'image'  => $imageName
             ]);
 
-            return redirect()->back()->with('success_message', 'Admin details updated successfully!');
+            return redirect()->back()->with('success_message', 'Berhasil memperbarui admin detail');
         }
 
         return view('admin/settings/update_admin_details');
@@ -182,6 +182,8 @@ class AdminController extends Controller
 
     public function updateVendorDetails($slug, Request $request)
     {
+        $vendorDetails = Vendor::where('id', Auth::guard('admin')->user()->vendor_id)->first();
+
         // $slug hanya dapat digunakan pada halaman personal_details atau business_details
         if ($slug == 'personal') {
             Session::put('page', 'update_personal_details');
@@ -189,24 +191,20 @@ class AdminController extends Controller
             if ($request->isMethod('post')) {
                 $data = $request->all();
                 $rules = [
-                    'vendor_name'   => 'required|regex:/^[\pL\s\-]+$/u',
-                    'vendor_city'   => 'required|regex:/^[\pL\s\-]+$/u',
+                    'vendor_name'   => 'required',
+                    'vendor_city'   => 'required',
                     'vendor_mobile' => 'required|numeric',
                 ];
                 $customMessages = [
-                    'vendor_name.required'   => 'Name is required',
-                    'vendor_city.required'   => 'City is required',
-                    'vendor_city.regex'      => 'Valid City alphabetical is required',
-                    'vendor_name.regex'      => 'Valid Name is required',
-                    'vendor_mobile.required' => 'Mobile is required',
-                    'vendor_mobile.numeric'  => 'Valid Mobile is required',
+                    'vendor_name.required'   => 'Nama harus diisi',
+                    'vendor_city.required'   => 'Kota harus diisi',
+                    'vendor_mobile.required' => 'Nomor handphone harus diisi',
+                    'vendor_mobile.numeric'  => 'Masukkan nomor handphone hanya menggunakan angka',
                 ];
-
                 $this->validate($request, $rules, $customMessages);
 
                 if ($request->hasFile('vendor_image')) {
                     $image_tmp = $request->file('vendor_image');
-
                     if ($image_tmp->isValid()) {
                         $extension = $image_tmp->getClientOriginalExtension();
                         $imageName = rand(111, 99999) . '.' . $extension;
@@ -234,34 +232,37 @@ class AdminController extends Controller
                     'country' => $data['vendor_country']
                 ]);
 
-                return redirect()->back()->with('success_message', 'Detail vendor berhasil diperbarui');
+                return redirect()->back()->with('success_message', 'Berhasil memperbarui vendor detail');
             }
-
-            $vendorDetails = Vendor::where('id', Auth::guard('admin')->user()->vendor_id)->first();
         } else if ($slug == 'business') {
             Session::put('page', 'update_business_details');
+
+            $vendorCount = VendorsBusinessDetail::where('vendor_id', Auth::guard('admin')->user()->vendor_id)->count();
+            if ($vendorCount > 0) {
+                $vendorDetails = VendorsBusinessDetail::where('vendor_id', Auth::guard('admin')->user()->vendor_id)->first();
+            } else {
+                $vendorDetails = array();
+            }
 
             if ($request->isMethod('post')) {
                 $data = $request->all();
                 $rules = [
-                    'shop_name'           => 'required|regex:/^[\pL\s\-]+$/u',
-                    'shop_city'           => 'required|regex:/^[\pL\s\-]+$/u',
+                    'shop_name'           => 'required',
+                    'shop_city'           => 'required',
                     'shop_mobile'         => 'required|numeric'
                 ];
                 $customMessages = [
-                    'shop_name.required'           => 'Name is required',
-                    'shop_city.required'           => 'City is required',
-                    'shop_city.regex'              => 'Valid City alphabetical is required',
-                    'shop_name.regex'              => 'Valid Shop Name is required',
-                    'shop_mobile.required'         => 'Mobile is required',
-                    'shop_mobile.numeric'          => 'Valid Mobile is required',
+                    'shop_name.required'           => 'Nama harus diisi',
+                    'shop_city.required'           => 'Kota harus diisi',
+                    'shop_mobile.required'         => 'Nomor handphone harus diisi',
+                    'shop_mobile.numeric'          => 'Masukkan nomor handphone hanya menggunakan angka',
                 ];
-
                 $this->validate($request, $rules, $customMessages);
 
                 $vendorCount = VendorsBusinessDetail::where('vendor_id', Auth::guard('admin')->user()->vendor_id)->count();
 
                 if ($vendorCount > 0) {
+                    // Jika 'vendor_id' dalam table 'admins' lebih dari 1 dan telah memiliki data bisnis detail sebelumnya, maka dapat melakukan memperbarui atau update kedalam 'vendor_business_detail'
                     VendorsBusinessDetail::where('vendor_id', Auth::guard('admin')->user()->vendor_id)->update([
                         'shop_name'               => $data['shop_name'],
                         'shop_mobile'             => $data['shop_mobile'],
@@ -272,6 +273,7 @@ class AdminController extends Controller
                         'shop_country'            => $data['shop_country']
                     ]);
                 } else {
+                    // Sedangkan 'vendor_id' dalam table 'admins' lebih dari 1 dan belum memiliki bisnis detail sebelumnya, akan menambahkan atau insert kedalam table 'vendor_business_detail'
                     VendorsBusinessDetail::insert([
                         'vendor_id'               => Auth::guard('admin')->user()->vendor_id,
                         'shop_name'               => $data['shop_name'],
@@ -284,15 +286,7 @@ class AdminController extends Controller
                     ]);
                 }
 
-                return redirect()->back()->with('success_message', 'Detail bisnis vendor berhasil diperbarui');
-            }
-
-            $vendorCount = VendorsBusinessDetail::where('vendor_id', Auth::guard('admin')->user()->vendor_id)->count();
-
-            if ($vendorCount > 0) {
-                $vendorDetails = VendorsBusinessDetail::where('vendor_id', Auth::guard('admin')->user()->vendor_id)->first();
-            } else {
-                $vendorDetails = array();
+                return redirect()->back()->with('success_message', 'Berhasil memperbarui vendor bisnis detail');
             }
         }
 
@@ -304,6 +298,7 @@ class AdminController extends Controller
     public function viewVendorDetails($id)
     {
         $vendorDetails = Admin::with('vendorPersonal', 'vendorBusiness')->where('id', $id)->first();
+        // Konversi variable dalam php untuk menjadi string json
         $vendorDetails = json_decode(json_encode($vendorDetails), true);
 
         return view('admin/admins/view_vendor_details')->with(compact('vendorDetails'));

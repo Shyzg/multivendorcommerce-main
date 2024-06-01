@@ -106,7 +106,8 @@
                         <h3 class="calc-h3 u-s-m-b-0">Grand Total</h3>
                     </td>
                     <td>
-                        <span class="calc-text grand_total">IDR {{ $total_price - Session::get('couponAmount') }}</span>
+                        <span class="calc-text grand_total">IDR
+                            {{ $total_price - Session::get('couponAmount') }}</span>
                     </td>
                 </tr>
             </tbody>

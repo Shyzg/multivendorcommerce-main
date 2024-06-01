@@ -14,7 +14,7 @@ class CheckOngkirController extends Controller
             $response = Http::withOptions(['verify' => false,])->withHeaders([
                 'key' => env('RAJAONGKIR_API_KEY')
             ])->post('https://api.rajaongkir.com/starter/cost', [
-                'origin'        => 151,
+                'origin'        => 11,
                 'destination'   => $request->destination,
                 'weight'        => 100,
                 'courier'       => $request->courier

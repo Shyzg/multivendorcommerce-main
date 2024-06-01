@@ -82,7 +82,6 @@
                                         <th>ID</th>
                                         <th>SKU</th>
                                         <th>Stock</th>
-                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -93,17 +92,6 @@
                                         <td>{{ $attribute['sku'] }}</td>
                                         <td>
                                             <input type="number" name="stock[]" value="{{ $attribute['stock'] }}" required style="width: 60px">
-                                        </td>
-                                        <td>
-                                            @if ($attribute['status'] == 1)
-                                            <a class="updateAttributeStatus" id="attribute-{{ $attribute['id'] }}" attribute_id="{{ $attribute['id'] }}" href="javascript:void(0)">
-                                                <i style="font-size: 25px" class="mdi mdi-bookmark-check" status="Active"></i>
-                                            </a>
-                                            @else
-                                            <a class="updateAttributeStatus" id="attribute-{{ $attribute['id'] }}" attribute_id="{{ $attribute['id'] }}" href="javascript:void(0)">
-                                                <i style="font-size: 25px" class="mdi mdi-bookmark-outline" status="Inactive"></i>
-                                            </a>
-                                            @endif
                                         </td>
                                     </tr>
                                     @endforeach

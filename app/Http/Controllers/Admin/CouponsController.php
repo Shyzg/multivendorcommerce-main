@@ -16,6 +16,7 @@ class CouponsController extends Controller
     // Menampilkan halaman coupon di dashboard admin pada views admin/coupons/coupons.blade.php
     public function coupons()
     {
+        // Menggunakan session untuk sebagai penanda halaman yang sedang digunakan pada sidebar
         Session::put('page', 'coupons');
 
         $adminType = Auth::guard('admin')->user()->type;
@@ -34,15 +35,19 @@ class CouponsController extends Controller
     {
         Session::put('page', 'coupons');
 
+        $categories = Section::with('categories')->get();
+        $users = User::select('email')->get();
+
         if ($id == '') {
-            $title = 'Add Coupon';
+            $title = 'Tambah Kupon';
             $coupon = new Coupon;
             $selCats   = array();
             $selUsers  = array();
             $message = 'Berhasil menambahkan coupon';
         } else {
-            $title = 'Edit Coupon';
+            $title = 'Ubah Kupon';
             $coupon = Coupon::find($id);
+            // Memisahkan data dalam bentuk string untuk menjadi array contoh (['Makanan', 'Minuman'])
             $selCats   = explode(',', $coupon['categories']);
             $selUsers  = explode(',', $coupon['users']);
             $message = 'Berhasil memperbarui coupon';
@@ -58,23 +63,25 @@ class CouponsController extends Controller
                 'expiry_date'   => 'required'
             ];
             $customMessages = [
-                'categories.required'    => 'Select Categories',
-                'coupon_option.required' => 'Select Coupon Option',
-                'coupon_type.required'   => 'Select Coupon Type',
-                'amount_type.required'   => 'Select Amount Type',
-                'amount.required'        => 'Enter Amount',
-                'amount.numeric'         => 'Enter Valid Amount',
-                'expiry_date.required'   => 'Enter Expiry Date',
+                'categories.required'    => 'Harus memilih kategori',
+                'coupon_option.required' => 'Harus memilih opsi kupon',
+                'coupon_type.required'   => 'Harus memilih tipe kupon',
+                'amount_type.required'   => 'Harus memilih tipe jumlah',
+                'amount.required'        => 'Jumlah tipe kupon harus diisi',
+                'amount.numeric'         => 'Jumlah tipe kupon harus diisikan dengan angka',
+                'expiry_date.required'   => 'Harus memilih tanggal berakhir kupon',
             ];
 
             $this->validate($request, $rules, $customMessages);
 
             if (isset($data['categories'])) {
+                // Menggabungkan data dalam bentuk array untuk jadi satu string contoh ("Makanan,Minuman")
                 $categories = implode(',', $data['categories']);
             } else {
                 $categories = '';
             }
             if (isset($data['users'])) {
+                // Menggabungkan data dalam bentuk array untuk jadi satu string contoh ("Jero,Reza,Abel")
                 $users = implode(',', $data['users']);
             } else {
                 $users = '';
@@ -102,14 +109,10 @@ class CouponsController extends Controller
             $coupon->amount_type   = $data['amount_type'];
             $coupon->amount        = $data['amount'];
             $coupon->expiry_date   = $data['expiry_date'];
-            $coupon->status        = 1;
             $coupon->save();
 
             return redirect('admin/coupons')->with('success_message', $message);
         }
-
-        $categories = Section::with('categories')->get()->toArray();
-        $users = User::select('email')->get();
 
         return view('admin.coupons.add_edit_coupon')->with(compact('title', 'coupon', 'categories', 'users', 'selCats', 'selUsers'));
     }

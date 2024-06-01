@@ -18,7 +18,6 @@ return new class extends Migration
             $table->integer('product_id');
             $table->integer('stock');
             $table->string('sku');
-            $table->tinyInteger('status');
             $table->timestamps();
         });
     }

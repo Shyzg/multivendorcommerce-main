@@ -20,26 +20,26 @@
         <div class="sec-maker-header text-center">
             <ul class="nav tab-nav-style-1-a justify-content-center">
                 <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#men-latest-products">New Arrivals</a>
+                    <a class="nav-link active" data-toggle="tab" href="#new">New Arrivals</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#men-best-selling-products">Best Sellers</a>
+                    <a class="nav-link" data-toggle="tab" href="#best-seller">Best Sellers</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#discounted-products">Discounted Products</a>
+                    <a class="nav-link" data-toggle="tab" href="#discount">Discounted Products</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#food-featured-products">Food Products</a>
+                    <a class="nav-link" data-toggle="tab" href="#food-products">Food Products</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#drink-featured-products">Drink Products</a>
+                    <a class="nav-link" data-toggle="tab" href="#drink-products">Drink Products</a>
                 </li>
             </ul>
         </div>
         <div class="wrapper-content">
             <div class="outer-area-tab">
                 <div class="tab-content">
-                    <div class="tab-pane active show fade" id="men-latest-products">
+                    <div class="tab-pane active show fade" id="new">
                         <div class="slider-fouc">
                             <div class="products-slider owl-carousel" data-item="4">
                                 @foreach ($newProducts as $product)
@@ -64,9 +64,7 @@
                                             </h6>
                                         </div>
                                         @php
-                                        $getDiscountPrice = \App\Models\Product::getDiscountPrice(
-                                        $product['id'],
-                                        );
+                                        $getDiscountPrice = \App\Models\Product::getDiscountPrice($product['id']);
                                         @endphp
                                         @if ($getDiscountPrice > 0)
                                         <div class="price-template">
@@ -90,7 +88,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane show fade" id="men-best-selling-products">
+                    <div class="tab-pane show fade" id="best-seller">
                         <div class="slider-fouc">
                             <div class="products-slider owl-carousel" data-item="4">
                                 @foreach ($bestSellers as $product)
@@ -141,7 +139,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="discounted-products">
+                    <div class="tab-pane fade" id="discount">
                         <div class="slider-fouc">
                             <div class="products-slider owl-carousel" data-item="4">
                                 @foreach ($discountedProducts as $product)
@@ -192,7 +190,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="food-featured-products">
+                    <div class="tab-pane fade" id="food-products">
                         <div class="slider-fouc">
                             <div class="products-slider owl-carousel" data-item="4">
                                 @foreach ($makanan as $product)
@@ -244,7 +242,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="drink-featured-products">
+                    <div class="tab-pane fade" id="drink-products">
                         <div class="slider-fouc">
                             <div class="products-slider owl-carousel" data-item="4">
                                 @foreach ($minuman as $product)

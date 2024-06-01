@@ -8,8 +8,10 @@ use App\Models\User;
 
 class UserController extends Controller
 {
+    // Menampilkan halaman coupon di dashboard admin pada views admin/users/users.blade.php
     public function users()
     {
+        // Menggunakan session untuk sebagai penanda halaman yang sedang digunakan pada sidebar
         Session::put('page', 'users');
 
         $users = User::get();

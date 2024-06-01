@@ -35,7 +35,6 @@ return new class extends Migration
             $table->dropColumn('state');
             $table->dropColumn('country');
             $table->dropColumn('mobile');
-            $table->dropColumn('status');
         });
     }
 };

@@ -16,7 +16,7 @@ class Category extends Model
 
     public static function categoryDetails($url)
     {
-        $categoryDetails = Category::select('id', 'category_name', 'url', 'description')->where('url', $url)->first()->toArray();
+        $categoryDetails = Category::select('id', 'category_name', 'url')->where('url', $url)->first();
         $catIds[] = $categoryDetails['id'];
         $breadcrumbs = '<li class="is-marked"><a href="' . url($categoryDetails['url']) . '">' . $categoryDetails['category_name'] . '</a></li>';
         $resp = array(

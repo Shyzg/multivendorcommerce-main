@@ -18,26 +18,6 @@ class ShippingController extends Controller
         return view('admin.shipping.shipping_charges')->with(compact('shippingCharges'));
     }
 
-    public function updateShippingStatus(Request $request)
-    {
-        if ($request->ajax()) {
-            $data = $request->all();
-
-            if ($data['status'] == 'Active') {
-                $status = 0;
-            } else {
-                $status = 1;
-            }
-
-            ShippingCharge::where('id', $data['shipping_id'])->update(['status' => $status]);
-
-            return response()->json([
-                'status'      => $status,
-                'shipping_id' => $data['shipping_id']
-            ]);
-        }
-    }
-
     public function editShippingCharges($id, Request $request)
     {
         Session::put('page', 'shipping');

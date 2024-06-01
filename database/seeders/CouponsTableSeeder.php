@@ -24,8 +24,7 @@ class CouponsTableSeeder extends Seeder
             'coupon_type'   => 'Single Time',
             'amount_type'   => 'Percentage',
             'amount'        => 10,
-            'expiry_date'   => '2022-12-31',
-            'status'        => 1
+            'expiry_date'   => '2022-12-31'
         ];
 
         Coupon::insert($couponRecords);

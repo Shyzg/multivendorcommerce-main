@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
@@ -10,11 +11,14 @@ use Intervention\Image\Facades\Image;
 use App\Models\Product;
 use App\Models\ProductsImage;
 use App\Models\ProductsAttribute;
+use App\Models\Section;
 
 class ProductsController extends Controller
 {
+    // Menampilkan halaman coupon di dashboard admin pada views admin/products/products.blade.php
     public function products()
     {
+        // Menggunakan session untuk sebagai penanda halaman yang sedang digunakan pada sidebar
         Session::put('page', 'products');
 
         $adminType = Auth::guard('admin')->user()->type;
@@ -37,38 +41,18 @@ class ProductsController extends Controller
         return view('admin.products.products')->with(compact('products'));
     }
 
-    public function updateProductStatus(Request $request)
-    {
-        if ($request->ajax()) {
-            $data = $request->all();
-
-            if ($data['status'] == 'Active') {
-                $status = 0;
-            } else {
-                $status = 1;
-            }
-
-            Product::where('id', $data['product_id'])->update(['status' => $status]);
-
-            return response()->json([
-                'status'     => $status,
-                'product_id' => $data['product_id']
-            ]);
-        }
-    }
-
     public function addEditProduct(Request $request, $id = null)
     {
         Session::put('page', 'products');
 
         if ($id == '') {
-            $title = 'Add Product';
-            $product = new \App\Models\Product();
-            $message = 'Product added successfully!';
+            $title = 'Tambahkan Produk';
+            $product = new Product();
+            $message = 'Berhasil menambahkan produk';
         } else {
-            $title = 'Edit Product';
+            $title = 'Ubah Produk';
             $product = Product::find($id);
-            $message = 'Product updated successfully!';
+            $message = 'Berhasil memperbarui produk';
         }
 
         if ($request->isMethod('post')) {
@@ -80,10 +64,9 @@ class ProductsController extends Controller
             ];
             $customMessages = [
                 'category_id.required'   => 'Category is required',
-                'product_name.required'  => 'Product Name is required',
-                'product_name.regex'     => 'Valid Product Name is required',
-                'product_price.required' => 'Product Price is required',
-                'product_price.numeric'  => 'Valid Product Price is required'
+                'product_name.required'  => 'Nama produk harus diisi',
+                'product_price.required' => 'Harga produk harus diisi',
+                'product_price.numeric'  => 'Harga produk harus diisikan dengan angka'
             ];
 
             $this->validate($request, $rules, $customMessages);
@@ -105,7 +88,7 @@ class ProductsController extends Controller
                 }
             }
 
-            $categoryDetails = \App\Models\Category::find($data['category_id']);
+            $categoryDetails = Category::find($data['category_id']);
             $product->section_id  = $categoryDetails['section_id'];
             $product->category_id = $data['category_id'];
 
@@ -122,40 +105,28 @@ class ProductsController extends Controller
                     $product->vendor_id = 0;
                 }
             }
-
             if (empty($data['product_discount'])) {
                 $data['product_discount'] = 0;
             }
-
             if (empty($data['product_weight'])) {
                 $data['product_weight'] = 0;
             }
-
             $product->product_name     = $data['product_name'];
             $product->product_price    = $data['product_price'];
             $product->product_discount = $data['product_discount'];
             $product->product_weight   = $data['product_weight'];
             $product->description      = $data['description'];
-
-            if (!empty($data['is_featured'])) {
-                $product->is_featured = $data['is_featured'];
-            } else {
-                $product->is_featured = 'No';
-            }
-
             if (!empty($data['is_bestseller'])) {
                 $product->is_bestseller = $data['is_bestseller'];
             } else {
                 $product->is_bestseller = 'No';
             }
-
-            $product->status = 1;
             $product->save();
 
             return redirect('admin/products')->with('success_message', $message);
         }
 
-        $categories = \App\Models\Section::with('categories')->get();
+        $categories = Section::with('categories')->get();
 
         return view('admin.products.add_edit_product')->with(compact('title', 'product', 'categories'));
     }
@@ -164,7 +135,7 @@ class ProductsController extends Controller
     {
         Product::where('id', $id)->delete();
 
-        $message = 'Product has been deleted successfully!';
+        $message = 'Berhasil menghapus produk';
 
         return redirect()->back()->with('success_message', $message);
     }
@@ -190,7 +161,7 @@ class ProductsController extends Controller
 
         Product::where('id', $id)->update(['product_image' => '']);
 
-        $message = 'Product Image has been deleted successfully!';
+        $message = 'Berhasil menghapus foto produk';
 
         return redirect()->back()->with('success_message', $message);
     }
@@ -215,7 +186,6 @@ class ProductsController extends Controller
                     $attribute->product_id = $id;
                     $attribute->sku        = $value;
                     $attribute->stock      = $data['stock'][$key];
-                    $attribute->status     = 1;
                     $attribute->save();
                 }
             }
@@ -247,26 +217,6 @@ class ProductsController extends Controller
         }
     }
 
-    public function updateAttributeStatus(Request $request)
-    {
-        if ($request->ajax()) {
-            $data = $request->all();
-
-            if ($data['status'] == 'Active') {
-                $status = 0;
-            } else {
-                $status = 1;
-            }
-
-            ProductsAttribute::where('id', $data['attribute_id'])->update(['status' => $status]);
-
-            return response()->json([
-                'status'       => $status,
-                'attribute_id' => $data['attribute_id']
-            ]);
-        }
-    }
-
     public function addImages(Request $request, $id)
     {
         Session::put('page', 'products');
@@ -295,7 +245,6 @@ class ProductsController extends Controller
                     $image = new ProductsImage;
                     $image->image      = $imageName;
                     $image->product_id = $id;
-                    $image->status     = 1;
                     $image->save();
                 }
             }

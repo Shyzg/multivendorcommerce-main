@@ -26,8 +26,7 @@ return new class extends Migration
             $table->integer('product_weight');
             $table->string('product_image')->nullable();
             $table->text('description')->nullable();
-            $table->enum('is_featured', ['No', 'Yes']);
-            $table->tinyInteger('status');
+            $table->enum('is_bestseller', ['No', 'Yes']);
             $table->timestamps();
         });
     }

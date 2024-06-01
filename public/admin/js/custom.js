@@ -33,54 +33,6 @@ $(document).ready(function() {
         });
     });
 
-    // Updating Product status (active/inactive) using AJAX in products.blade.php    
-    $(document).on('click', '.updateProductStatus', function() { // '.updateProductStatus' is the anchor link <a> CSS class    // This is the same as    $('.updateProductStatus').on('click', function() {
-        var status     = $(this).children('i').attr('status'); // Using HTML Custom Attributes
-        var product_id = $(this).attr('product_id'); // Using HTML Custom Attributes
-
-        
-        $.ajax({
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}, // X-CSRF-TOKEN: https://laravel.com/docs/9.x/csrf#csrf-x-csrf-token    
-            type   : 'post',
-            url    : '/admin/update-product-status', // check the web.php for this route and check the ProductsController for the updateProductStatus() method
-            data   : {status: status, product_id: product_id}, // we pass the status and product_id
-            success: function(resp) {
-                if (resp.status == 0) { // in case of success, reverse the status (active/inactive) and show the right icon in the frontend    // Or the same    if (resp['status'] == 0) {
-                    $('#product-' + product_id).html('<i style="font-size: 25px" class="mdi mdi-bookmark-outline" status="Inactive"></i>');
-                } else if (resp.status == 1) {
-                    $('#product-' + product_id).html('<i style="font-size: 25px" class="mdi mdi-bookmark-check" status="Active"></i>');
-                }
-            },
-            error  : function() {
-                alert('Error');
-            }
-        });
-    });
-
-    // Updating Attribute status (active/inactive) using AJAX in add_edit_attributes.blade.php    
-    $(document).on('click', '.updateAttributeStatus', function() { // '.updateAttributeStatus' is the anchor link <a> CSS class    // This is the same as    $('.updateAttributetatus').on('click', function() {
-        var status       = $(this).children('i').attr('status'); // Using HTML Custom Attributes
-        var attribute_id = $(this).attr('attribute_id'); // Using HTML Custom Attributes
-
-        
-        $.ajax({
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}, // X-CSRF-TOKEN: https://laravel.com/docs/9.x/csrf#csrf-x-csrf-token    
-            type   : 'post',
-            url    : '/admin/update-attribute-status', // check the web.php for this route and check the ProductsController for the updateAttributeStatus() method
-            data   : {status: status, attribute_id: attribute_id}, // we pass the status and attribute_id
-            success: function(resp) {
-                if (resp.status == 0) { // in case of success, reverse the status (active/inactive) and show the right icon in the frontend    // Or the same    if (resp['status'] == 0) {
-                    $('#attribute-' + attribute_id).html('<i style="font-size: 25px" class="mdi mdi-bookmark-outline" status="Inactive"></i>');
-                } else if (resp.status == 1) {
-                    $('#attribute-' + attribute_id).html('<i style="font-size: 25px" class="mdi mdi-bookmark-check" status="Active"></i>');
-                }
-            },
-            error  : function() {
-                alert('Error');
-            }
-        });
-    });
-
     // Updating Filter status (active/inactive) using AJAX in filters.blade.php    
     $(document).on('click', '.updateFilterStatus', function() { // '.updateFilterStatus' is the anchor link <a> CSS class    // This is the same as    $('.updateFilterstatus').on('click', function() {
         var status    = $(this).children('i').attr('status'); // Using HTML Custom Attributes
@@ -146,54 +98,6 @@ $(document).ready(function() {
                     $('#coupon-' + coupon_id).html('<i style="font-size: 25px" class="mdi mdi-bookmark-outline" status="Inactive"></i>');
                 } else if (resp.status == 1) {
                     $('#coupon-' + coupon_id).html('<i style="font-size: 25px" class="mdi mdi-bookmark-check" status="Active"></i>');
-                }
-            },
-            error  : function() {
-                alert('Error');
-            }
-        });
-    });
-
-    // Update User Status (active/inactive) via AJAX in admin/users/users.blade.php, check admin/js/custom.js    
-    $(document).on('click', '.updateUserStatus', function() { // '.updateUserStatus' is the anchor link <a> CSS class    // This is the same as    $('.updateUserStatus').on('click', function() {
-        var status  = $(this).children('i').attr('status'); // Using HTML Custom Attributes
-        var user_id = $(this).attr('user_id'); // Using HTML Custom Attributes
-
-        
-        $.ajax({
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}, // X-CSRF-TOKEN: https://laravel.com/docs/9.x/csrf#csrf-x-csrf-token    
-            type   : 'post',
-            url    : '/admin/update-user-status', // check the web.php for this route and check the UsersController for the updateUserStatus() method
-            data   : {status: status, user_id: user_id}, // we pass the status and user_id
-            success: function(resp) {
-                if (resp.status == 0) { // in case of success, reverse the status (active/inactive) and show the right icon in the frontend    // Or the same    if (resp['status'] == 0) {
-                    $('#user-' + user_id).html('<i style="font-size: 25px" class="mdi mdi-bookmark-outline" status="Inactive"></i>');
-                } else if (resp.status == 1) {
-                    $('#user-' + user_id).html('<i style="font-size: 25px" class="mdi mdi-bookmark-check" status="Active"></i>');
-                }
-            },
-            error  : function() {
-                alert('Error');
-            }
-        });
-    });
-
-    // Update Shipping Status (active/inactive) via AJAX in admin/shipping/shipping_charages.blade.php, check admin/js/custom.js    
-    $(document).on('click', '.updateShippingStatus', function() { // '.updateUserStatus' is the anchor link <a> CSS class    // This is the same as    $('.updateUserStatus').on('click', function() {
-        var status  = $(this).children('i').attr('status'); // Using HTML Custom Attributes
-        var shipping_id = $(this).attr('shipping_id'); // Using HTML Custom Attributes
-
-        
-        $.ajax({
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}, // X-CSRF-TOKEN: https://laravel.com/docs/9.x/csrf#csrf-x-csrf-token    
-            type   : 'post',
-            url    : '/admin/update-shipping-status', // check the web.php for this route and check the ShippingController for the updateShippingStatus() method
-            data   : {status: status, shipping_id: shipping_id}, // we pass in the status and shipping_id
-            success: function(resp) {
-                if (resp.status == 0) { // in case of success, reverse the status (active/inactive) and show the right icon in the frontend    // Or the same    if (resp['status'] == 0) {
-                    $('#shipping-' + shipping_id).html('<i style="font-size: 25px" class="mdi mdi-bookmark-outline" status="Inactive"></i>');
-                } else if (resp.status == 1) {
-                    $('#shipping-' + shipping_id).html('<i style="font-size: 25px" class="mdi mdi-bookmark-check" status="Active"></i>');
                 }
             },
             error  : function() {

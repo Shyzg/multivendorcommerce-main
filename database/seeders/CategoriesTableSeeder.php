@@ -20,7 +20,6 @@ class CategoriesTableSeeder extends Seeder
                 'section_id'        => 1,
                 'category_name'     => 'Makanan',
                 'category_discount' => 0,
-                'description'       => '',
                 'url'               => 'makanan',
             ],
             [
@@ -28,7 +27,6 @@ class CategoriesTableSeeder extends Seeder
                 'section_id'        => 1,
                 'category_name'     => 'Minuman',
                 'category_discount' => 0,
-                'description'       => '',
                 'url'               => 'minuman',
             ]
         ];

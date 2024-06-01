@@ -27,9 +27,7 @@ class ProductsTableSeeder extends Seeder
                 'product_discount' => 10,
                 'product_weight'   => 500,
                 'product_weight'   => 500,
-                'product_image'    => '',
-                'is_featured'      => 'Yes',
-                'status'           => 1,
+                'product_image'    => ''
             ]
         ];
 

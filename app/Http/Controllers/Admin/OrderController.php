@@ -11,8 +11,10 @@ use App\Models\OrderItemStatus;
 
 class OrderController extends Controller
 {
+    // Menampilkan halaman coupon di dashboard admin pada views admin/orders/orders.blade.php
     public function orders()
     {
+        // Menggunakan session untuk sebagai penanda halaman yang sedang digunakan pada sidebar
         Session::put('page', 'orders');
 
         $adminType = Auth::guard('admin')->user()->type;
@@ -65,14 +67,6 @@ class OrderController extends Controller
             $item_discount = 0;
         }
 
-        return view('admin.orders.order_details')->with(compact('orderDetails', 'userDetails', 'orderItemStatuses',  'item_discount'));
-    }
-
-    public function viewOrderInvoice($order_id)
-    {
-        $orderDetails = Order::with('orders_products')->where('id', $order_id)->first();
-        $userDetails = User::where('id', $orderDetails['user_id'])->first();
-
-        return view('admin.orders.order_invoice')->with(compact('orderDetails', 'userDetails'));
+        return view('admin.orders.order_details')->with(compact('orderDetails', 'userDetails', 'orderItemStatuses', 'item_discount'));
     }
 }

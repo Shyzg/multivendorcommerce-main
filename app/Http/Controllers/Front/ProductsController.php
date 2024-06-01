@@ -22,6 +22,9 @@ use App\Models\OrdersProduct;
 use App\Models\City;
 use App\Models\Province;
 use App\Services\Midtrans\CreateSnapTokenService;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\View;
 
 class ProductsController extends Controller
 {
@@ -30,29 +33,11 @@ class ProductsController extends Controller
         if ($request->ajax()) {
             $data = $request->all();
             $url          = $data['url'];
-            $_GET['sort'] = $data['sort'];
-            $categoryCount = Category::where([
-                'url'    => $url
-            ])->count();
+            $categoryCount = Category::where(['url' => $url])->count();
 
             if ($categoryCount > 0) {
                 $categoryDetails = Category::categoryDetails($url);
                 $categoryProducts = Product::whereIn('category_id', $categoryDetails['catIds']);
-
-                if (isset($_GET['sort']) && !empty($_GET['sort'])) {
-                    if ($_GET['sort'] == 'product_latest') {
-                        $categoryProducts->orderBy('products.id', 'Desc');
-                    } elseif ($_GET['sort'] == 'price_lowest') {
-                        $categoryProducts->orderBy('products.product_price', 'Asc');
-                    } elseif ($_GET['sort'] == 'price_highest') {
-                        $categoryProducts->orderBy('products.product_price', 'Desc');
-                    } elseif ($_GET['sort'] == 'name_z_a') {
-                        $categoryProducts->orderBy('products.product_name', 'Desc');
-                    } elseif ($_GET['sort'] == 'name_a_z') {
-                        $categoryProducts->orderBy('products.product_name', 'Asc');
-                    }
-                }
-
                 $productIds = array();
 
                 if (isset($data['price']) && !empty($data['price'])) {
@@ -63,7 +48,7 @@ class ProductsController extends Controller
                         }
                     }
 
-                    $productIds = array_unique(\Illuminate\Support\Arr::flatten($productIds));
+                    $productIds = array_unique(Arr::flatten($productIds));
                     $categoryProducts->whereIn('products.id', $productIds);
                 }
 
@@ -74,30 +59,14 @@ class ProductsController extends Controller
                 abort(404);
             }
         } else {
-            $url = \Illuminate\Support\Facades\Route::getFacadeRoot()->current()->uri();
-            $categoryCount = Category::where([
-                'url'    => $url
-            ])->count();
+            $url = Route::getFacadeRoot()->current()->uri();
+            $categoryCount = Category::where(['url' => $url])->count();
 
             if ($categoryCount > 0) {
                 $categoryDetails = Category::categoryDetails($url);
                 $categoryProducts = Product::whereIn('category_id', $categoryDetails['catIds']);
-
-                if (isset($_GET['sort']) && !empty($_GET['sort'])) {
-                    if ($_GET['sort'] == 'product_latest') {
-                        $categoryProducts->orderBy('products.id', 'Desc');
-                    } elseif ($_GET['sort'] == 'price_lowest') {
-                        $categoryProducts->orderBy('products.product_price', 'Asc');
-                    } elseif ($_GET['sort'] == 'price_highest') {
-                        $categoryProducts->orderBy('products.product_price', 'Desc');
-                    } elseif ($_GET['sort'] == 'name_z_a') {
-                        $categoryProducts->orderBy('products.product_name', 'Desc');
-                    } elseif ($_GET['sort'] == 'name_a_z') {
-                        $categoryProducts->orderBy('products.product_name', 'Asc');
-                    }
-                }
-
                 $categoryProducts = $categoryProducts->paginate(30);
+
                 return view('front.products.listing')->with(compact('categoryDetails', 'categoryProducts', 'url'));
             } else {
                 abort(404);
@@ -118,7 +87,7 @@ class ProductsController extends Controller
     {
         $productDetails = Product::with([
             'section', 'category', 'attributes' => function ($query) {
-                $query->where('stock', '>', 0)->where('status', 1);
+                $query->where('stock', '>', 0);
             }, 'images', 'vendor'
         ])->find($id);
         $categoryDetails = Category::categoryDetails($productDetails['category']['url'] ?? null);
@@ -134,16 +103,6 @@ class ProductsController extends Controller
         $totalStock = ProductsAttribute::where('product_id', $id)->sum('stock');
 
         return view('front.products.detail')->with(compact('productDetails', 'categoryDetails', 'totalStock'));
-    }
-
-    public function getProductPrice(Request $request)
-    {
-        if ($request->ajax()) {
-            $data = $request->all();
-            $getDiscountAttributePrice = Product::getDiscountAttributePrice($data['product_id']);
-
-            return $getDiscountAttributePrice;
-        }
     }
 
     public function cart()
@@ -168,7 +127,7 @@ class ProductsController extends Controller
             $getProductStock = ProductsAttribute::getProductStock($data['product_id']);
 
             if ($getProductStock < $data['quantity']) {
-                return redirect()->back()->with('error_message', 'Required Quantity is not available!');
+                return redirect()->back()->with('error_message', 'Kuantitas yang dibutuhkan tidak tersedia');
             }
 
             $session_id = Session::get('session_id');
@@ -208,7 +167,7 @@ class ProductsController extends Controller
                 $item->save();
             }
 
-            return redirect()->back()->with('success_message', 'Product has been added in Cart! <a href="/cart" style="text-decoration: underline !important">View Cart</a>');
+            return redirect()->back()->with('success_message', 'Produk ini telah dimasukkan kedalam keranjang <a href="/cart" style="text-decoration: underline !important">Lihat Keranjang</a>');
         }
     }
 
@@ -230,8 +189,8 @@ class ProductsController extends Controller
 
                 return response()->json([
                     'status'     => false,
-                    'message'    => 'Product Stock is not available',
-                    'view'       => (string) \Illuminate\Support\Facades\View::make('front.products.cart_items')->with(compact('getCartItems'))
+                    'message'    => 'Stok produk tidak tersedia',
+                    'view'       => (string) View::make('front.products.cart_items')->with(compact('getCartItems'))
                 ]);
             }
 
@@ -248,7 +207,7 @@ class ProductsController extends Controller
             return response()->json([
                 'status'         => true,
                 'totalCartItems' => $totalCartItems,
-                'view'           => (string) \Illuminate\Support\Facades\View::make('front.products.cart_items')->with(compact('getCartItems'))
+                'view'           => (string) View::make('front.products.cart_items')->with(compact('getCartItems'))
             ]);
         }
     }
@@ -268,7 +227,7 @@ class ProductsController extends Controller
 
             return response()->json([
                 'totalCartItems' => $totalCartItems,
-                'view'   => (string) \Illuminate\Support\Facades\View::make('front.products.cart_items')->with(compact('getCartItems'))
+                'view'   => (string) View::make('front.products.cart_items')->with(compact('getCartItems'))
             ]);
         }
     }
@@ -289,31 +248,26 @@ class ProductsController extends Controller
                 return response()->json([
                     'status'         => false,
                     'totalCartItems' => $totalCartItems,
-                    'message'        => 'The coupon is invalid!',
-                    'view'           => (string) \Illuminate\Support\Facades\View::make('front.products.cart_items')->with(compact('getCartItems'))
+                    'message'        => 'Masukkan kode kupon yang benar',
+                    'view'           => (string) View::make('front.products.cart_items')->with(compact('getCartItems'))
                 ]);
             } else {
                 $couponDetails = Coupon::where('coupon_code', $data['code'])->first();
-
-                if ($couponDetails->status == 0) {
-                    $message = 'The coupon is inactive!';
-                }
-
                 $expiry_date  = $couponDetails->expiry_date;
                 $current_date = date('Y-m-d');
 
                 if ($expiry_date < $current_date) {
-                    $message = 'The coupon is expired!';
+                    $message = 'Kode kupon ini tidak dapat digunakan karena telah melebihi tanggal yang telah ditentukan';
                 }
 
-                if ($couponDetails->coupon_type == 'Single Time') {
+                if ($couponDetails->coupon_type == 'Sekali Pakai') {
                     $couponCount = Order::where([
                         'coupon_code' => $data['code'],
                         'user_id'     => Auth::user()->id
                     ])->count();
 
                     if ($couponCount >= 1) {
-                        $message = 'This coupon code is already availed by you!';
+                        $message = 'Kupon ini telah digunakan';
                     }
                 }
 
@@ -322,11 +276,11 @@ class ProductsController extends Controller
 
                 foreach ($getCartItems as $key => $item) {
                     if (!in_array($item['product']['category_id'], $catArr)) {
-                        $message = 'This coupon code selected categories is not for one of the selected products category!';
+                        $message = 'Kode kupon ini hanya dapat digunakan pada kategori yang telah ditentukan';
                     }
 
-                    $attrPrice = Product::getDiscountAttributePrice($item['product_id']);
-                    $total_amount = $total_amount + ($attrPrice['final_price'] * $item['quantity']);
+                    $prodPrice = Product::getDiscountAttributePrice($item['product_id']);
+                    $total_amount = $total_amount + ($prodPrice['final_price'] * $item['quantity']);
                 }
 
                 if (isset($couponDetails->users) && !empty($couponDetails->users)) {
@@ -338,18 +292,8 @@ class ProductsController extends Controller
                         }
                         foreach ($getCartItems as $item) {
                             if (!in_array($item['user_id'], $usersId)) {
-                                $message = 'This coupon code is not available for you! Try again with a valid coupon code! (The coupon code is available only for certain selected users!)';
+                                $message = 'Kode kupon ini hanya dapat digunakan pada customer yang telah ditentukan';
                             }
-                        }
-                    }
-                }
-
-                if ($couponDetails->vendor_id > 0) {
-                    $productIds = Product::select('id')->where('vendor_id', $couponDetails->vendor_id)->pluck('id');
-
-                    foreach ($getCartItems as $item) {
-                        if (!in_array($item['product']['id'], $productIds)) {
-                            $message = 'This coupon code is not available for you! Try again with a valid coupon code! (vendor validation)!. The coupon code exists but one of the products in the Cart doesn\'t belong to that specific vendor who created/owns that Coupon!';
                         }
                     }
                 }
@@ -359,10 +303,10 @@ class ProductsController extends Controller
                         'status'         => false,
                         'totalCartItems' => $totalCartItems,
                         'message'        => $message,
-                        'view'           => (string) \Illuminate\Support\Facades\View::make('front.products.cart_items')->with(compact('getCartItems'))
+                        'view'           => (string) View::make('front.products.cart_items')->with(compact('getCartItems'))
                     ]);
                 } else {
-                    if ($couponDetails->amount_type == 'Fixed') {
+                    if ($couponDetails->amount_type == 'Tetap') {
                         $couponAmount = $couponDetails->amount;
                     } else {
                         $couponAmount = $total_amount * ($couponDetails->amount / 100);
@@ -373,7 +317,7 @@ class ProductsController extends Controller
                     Session::put('couponAmount', $couponAmount);
                     Session::put('couponCode', $data['code']);
 
-                    $message = 'Coupon Code successfully applied. You are availing discount!';
+                    $message = 'Kode kupon ini berhasil digunakan';
 
                     return response()->json([
                         'status'         => true,
@@ -381,7 +325,7 @@ class ProductsController extends Controller
                         'couponAmount'   => $couponAmount,
                         'grand_total'    => $grand_total,
                         'message'        => $message,
-                        'view'           => (string) \Illuminate\Support\Facades\View::make('front.products.cart_items')->with(compact('getCartItems'))
+                        'view'           => (string) View::make('front.products.cart_items')->with(compact('getCartItems'))
                     ]);
                 }
             }
@@ -405,8 +349,8 @@ class ProductsController extends Controller
         $total_weight = 0;
 
         foreach ($getCartItems as $item) {
-            $attrPrice = Product::getDiscountAttributePrice($item['product_id']);
-            $total_price = $total_price + ($attrPrice['final_price'] * $item['quantity']);
+            $prodPrice = Product::getDiscountAttributePrice($item['product_id']);
+            $total_price = $total_price + ($prodPrice['final_price'] * $item['quantity']);
             $product_weight = $item['product']['product_weight'];
             $total_weight = $total_weight + $product_weight;
         }
@@ -421,27 +365,10 @@ class ProductsController extends Controller
         if ($request->isMethod('post')) {
             $data = $request->all();
 
-            foreach ($getCartItems as $item) {
-                $product_status = Product::getProductStatus($item['product_id']);
-
-                if ($product_status == 0) {
-                    $message = $item['product']['product_name'] . ' with size is not available. Please remove it from the Cart and choose another product.';
-                    return redirect('/cart')->with('error_message', $message);
-                }
-            }
-
             $getProductStock = ProductsAttribute::getProductStock($item['product_id']);
 
             if ($getProductStock == 0) {
                 $message = $item['product']['product_name'] . ' with  size is not available. Please remove it from the Cart and choose another product.';
-
-                return redirect('/cart')->with('error_message', $message);
-            }
-
-            $getAttributeStatus = ProductsAttribute::getAttributeStatus($item['product_id']);
-
-            if ($getAttributeStatus == 0) {
-                $message = $item['product']['product_name'] . ' with size is not available. Please remove it from the Cart and choose another product.';
 
                 return redirect('/cart')->with('error_message', $message);
             }
@@ -471,7 +398,6 @@ class ProductsController extends Controller
             }
 
             $deliveryAddress = DeliveryAddress::where('id', $data['address_id'])->first();
-
             $payment_method = 'Prepaid';
 
             DB::beginTransaction();
@@ -516,22 +442,20 @@ class ProductsController extends Controller
                 $cartItem->vendor_id       = $getProductDetails['vendor_id'];
                 $cartItem->product_id      = $item['product_id'];
                 $cartItem->product_name    = $getProductDetails['product_name'];
-                $cartItem->item_status    = 'In Progress';
+                $cartItem->item_status     = 'In Progress';
                 $getDiscountAttributePrice = Product::getDiscountAttributePrice($item['product_id']);
                 $cartItem->product_price   = $getDiscountAttributePrice['final_price'];
                 $getProductStock = ProductsAttribute::getProductStock($item['product_id']);
-
                 if ($item['quantity'] > $getProductStock) {
                     $message = $getProductDetails['product_name'] . ' with size stock is not available/enough for your order. Please reduce its quantity and try again!';
 
                     return redirect('/cart')->with('error_message', $message);
                 }
-
                 $cartItem->product_qty     = $item['quantity'];
                 $cartItem->save();
+
                 $getProductStock = ProductsAttribute::getProductStock($item['product_id']);
                 $newStock = $getProductStock - $item['quantity'];
-
                 ProductsAttribute::where([
                     'product_id' => $item['product_id'],
                 ])->update(['stock' => $newStock]);
@@ -544,7 +468,6 @@ class ProductsController extends Controller
                 DB::beginTransaction();
 
                 $snapToken = $order->snap_token;
-
                 if (is_null($snapToken)) {
                     $midtrans = new CreateSnapTokenService($order);
                     $snapToken = $midtrans->getSnapToken();

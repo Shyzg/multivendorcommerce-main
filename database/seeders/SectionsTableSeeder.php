@@ -14,7 +14,7 @@ class SectionsTableSeeder extends Seeder
      */
     public function run()
     {
-        $sectionRecords = ['id' => 1, 'name' => 'Healthy', 'status' => 1];
+        $sectionRecords = ['id' => 1, 'name' => 'Healthy'];
 
         Section::insert($sectionRecords);
     }

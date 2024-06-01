@@ -24,7 +24,6 @@ return new class extends Migration
             $table->string('amount_type');
             $table->float('amount');
             $table->date('expiry_date');
-            $table->tinyInteger('status');
             $table->timestamps();
         });
     }

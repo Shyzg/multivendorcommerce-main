@@ -10,8 +10,10 @@ use App\Models\Section;
 
 class SectionController extends Controller
 {
+    // Menampilkan halaman coupon di dashboard admin pada views admin/sections/sections.blade.php
     public function sections()
     {
+        // Menggunakan session untuk sebagai penanda halaman yang sedang digunakan pada sidebar
         Session::put('page', 'sections');
 
         $sections = Section::get()->toArray();
@@ -24,29 +26,27 @@ class SectionController extends Controller
         Session::put('page', 'sections');
 
         if ($id == '') {
-            $title = 'Add Section';
+            $title = 'Tambahkan Section';
             $section = new Section();
-            $message = 'Section added successfully!';
+            $message = 'Berhasil menambahkan section';
         } else {
-            $title = 'Edit Section';
+            $title = 'Ubah Section';
             $section = Section::find($id);
-            $message = 'Section updated successfully!';
+            $message = 'Berhasil memperbarui section';
         }
 
         if ($request->isMethod('post')) {
             $data = $request->all();
             $rules = [
-                'section_name' => 'required|regex:/^[\pL\s\-]+$/u'
+                'section_name' => 'required'
             ];
             $customMessages = [
-                'section_name.required' => 'Section Name is required',
-                'section_name.regex'    => 'Valid Section Name is required',
+                'section_name.required' => 'Nama section harus diisi'
             ];
 
             $this->validate($request, $rules, $customMessages);
 
             $section->name   = $data['section_name'];
-            $section->status = 1;
             $section->save();
 
             return redirect('admin/products')->with('success_message', $message);
@@ -59,7 +59,7 @@ class SectionController extends Controller
     {
         Section::where('id', $id)->delete();
 
-        $message = 'Section has been deleted successfully!';
+        $message = 'Berhasil menghapus section';
 
         return redirect()->back()->with('success_message', $message);
     }

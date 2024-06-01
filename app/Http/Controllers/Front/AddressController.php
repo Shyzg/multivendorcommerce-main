@@ -9,6 +9,8 @@ use App\Models\DeliveryAddress;
 use App\Models\Country;
 use App\Models\City;
 use App\Models\Province;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\View;
 
 class AddressController extends Controller
 {
@@ -16,7 +18,7 @@ class AddressController extends Controller
     {
         if ($request->ajax()) {
             $data = $request->all();
-            $deliveryAddress = DeliveryAddress::where('id', $data['addressid'])->first()->toArray();
+            $deliveryAddress = DeliveryAddress::where('id', $data['addressid'])->first();
 
             return response()->json([
                 'address' => $deliveryAddress
@@ -27,13 +29,13 @@ class AddressController extends Controller
     public function saveDeliveryAddress(Request $request)
     {
         if ($request->ajax()) {
-            $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
+            $validator = Validator::make($request->all(), [
                 'delivery_name'    => 'required|string|max:100',
                 'delivery_address' => 'required|string|max:100',
                 'delivery_city'    => 'required|string|max:100',
                 'delivery_state'   => 'required|string|max:100',
                 'delivery_country' => 'required|string|max:100',
-                'delivery_mobile'  => 'required|numeric|digits:10'
+                'delivery_mobile'  => 'required|numeric'
             ]);
 
             if ($validator->passes()) {
@@ -59,7 +61,7 @@ class AddressController extends Controller
                 $provinces = Province::get()->toArray();
 
                 return response()->json([
-                    'view' => (string) \Illuminate\Support\Facades\View::make('front.products.delivery_addresses')->with(compact('deliveryAddresses', 'countries', 'cities', 'provinces'))
+                    'view' => (string) View::make('front.products.delivery_addresses')->with(compact('deliveryAddresses', 'countries', 'cities', 'provinces'))
                 ]);
             } else {
                 return response()->json([
@@ -78,12 +80,12 @@ class AddressController extends Controller
             DeliveryAddress::where('id', $data['addressid'])->delete();
 
             $deliveryAddresses = DeliveryAddress::deliveryAddresses();
-            $countries = Country::get()->toArray();
-            $cities =  City::get()->toArray();
-            $provinces = Province::get()->toArray();
+            $countries = Country::get();
+            $cities =  City::get();
+            $provinces = Province::get();
 
             return response()->json([
-                'view' => (string) \Illuminate\Support\Facades\View::make('front.products.delivery_addresses')->with(compact('deliveryAddresses', 'countries', 'cities', 'provinces'))
+                'view' => (string) View::make('front.products.delivery_addresses')->with(compact('deliveryAddresses', 'countries', 'cities', 'provinces'))
             ]);
         }
     }

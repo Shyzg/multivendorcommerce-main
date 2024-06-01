@@ -18,7 +18,6 @@ return new class extends Migration
             $table->integer('section_id');
             $table->string('category_name');
             $table->double('category_discount')->default(0);
-            $table->text('description')->nullable();
             $table->string('url');
             $table->timestamps();
         });

@@ -17,13 +17,4 @@ class ProductsAttribute extends Model
 
         return $getProductStock->stock ?? null;
     }
-
-    public static function getAttributeStatus($product_id)
-    {
-        $getAttributeStatus = ProductsAttribute::select('status')->where([
-            'product_id' => $product_id
-        ])->first();
-
-        return $getAttributeStatus->status;
-    }
 }
