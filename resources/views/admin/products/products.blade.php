@@ -4,7 +4,7 @@
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="row">
-            <div class="col-lg-12 grid-margin stretch-card">
+            <div class="col grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Produk</h4>
@@ -23,7 +23,7 @@
                                     <tr>
                                         <th>Nama Produk</th>
                                         <th>Foto Produk</th>
-                                        <th>Category</th>
+                                        <th>Kategori</th>
                                         <th>Section</th>
                                         <th>Actions</th>
                                     </tr>
@@ -42,18 +42,14 @@
                                         <td>{{ $product['category']['category_name'] ?? null }}</td>
                                         <td>{{ $product['section']['name']  ?? null }}</td>
                                         <td>
-                                            <a title="Edit Product" href="{{ url('admin/add-edit-product/' . $product['id']) }}">
-                                                <i style="font-size: 25px" class="mdi mdi-pencil-box"></i>
-                                            </a>
-                                            <a title="Add Attributes" href="{{ url('admin/add-edit-attributes/' . $product['id']) }}">
-                                                <i style="font-size: 25px" class="mdi mdi-plus-box"></i>
-                                            </a>
-                                            <a title="Add Multiple Images" href="{{ url('admin/add-images/' . $product['id']) }}">
-                                                <i style="font-size: 25px" class="mdi mdi-library-plus"></i>
-                                            </a>
-                                            <a href="JavaScript:void(0)" class="confirmDelete" module="product" moduleid="{{ $product['id'] }}">
-                                                <i style="font-size: 25px" class="mdi mdi-file-excel-box"></i>
-                                            </a>
+                                            <div class="d-flex flex-column">
+                                                <a href="{{ url('admin/add-edit-product/' . $product['id']) }}" class="btn btn-outline-primary mb-2">Perbarui Produk</a>
+                                                <a href="{{ url('admin/add-edit-attributes/' . $product['id']) }}" class="btn btn-outline-primary mb-2">Tambah Atribut</a>
+                                                <a href="{{ url('admin/add-images/' . $product['id']) }}" class="btn btn-outline-primary mb-2">Tambah Gambar</a>
+                                                <a href="JavaScript:void(0)" class="btn btn-outline-danger confirmDelete" module="product" moduleid="{{ $product['id'] }}">
+                                                    Hapus
+                                                </a>
+                                            </div>
                                         </td>
                                     </tr>
                                     @endforeach

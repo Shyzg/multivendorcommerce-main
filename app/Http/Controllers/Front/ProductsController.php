@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\View;
 use App\Models\Category;
 use App\Models\DeliveryAddress;
 use App\Models\Product;
@@ -17,14 +20,10 @@ use App\Models\Order;
 use App\Models\Vendor;
 use App\Models\User;
 use App\Models\Country;
-use App\Models\ShippingCharge;
 use App\Models\OrdersProduct;
 use App\Models\City;
 use App\Models\Province;
 use App\Services\Midtrans\CreateSnapTokenService;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\View;
 
 class ProductsController extends Controller
 {
@@ -275,6 +274,7 @@ class ProductsController extends Controller
                 $total_amount = 0;
 
                 foreach ($getCartItems as $key => $item) {
+                    // Kalau didalam array tidak memiliki customer yang telah ditentukan
                     if (!in_array($item['product']['category_id'], $catArr)) {
                         $message = 'Kode kupon ini hanya dapat digunakan pada kategori yang telah ditentukan';
                     }
@@ -288,9 +288,11 @@ class ProductsController extends Controller
                     if (count($usersArr)) {
                         foreach ($usersArr as $key => $user) {
                             $getUserId = User::select('id')->where('email', $user)->first();
+                            // Memasukkan customer yang telah ditentukan dalam satu array
                             $usersId[] = $getUserId['id'];
                         }
                         foreach ($getCartItems as $item) {
+                            // Kalau didalam array tidak memiliki customer yang telah ditentukan
                             if (!in_array($item['user_id'], $usersId)) {
                                 $message = 'Kode kupon ini hanya dapat digunakan pada customer yang telah ditentukan';
                             }
@@ -334,65 +336,52 @@ class ProductsController extends Controller
 
     public function checkout(Request $request)
     {
-        $countries = Country::get();
-        $cities =  City::get();
-        $provinces = Province::get();
+        $countries = Country::orderBy('name', 'asc')->get();
+        $cities = City::orderBy('name', 'asc')->get();
+        $provinces = Province::orderBy('name', 'asc')->get();
         $getCartItems = Cart::getCartItems();
 
         if (count($getCartItems) == 0) {
-            $message = 'Shopping Cart is empty! Please add products to your Cart to checkout';
+            $message = 'Keranjang belanjaan kosong, tambahkan produk kedalam keranjang untuk melanjutkan pemesanan';
 
             return redirect('cart')->with('error_message', $message);
         }
 
         $total_price  = 0;
-        $total_weight = 0;
-
         foreach ($getCartItems as $item) {
             $prodPrice = Product::getDiscountAttributePrice($item['product_id']);
             $total_price = $total_price + ($prodPrice['final_price'] * $item['quantity']);
             $product_weight = $item['product']['product_weight'];
-            $total_weight = $total_weight + $product_weight;
         }
 
         $deliveryAddresses = DeliveryAddress::deliveryAddresses();
 
         foreach ($deliveryAddresses as $key => $value) {
-            $shippingCharges = ShippingCharge::getShippingCharges($total_weight, 'Indonesia');
-            $deliveryAddresses[$key]['shipping_charges'] = $shippingCharges;
+            $deliveryAddresses[$key]['shipping_charges'];
         }
 
         if ($request->isMethod('post')) {
             $data = $request->all();
 
             $getProductStock = ProductsAttribute::getProductStock($item['product_id']);
-
             if ($getProductStock == 0) {
-                $message = $item['product']['product_name'] . ' with  size is not available. Please remove it from the Cart and choose another product.';
+                $message = $item['product']['product_name'] . ' stok produk ini tidak tersedia atau habis';
 
                 return redirect('/cart')->with('error_message', $message);
             }
 
             if (empty($data['address_id'])) {
-                $message = 'Please select Delivery Address!';
+                $message = 'Alamat pengiriman harus dipilih';
 
                 return redirect()->back()->with('error_message', $message);
             }
-
             if (empty($data['shipping_charges']) || $data['shipping_charges'] == null || $data['grand_total'] == null) {
-                $message = 'Please select PickUp!';
+                $message = 'Metode pengiriman harus dipilih';
 
                 return redirect()->back()->with('error_message', $message);
             }
-
-            if (empty($data['shipping_charges'])) {
-                $message = 'Please select PickUp!';
-
-                return redirect()->back()->with('error_message', $message);
-            }
-
             if (empty($data['payment_gateway'])) {
-                $message = 'Please select Payment Method!';
+                $message = 'Metode pembayaran harus dipilih';
 
                 return redirect()->back()->with('error_message', $message);
             }
@@ -400,19 +389,18 @@ class ProductsController extends Controller
             $deliveryAddress = DeliveryAddress::where('id', $data['address_id'])->first();
             $payment_method = 'Prepaid';
 
+            // Untuk memastikan bahwa semua operasi database berikutnya bagian dari proses penyimpanan database yang sama
             DB::beginTransaction();
 
             $total_price = 0;
-
             foreach ($getCartItems as $item) {
                 $getDiscountAttributePrice = Product::getDiscountAttributePrice($item['product_id']);
                 $total_price = $total_price + ($getDiscountAttributePrice['final_price'] * $item['quantity']);
             }
 
             $shipping_charges = 0;
-            $shipping_charges = ShippingCharge::getShippingCharges($total_weight, 'Indonesia');
             $grand_total = $total_price + $shipping_charges - Session::get('couponAmount');
-
+            // Untuk menyimpan data grand_total kedalam sesi untuk bisa tetap digunakan/tampilkan ke halaman selanjutnya yaitu proses pembayaran midtrans
             Session::put('grand_total', $grand_total);
 
             $order = new Order;
@@ -429,15 +417,17 @@ class ProductsController extends Controller
             $order->coupon_amount    = Session::get('couponAmount');
             $order->payment_method   = $payment_method;
             $order->payment_gateway  = $data['payment_gateway'];
-            $order->grand_total      =  $data['grand_total'];
+            $order->grand_total      = $data['grand_total'];
+            // Menyimpan data ke tabel orders
             $order->save();
+            // Digunakan untuk mendapatkan id auto-increment dari tabel orders yang barusan disimpan yang ada didalam variable $order_id
             $order_id = DB::getPdo()->lastInsertId();
 
             foreach ($getCartItems as $item) {
-                $cartItem = new OrdersProduct;
-                $cartItem->order_id = $order_id;
-                $cartItem->user_id  = Auth::user()->id;
-                $getProductDetails = Product::select('product_name', 'admin_id', 'vendor_id')->where('id', $item['product_id'])->first();
+                $cartItem                  = new OrdersProduct;
+                $cartItem->user_id         = Auth::user()->id;
+                $cartItem->order_id        = $order_id;
+                $getProductDetails         = Product::select('product_name', 'admin_id', 'vendor_id')->where('id', $item['product_id'])->first();
                 $cartItem->admin_id        = $getProductDetails['admin_id'];
                 $cartItem->vendor_id       = $getProductDetails['vendor_id'];
                 $cartItem->product_id      = $item['product_id'];
@@ -447,21 +437,22 @@ class ProductsController extends Controller
                 $cartItem->product_price   = $getDiscountAttributePrice['final_price'];
                 $getProductStock = ProductsAttribute::getProductStock($item['product_id']);
                 if ($item['quantity'] > $getProductStock) {
-                    $message = $getProductDetails['product_name'] . ' with size stock is not available/enough for your order. Please reduce its quantity and try again!';
+                    $message = $getProductDetails['product_name'] . 'stok produk ini tidak tersedia atau melebihi dalam jumlah kuantitas yang dibutuhkan';
 
                     return redirect('/cart')->with('error_message', $message);
                 }
                 $cartItem->product_qty     = $item['quantity'];
+                // Menyimpan data ke tabel orders_products
                 $cartItem->save();
 
+                // Melakukan perubahan stok produk
                 $getProductStock = ProductsAttribute::getProductStock($item['product_id']);
                 $newStock = $getProductStock - $item['quantity'];
-                ProductsAttribute::where([
-                    'product_id' => $item['product_id'],
-                ])->update(['stock' => $newStock]);
+                ProductsAttribute::where(['product_id' => $item['product_id']])->update(['stock' => $newStock]);
             }
 
             Session::put('order_id', $order_id);
+            // Jika semua operasi penyimpanan kedalam database untuk tabel orders dan orders_products berhasil, DB:commit() digunakan untuk menyimpan semua perubahan yang ada dalam database
             DB::commit();
 
             if ($data['payment_gateway'] == 'midtrans') {
@@ -484,24 +475,9 @@ class ProductsController extends Controller
 
             if ($data['payment_gateway'] == 'midtrans') {
                 return view('front.orders.show', compact('order', 'snapToken'));
-            } else {
-                echo 'Other Prepaid payment methods coming soon';
             }
-
-            return redirect('thanks');
         }
 
         return view('front.products.checkout')->with(compact('deliveryAddresses', 'countries', 'cities', 'provinces', 'getCartItems', 'total_price'));
-    }
-
-    public function thanks()
-    {
-        if (Session::has('order_id')) {
-            Cart::where('user_id', Auth::user()->id)->delete();
-
-            return view('front.products.thanks');
-        } else {
-            return redirect('cart');
-        }
     }
 }

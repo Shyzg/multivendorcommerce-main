@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-use Intervention\Image\Facades\Image;
 use App\Models\Category;
 use App\Models\Section;
 
@@ -30,14 +29,14 @@ class CategoryController extends Controller
             $title = 'Tambah Kategori';
             $category = new Category();
             $getCategories = array();
-            $message = 'Berhasil menambahkan category';
+            $message = 'Berhasil menambahkan kategori';
         } else {
             $title = 'Ubah Kategori';
             $category = Category::find($id);
             $getCategories = Category::where([
                 'section_id' => $category['section_id']
             ])->get();
-            $message = 'Berhasil memperbarui category';
+            $message = 'Berhasil memperbarui kategori';
         }
         if ($request->isMethod('post')) {
             $data = $request->all();

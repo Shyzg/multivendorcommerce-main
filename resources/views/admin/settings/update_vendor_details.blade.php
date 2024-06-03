@@ -3,29 +3,13 @@
 @section('content')
 <div class="main-panel">
     <div class="content-wrapper">
+        @if ($slug == 'personal')
         <div class="row">
-            <div class="col-md-12 grid-margin">
-                <div class="row">
-                    <div class="col-12 col-xl-8 mb-4 mb-xl-0">
-                        <h3 class="font-weight-bold">Update Vendor Details</h3>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-
-        @if ($slug == 'personal') {{-- $slug was passed from AdminController to view (using compact() method) --}}
-        <div class="row">
-            <div class="col-md-6 grid-margin stretch-card">
+            <div class="col grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Update Personal Information</h4>
-
-
-                        {{-- Our Bootstrap error code in case of wrong current password or the new password and confirm password are not matching: --}}
-                        {{-- Determining If An Item Exists In The Session (using has() method): https://laravel.com/docs/9.x/session#determining-if-an-item-exists-in-the-session --}}
-                        @if (Session::has('error_message')) <!-- Check AdminController.php, updateAdminPassword() method -->
+                        <h4 class="card-title">Perbarui Detil Pemilik Toko</h4>
+                        @if (Session::has('error_message'))
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             <strong>Error:</strong> {{ Session::get('error_message') }}
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -33,28 +17,17 @@
                             </button>
                         </div>
                         @endif
-
-
-
-                        {{-- Displaying Laravel Validation Errors: https://laravel.com/docs/9.x/validation#quick-displaying-the-validation-errors --}}
                         @if ($errors->any())
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-
                             @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                             @endforeach
-
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         @endif
-
-
-
-                        {{-- Our Bootstrap success message in case of updating admin password is successful: --}}
-                        {{-- Determining If An Item Exists In The Session (using has() method): https://laravel.com/docs/9.x/session#determining-if-an-item-exists-in-the-session --}}
-                        @if (Session::has('success_message')) <!-- Check AdminController.php, updateAdminPassword() method -->
+                        @if (Session::has('success_message'))
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                             <strong>Success:</strong> {{ Session::get('success_message') }}
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -62,54 +35,56 @@
                             </button>
                         </div>
                         @endif
-
-
-
-                        <form class="forms-sample" action="{{ url('admin/update-vendor-details/personal') }}" method="post" enctype="multipart/form-data"> @csrf <!-- Using the enctype="multipart/form-data" to allow uploading files (images) -->
+                        <form class="forms-sample" action="{{ url('admin/update-vendor-details/personal') }}" method="post" enctype="multipart/form-data">
+                            @csrf
                             <div class="form-group">
-                                <label>Vendor Username/Email</label>
-                                <input class="form-control" value="{{ Auth::guard('admin')->user()->email }}" readonly> <!-- Check updateAdminPassword() method in AdminController.php --> {{-- Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances --}}
+                                <label>Email</label>
+                                <input class="form-control" value="{{ Auth::guard('admin')->user()->email }}" readonly>
                             </div>
                             <div class="form-group">
-                                <label for="vendor_name">Name</label>
-                                <input type="text" class="form-control" id="vendor_name" placeholder="Enter Name" name="vendor_name" value="{{ Auth::guard('admin')->user()->name }}"> {{-- $vendorDetails was passed from AdminController --}} {{-- Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances --}}
+                                <label for="vendor_name">Nama Pemilik Toko</label>
+                                <input type="text" class="form-control" id="vendor_name" placeholder="Masukkan Nama Lengkap Pemilik Toko" name="vendor_name" value="{{ Auth::guard('admin')->user()->name }}">
                             </div>
                             <div class="form-group">
-                                <label for="vendor_address">Address</label>
-                                <input type="text" class="form-control" id="vendor_address" placeholder="Enter Address" name="vendor_address" value="{{ $vendorDetails['address'] }}"> {{-- $vendorDetails was passed from AdminController --}}
+                                <label for="vendor_address">Alamat Pemilik Toko</label>
+                                <input type="text" class="form-control" id="vendor_address" placeholder="Masukkan Alamat Pemilik Toko" name="vendor_address" value="{{ $vendorDetails['address'] }}">
                             </div>
                             <div class="form-group">
-                                <label for="vendor_city">City</label>
-                                <input type="text" class="form-control" id="vendor_city" placeholder="Enter City" name="vendor_city" value="{{ $vendorDetails['city'] }}"> {{-- $vendorDetails was passed from AdminController --}}
-                            </div>
-                            <div class="form-group">
-                                <label for="vendor_state">State</label>
-                                <input type="text" class="form-control" id="vendor_state" placeholder="Enter State" name="vendor_state" value="{{ $vendorDetails['state'] }}"> {{-- $vendorDetails was passed from AdminController --}}
-                            </div>
-                            <div class="form-group">
-                                {{-- Show all world countries from the database `countries` table --}}
-                                <label for="shop_country">Country</label>
-
-                                <select class="form-control" id="vendor_country" name="vendor_country" style="color: #495057">
-                                    <option value="">Select Country</option>
-
-                                    @foreach ($countries as $country) {{-- $countries was passed from AdminController to view using compact() method --}}
-                                    <option value="{{ $country['country_name'] }}" @if ($country['country_name']==$vendorDetails['country']) selected @endif>{{ $country['country_name'] }}</option>
+                                <label for="vendor_city">Kota</label>
+                                <select class="form-control" id="vendor_city" name="vendor_city" style="color: #495057">
+                                    <option value="">Pilih Kota</option>
+                                    @foreach ($cities as $city)
+                                    <option value="{{ $city['name'] }}" @if ($city['name']==$vendorDetails['city']) selected @endif>{{ $city['name'] }}</option>
                                     @endforeach
-
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="vendor_mobile">Mobile</label>
-                                <input type="text" class="form-control" id="vendor_mobile" placeholder="Enter 10 Digit Mobile Number" name="vendor_mobile" value="{{ Auth::guard('admin')->user()->mobile }}" maxlength="10" minlength="10"> {{-- Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances --}}
+                                <label for="vendor_state">Provinsi</label>
+                                <select class="form-control" id="vendor_state" name="vendor_state" style="color: #495057">
+                                    <option value="">Pilih Provinsi</option>
+                                    @foreach ($provinces as $state)
+                                    <option value="{{ $state['name'] }}" @if ($state['name']==$vendorDetails['state']) selected @endif>{{ $state['name'] }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="form-group">
-                                <label for="vendor_image">Vendor Photo</label>
+                                <label for="vendor_country">Negara</label>
+                                <select class="form-control" id="vendor_country" name="vendor_country" style="color: #495057">
+                                    <option value="">Negara</option>
+                                    @foreach ($countries as $country)
+                                    <option value="{{ $country['name'] }}" @if ($country['name']==$vendorDetails['country']) selected @endif>{{ $country['name'] }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="vendor_mobile">Nomor Handphone Pemilik Toko</label>
+                                <input type="text" class="form-control" id="vendor_mobile" placeholder="Masukkan Nomor Handphone Pemilik Toko" name="vendor_mobile" value="{{ Auth::guard('admin')->user()->mobile }}" maxlength="10" minlength="10">
+                            </div>
+                            <div class="form-group">
+                                <label for="vendor_image">Foto Profil</label>
                                 <input type="file" class="form-control" id="vendor_image" name="vendor_image">
-                                {{-- Show the admin image if exists --}}
-                                @if (!empty(Auth::guard('admin')->user()->image)) {{-- Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances --}}
-                                <a target="_blank" href="{{ url('admin/images/photos/' . Auth::guard('admin')->user()->image) }}">View Image</a> <!-- We used    target="_blank"    to open the image in another separate page --> {{-- Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances --}}
-                                <input type="hidden" name="current_vendor_image" value="{{ Auth::guard('admin')->user()->image }}"> <!-- to send the current admin image url all the time with all the requests --> {{-- Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances --}}
+                                @if (!empty(Auth::guard('admin')->user()->image))
+                                <input type="hidden" name="current_vendor_image" value="{{ Auth::guard('admin')->user()->image }}">
                                 @endif
                             </div>
                             <button type="submit" class="btn btn-primary mr-2">Submit</button>
@@ -121,15 +96,11 @@
         </div>
         @elseif ($slug == 'business')
         <div class="row">
-            <div class="col-md-6 grid-margin stretch-card">
+            <div class="col grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Update Vendor Business Information</h4>
-
-
-                        {{-- Our Bootstrap error code in case of wrong current password or the new password and confirm password are not matching: --}}
-                        {{-- Determining If An Item Exists In The Session (using has() method): https://laravel.com/docs/9.x/session#determining-if-an-item-exists-in-the-session --}}
-                        @if (Session::has('error_message')) <!-- Check AdminController.php, updateAdminPassword() method -->
+                        <h4 class="card-title">Perbarui Detil Toko</h4>
+                        @if (Session::has('error_message'))
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             <strong>Error:</strong> {{ Session::get('error_message') }}
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -137,29 +108,17 @@
                             </button>
                         </div>
                         @endif
-
-
-
-                        {{-- Displaying Laravel Validation Errors: https://laravel.com/docs/9.x/validation#quick-displaying-the-validation-errors --}}
                         @if ($errors->any())
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-
                             @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                             @endforeach
-
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         @endif
-
-
-
-                        {{-- Our Bootstrap success message in case of updating admin password is successful: --}}
-
-                        {{-- Determining If An Item Exists In The Session (using has() method): https://laravel.com/docs/9.x/session#determining-if-an-item-exists-in-the-session --}}
-                        @if (Session::has('success_message')) <!-- Check AdminController.php, updateAdminPassword() method -->
+                        @if (Session::has('success_message'))
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                             <strong>Success:</strong> {{ Session::get('success_message') }}
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -167,50 +126,43 @@
                             </button>
                         </div>
                         @endif
-
-
-
-                        <form class="forms-sample" action="{{ url('admin/update-vendor-details/business') }}" method="post" enctype="multipart/form-data"> @csrf <!-- Using the enctype="multipart/form-data" to allow uploading files (images) -->
+                        <form class="forms-sample" action="{{ url('admin/update-vendor-details/business') }}" method="post" enctype="multipart/form-data">
+                            @csrf
                             <div class="form-group">
-                                <label>Vendor Username/Email</label>
-                                <input class="form-control" value="{{ Auth::guard('admin')->user()->email }}" readonly> <!-- Check updateAdminPassword() method in AdminController.php --> {{-- Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances --}}
+                                <label for="shop_name">Nama Toko</label>
+                                <input type="text" class="form-control" id="shop_name" placeholder="Masukkan Nama Toko" name="shop_name" @if (isset($vendorDetails['shop_name'])) value="{{ $vendorDetails['shop_name'] }}" @endif>
                             </div>
                             <div class="form-group">
-                                <label for="shop_name">Shop Name</label>
-                                <input type="text" class="form-control" id="shop_name" placeholder="Enter Shop Name" name="shop_name" @if (isset($vendorDetails['shop_name'])) value="{{ $vendorDetails['shop_name'] }}" @endif> {{-- $vendorDetails was passed from AdminController --}}
+                                <label for="shop_address">Alamat Toko</label>
+                                <input type="text" class="form-control" id="shop_address" placeholder="Masukkan Alamat Toko" name="shop_address" @if (isset($vendorDetails['shop_address'])) value="{{ $vendorDetails['shop_address'] }}" @endif>
                             </div>
                             <div class="form-group">
-                                <label for="shop_address">Shop Address</label>
-                                <input type="text" class="form-control" id="shop_address" placeholder="Enter Shop Address" name="shop_address" @if (isset($vendorDetails['shop_address'])) value="{{ $vendorDetails['shop_address'] }}" @endif> {{-- $vendorDetails was passed from AdminController --}}
-                            </div>
-                            <div class="form-group">
-                                <label for="shop_city">Shop City</label>
-                                <input type="text" class="form-control" id="shop_city" placeholder="Enter Shop City" name="shop_city" @if (isset($vendorDetails['shop_city'])) value="{{ $vendorDetails['shop_city'] }}" @endif> {{-- $vendorDetails was passed from AdminController --}}
-                            </div>
-                            <div class="form-group">
-                                <label for="shop_state">Shop State</label>
-                                <input type="text" class="form-control" id="shop_state" placeholder="Enter Shop State" name="shop_state" @if (isset($vendorDetails['shop_state'])) value="{{ $vendorDetails['shop_state'] }}" @endif> {{-- $vendorDetails was passed from AdminController --}}
-                            </div>
-                            <div class="form-group">
-                                {{-- Show all world countries from the database `countries` table --}}
-                                <label for="shop_country">Shop Country</label>
-
-                                <select class="form-control" id="shop_country" name="shop_country" style="color: #495057">
-                                    <option value="">Select Country</option>
-
-                                    @foreach ($countries as $country) {{-- $countries was passed from AdminController to view using compact() method --}}
-                                    <option value="{{ $country['country_name'] }}" @if (isset($vendorDetails['shop_country']) && $country['country_name']==$vendorDetails['shop_country']) selected @endif>{{ $country['country_name'] }}</option>
+                                <label for="shop_city">Kota Toko</label>
+                                <select class="form-control" id="shop_city" name="shop_city" style="color: #495057">
+                                    @foreach ($cities as $city)
+                                    <option value="{{ $city['name'] }}" @if (isset($vendorDetails['shop_city']) && $city['name']==$vendorDetails['shop_city']) selected @endif>{{ $city['name'] }}</option>
                                     @endforeach
-
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="shop_mobile">Shop Mobile</label>
-                                <input type="text" class="form-control" id="shop_mobile" placeholder="Enter 10 Digit Shop Mobile Number" name="shop_mobile" @if (isset($vendorDetails['shop_mobile'])) value="{{ $vendorDetails['shop_mobile'] }}" @endif maxlength="10" minlength="10">
+                                <label for="user-state">Provinsi Toko</label>
+                                <select class="form-control" id="shop_state" name="shop_state" style="color: #495057">
+                                    @foreach ($provinces as $state)
+                                    <option value="{{ $state['name'] }}" @if (isset($vendorDetails['shop_state']) && $state['name']==$vendorDetails['shop_state']) selected @endif>{{ $state['name'] }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="form-group">
-                                <label for="shop_mobile">Shop Website</label>
-                                <input type="text" class="form-control" id="shop_website" placeholder="Enter Shop Website" name="shop_website" @if (isset($vendorDetails['shop_website'])) value="{{ $vendorDetails['shop_website'] }}" @endif>
+                                <label for="shop_country">Negara Toko</label>
+                                <select class="form-control" id="shop_country" name="shop_country" style="color: #495057">
+                                    @foreach ($countries as $country)
+                                    <option value="{{ $country['name'] }}" @if (isset($vendorDetails['shop_country']) && $country['name']==$vendorDetails['shop_country']) selected @endif>{{ $country['name'] }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="shop_mobile">Nomor Handphone Toko</label>
+                                <input type="text" class="form-control" id="shop_mobile" placeholder="Masukkan Nomor Handphone Toko" name="shop_mobile" @if (isset($vendorDetails['shop_mobile'])) value="{{ $vendorDetails['shop_mobile'] }}" @endif maxlength="13" minlength="10">
                             </div>
                             <button type="submit" class="btn btn-primary mr-2">Submit</button>
                             <button type="reset" class="btn btn-light">Cancel</button>
@@ -221,6 +173,5 @@
         </div>
         @endif
     </div>
-    @include('admin.layout.footer')
 </div>
 @endsection

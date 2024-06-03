@@ -11,7 +11,7 @@
 <div class="page-style-a">
     <div class="container">
         <div class="page-intro">
-            <h2>Products</h2>
+            <h2>Produk</h2>
         </div>
     </div>
 </div>
@@ -20,19 +20,19 @@
         <div class="sec-maker-header text-center">
             <ul class="nav tab-nav-style-1-a justify-content-center">
                 <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#new">New Arrivals</a>
+                    <a class="nav-link active" data-toggle="tab" href="#new">Baru</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#best-seller">Best Sellers</a>
+                    <a class="nav-link" data-toggle="tab" href="#best-seller">Paling Laku</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#discount">Discounted Products</a>
+                    <a class="nav-link" data-toggle="tab" href="#discount">Diskon</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#food-products">Food Products</a>
+                    <a class="nav-link" data-toggle="tab" href="#food-products">Makanan</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#drink-products">Drink Products</a>
+                    <a class="nav-link" data-toggle="tab" href="#drink-products">Minuman</a>
                 </li>
             </ul>
         </div>

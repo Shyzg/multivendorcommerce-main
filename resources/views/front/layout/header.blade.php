@@ -19,7 +19,7 @@ $sections = Section::sections();
                     <li>
                         <a>
                             @if (Auth::check())
-                            Welcome {{ Auth::user()->name }}
+                            Selamat Datang {{ Auth::user()->name }}
                             @else
                             Login/Register
                             @endif
@@ -30,13 +30,13 @@ $sections = Section::sections();
                             <li>
                                 <a href="{{ url('user/account') }}">
                                     <i class="fas fa-sign-in-alt u-s-m-r-9"></i>
-                                    My Account
+                                    Detail Akun
                                 </a>
                             </li>
                             <li>
                                 <a href="{{ url('user/orders') }}">
                                     <i class="fas fa-sign-in-alt u-s-m-r-9"></i>
-                                    My Orders
+                                    Riwayat Pemesanan
                                 </a>
                             </li>
                             <li>
@@ -49,13 +49,13 @@ $sections = Section::sections();
                             <li>
                                 <a href="{{ url('user/login-register') }}">
                                     <i class="fas fa-sign-in-alt u-s-m-r-9"></i>
-                                    As Customer
+                                    Sebagai Pembeli
                                 </a>
                             </li>
                             <li>
                                 <a href="{{ url('vendor/login-register') }}">
                                     <i class="fas fa-sign-in-alt u-s-m-r-9"></i>
-                                    As Vendor
+                                    Sebagai Pemilik Toko
                                 </a>
                             </li>
                             @endif

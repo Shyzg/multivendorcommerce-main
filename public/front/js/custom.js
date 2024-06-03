@@ -15,10 +15,6 @@ function get_filter(class_name) { // get the filter values of a certain filter (
 
 // jQuery
 $(document).ready(function() {
-    // Show our Preloader/Loader/Loading Page/Preloading Screen ALL THE TIME FOR TESTING!    
-    // $('.loader').show();
-
-
     // the <select> box in front/products/detail.blade.php (to show the correct related `price` and `stock` depending on the selected `size` (from the `products_attributes` table))
     $('#getPrice').change(function() {
         // console.log(this);
@@ -125,14 +121,6 @@ $(document).ready(function() {
         }
     });
 
-
-
-    // Show our Preloader/Loader/Loading Page/Preloading Screen while the placing order <form> is submitted using the    id="placeOrder"    HTML attribute in front/products/checkout.blade.php
-    $(document).on('click', '#placeOrder', function() {
-        // Show our Preloader/Loader/Loading Page/Preloading Screen while the <form> is submitted    
-        $('.loader').show();
-    });
-
     // User Login <form> submission (in front/users/login_register.blade.php)    
     $('#loginForm').submit(function() { // When the login <form> is submitted
         var formdata = $(this).serialize(); // serialize() method comes in handy when submitting an HTML Form using an AJAX request / Ajax call, as it collects all the name/value pairs from the HTML Form input fields like: <input>, <textarea>, <select><option>, ... HTML elements of the <form> (instead of the heavy work of assigning an identifier/handle for every <input> and <textarea>, ... using an HTML 'id' or CSS 'class', and then getting the value for every one of them like this:    $('#username).val();    )    // serialize() jQuery method: https://www.w3schools.com/jquery/ajax_serialize.asp
@@ -194,11 +182,6 @@ $(document).ready(function() {
 
     // User Forgot Password Functionality (this route is accessed from the <a> tag in front/users/login_register.blade.php through a 'GET' request, and through a 'POST' request when the HTML Form is submitted in front/users/forgot_password.blade.php))    
     $('#forgotForm').submit(function() { // When the forgot password <form> (in front/users/forgot_password.blade.php) is submitted
-
-        // Show our Preloader/Loader/Loading Page/Preloading Screen while the <form> is submitted    
-        $('.loader').show();
-
-
         var formdata = $(this).serialize(); // serialize() method comes in handy when submitting an HTML Form using an AJAX request / Ajax call, as it collects all the name/value pairs from the HTML Form input fields like: <input>, <textarea>, <select><option>, ... HTML elements of the <form> (instead of the heavy work of assigning an identifier/handle for every <input> and <textarea>, ... using an HTML 'id' or CSS 'class', and then getting the value for every one of them like this:    $('#username).val();    )    // serialize() jQuery method: https://www.w3schools.com/jquery/ajax_serialize.asp
 
 
@@ -216,9 +199,6 @@ $(document).ready(function() {
                 
                 if (resp.type == 'error') { // if there're Validation Errors (login fails), show the Validation Error Messages (each of them under its respective <input> field)    // 'type' is sent as a PHP array key (in the HTTP response from the server (backend)) from inside the userRegister() method in Front/UserController.php
                     // Hide our Preloader/Loader/Loading Page/Preloading Screen when there's an error    
-                    $('.loader').hide();
-
-
                     // Note: in HTML in front/users/login_register.blade.php, to conveniently display the errors by jQuery loop, the pattern must be like: register-x (e.g. register-mobile, regitster-email, ... in order for the jQuery loop to work. And x must be identical to the 'name' HTML attributes (e.g. the <input> with the    name='mobile'    HTML attribute must have a <p> with an id HTML attribute    id="register-mobile"    ) so that when the vaildation errors array are sent as a response to the AJAX request, they could conveniently/easily handled by the jQuery $.each() loop)
                     $.each(resp.errors, function(i, error) { // 'i' is the attribute (the 'name' HTML attribute) ('i' is the JavaScript object keys or the PHP array (sent from backend/server response from method inside controller) keys/indexes, and 'error' is the Validation Error ('error' is the JavaScript object values or the PHP array (sent from backend/server response from method inside controller) values    // $.each(): https://api.jquery.com/jquery.each/    // 'errors' is sent as a PHP array key (in the HTTP response from the server (backend)) from inside the userRegister() method in Front/UserController.php
 
@@ -238,8 +218,6 @@ $(document).ready(function() {
 
                 } else if (resp.type == 'success') { // if there're no validation errors (login is successful), redirect to the Cart page    // 'type' is sent as a PHP array key (in the HTTP response from the server (backend)) from inside the userRegister() method in Front/UserController.php
                     // Hide our Preloader/Loader/Loading Page/Preloading Screen when the response is 'success'    
-                    $('.loader').hide();
-
 
                     $('#forgot-success').attr('style', 'color: green'); // I already did this in the HTML page in the <p> tags in the HTML in front/users/login_register.blade.php (    <p id="forgot-name" style="color: red"></p>    )    // This is the same as:    $('#forgot-' + i).css('color', 'green');    // Change the CSS color of the <p> tags
                     $('#forgot-success').html(resp.message); // replace the <p> tags that we created inside the user registration <form> in front/users/login_register.blade.php depending on x in their 'id' HTML attributes 'login-x' (e.g. forgot-mobile, forgot-email, ...)
@@ -256,9 +234,6 @@ $(document).ready(function() {
     // User Update Details HTML Form submission (in front/users/user_account.blade.php)    
     $('#accountForm').submit(function() { // When the registration <form> is submitted
 
-        // Show our Preloader/Loader/Loading Page/Preloading Screen while the <form> is submitted    
-        $('.loader').show();
-
         var formdata = $(this).serialize(); // serialize() method comes in handy when submitting an HTML Form using an AJAX request / Ajax call, as it collects all the name/value pairs from the HTML Form input fields like: <input>, <textarea>, <select><option>, ... HTML elements of the <form> (instead of the heavy work of assigning an identifier/handle for every <input> and <textarea>, ... using an HTML 'id' or CSS 'class', and then getting the value for every one of them like this:    $('#username).val();    )    // serialize() jQuery method: https://www.w3schools.com/jquery/ajax_serialize.asp
 
         // return false; // DON'T SUBMIT THE FORM!!
@@ -274,9 +249,6 @@ $(document).ready(function() {
                 // Showing Validation Errors in the view (from the backend/server response of our AJAX request):
                 if (resp.type == 'error') { // if there're Validation Errors (login fails), show the Validation Error Messages (each of them under its respective <input> field)    // 'type' is sent as a PHP array key (in the HTTP response from the server (backend)) from inside the userAccount() method in Front/UserController.php
                     // Hide our Preloader/Loader/Loading Page/Preloading Screen when there's an error    
-                    $('.loader').hide();
-
-
                     // Note: in HTML in front/users/user_account.blade.php, to conveniently display the errors by jQuery loop, the pattern must be like: account-x (e.g. account-mobile, regitster-email, ... in order for the jQuery loop to work. And x must be identical to the 'name' HTML attributes (e.g. the <input> with the    name='mobile'    HTML attribute must have a <p> with an id HTML attribute    id="account-mobile"    ) so that when the vaildation errors array are sent as a response to the AJAX request, they could conveniently/easily handled by the jQuery $.each() loop)
                     $.each(resp.errors, function(i, error) { // 'i' is the attribute (the 'name' HTML attribute) ('i' is the JavaScript object keys or the PHP array (sent from backend/server response from method inside controller) keys/indexes, and 'error' is the Validation Error ('error' is the JavaScript object values or the PHP array (sent from backend/server response from method inside controller) values    // $.each(): https://api.jquery.com/jquery.each/    // 'errors' is sent as a PHP array key (in the HTTP response from the server (backend)) from inside the userAccount() method in Front/UserController.php
 
@@ -295,8 +267,6 @@ $(document).ready(function() {
 
                 } else if (resp.type == 'success') { // if there're no validation errors (login is successful), redirect to the Cart page    // 'type' is sent as a PHP array key (in the HTTP response from the server (backend)) from inside the userAccount() method in Front/UserController.php
                     // Hide our Preloader/Loader/Loading Page/Preloading Screen when the response is 'success'    
-                    $('.loader').hide();
-
 
                     $('#account-success').attr('style', 'color: green'); // I already did this in the HTML page in the <p> tags in the HTML in front/users/user_account.blade.php (    <p id="login-name" style="color: red"></p>    )    // This is the same as:    $('#login-' + i).css('color', 'green');    // Change the CSS color of the <p> tags
                     $('#account-success').html(resp.message); // replace the <p> tags that we created inside the user registration <form> in front/users/user_account.blade.php depending on x in their 'id' HTML attributes 'login-x' (e.g. login-mobile, login-email, ...)
@@ -321,10 +291,6 @@ $(document).ready(function() {
     // User Update Password HTML Form submission (in front/users/user_account.blade.php)    
     $('#passwordForm').submit(function() { // When the registration <form> is submitted
 
-        // Show our Preloader/Loader/Loading Page/Preloading Screen while the <form> is submitted    
-        $('.loader').show();
-
-
         var formdata = $(this).serialize(); // serialize() method comes in handy when submitting an HTML Form using an AJAX request / Ajax call, as it collects all the name/value pairs from the HTML Form input fields like: <input>, <textarea>, <select><option>, ... HTML elements of the <form> (instead of the heavy work of assigning an identifier/handle for every <input> and <textarea>, ... using an HTML 'id' or CSS 'class', and then getting the value for every one of them like this:    $('#username).val();    )    // serialize() jQuery method: https://www.w3schools.com/jquery/ajax_serialize.asp
 
         // return false; // DON'T SUBMIT THE FORM!!
@@ -343,9 +309,6 @@ $(document).ready(function() {
                 // Showing Validation Errors in the view (from the backend/server response of our AJAX request):
                 if (resp.type == 'error') { // if there're Validation Errors (login fails), show the Validation Error Messages (each of them under its respective <input> field)    // 'type' is sent as a PHP array key (in the HTTP response from the server (backend)) from inside the userAccount() method in Front/UserController.php
                     // Hide our Preloader/Loader/Loading Page/Preloading Screen when there's an error    
-                    $('.loader').hide();
-
-
                     // Note: in HTML in front/users/user_account.blade.php, to conveniently display the errors by jQuery loop, the pattern must be like: account-x (e.g. account-mobile, regitster-email, ... in order for the jQuery loop to work. And x must be identical to the 'name' HTML attributes (e.g. the <input> with the    name='mobile'    HTML attribute must have a <p> with an id HTML attribute    id="account-mobile"    ) so that when the vaildation errors array are sent as a response to the AJAX request, they could conveniently/easily handled by the jQuery $.each() loop)
                     $.each(resp.errors, function(i, error) { // 'i' is the attribute (the 'name' HTML attribute) ('i' is the JavaScript object keys or the PHP array (sent from backend/server response from method inside controller) keys/indexes, and 'error' is the Validation Error ('error' is the JavaScript object values or the PHP array (sent from backend/server response from method inside controller) values    // $.each(): https://api.jquery.com/jquery.each/    // 'errors' is sent as a PHP array key (in the HTTP response from the server (backend)) from inside the userAccount() method in Front/UserController.php
                         $('#password-' + i).attr('style', 'color: red'); // I already did this in the HTML page in the <p> tags in the HTML in front/users/user_account.blade.php (    <p id="account-name" style="color: red"></p>    )    // This is the same as:    $('#password-' + i).css('color', 'red');    // Change the CSS color of the <p> tags
@@ -362,9 +325,6 @@ $(document).ready(function() {
                     });
 
                 } else if (resp.type == 'incorrect') { // if the entered current password is incorrect/wrong    // 'type' is sent as a PHP array key (in the HTTP response from the server (backend)) from inside the userUpdatePassword() method in Front/UserController.php
-                    // Hide our Preloader/Loader/Loading Page/Preloading Screen when the response is 'success'    
-                    $('.loader').hide();
-
                     $('#password-error').attr('style', 'color: red'); // I already did this in the HTML page in the <p> tags in the HTML in front/users/user_account.blade.php (    <p id="password-name" style="color: red"></p>    )    // This is the same as:    $('#password-' + i).css('color', 'red');    // Change the CSS color of the <p> tags
                     $('#password-error').html(resp.message); // replace the <p> tags that we created inside the user registration <form> in front/users/user_account.blade.php depending on x in their 'id' HTML attributes 'password-x' (e.g. password-mobile, password-email, ...)
 
@@ -376,9 +336,6 @@ $(document).ready(function() {
                     }, 3000);
 
                 } else if (resp.type == 'success') { // if there're no validation errors (login is successful), redirect to the Cart page    // 'type' is sent as a PHP array key (in the HTTP response from the server (backend)) from inside the userAccount() method in Front/UserController.php
-                    // Hide our Preloader/Loader/Loading Page/Preloading Screen when the response is 'success'    
-                    $('.loader').hide();
-
                     $('#password-success').attr('style', 'color: green'); // I already did this in the HTML page in the <p> tags in the HTML in front/users/user_account.blade.php (    <p id="password-name" style="color: red"></p>    )    // This is the same as:    $('#password-' + i).css('color', 'green');    // Change the CSS color of the <p> tags
                     $('#password-success').html(resp.message); // replace the <p> tags that we created inside the user registration <form> in front/users/user_account.blade.php depending on x in their 'id' HTML attributes 'password-x' (e.g. password-mobile, password-email, ...)
 
@@ -527,8 +484,6 @@ $(document).ready(function() {
                 // Showing Validation Errors in the view (from the backend/server response of our AJAX request):
                 if (resp.type == 'error') { // if there're Validation Errors, show the Validation Error Messages (each of them under its respective <input> field)    // 'type' is sent as a PHP array key (in the HTTP response from the server (backend)) from inside the saveDeliveryAddress() method in Front/AddressController.php
                     // Hide our Preloader/Loader/Loading Page/Preloading Screen when there's an error    
-                    $('.loader').hide();
-
 
                     // Note: in HTML in front/products/delivery_addresses.blade.php, to conveniently display the errors by jQuery loop, the pattern must be like: account-x (e.g. account-mobile, register-email, ... in order for the jQuery loop to work. And x must be identical to the 'name' HTML attributes (e.g. the <input> with the    name='mobile'    HTML attribute must have a <p> with an id HTML attribute    id="account-mobile"    ) so that when the vaildation errors array are sent as a response to the AJAX request, they could conveniently/easily be handled by the jQuery $.each() loop)
                     $.each(resp.errors, function(i, error) { // 'i' is the attribute (the 'name' HTML attribute) ('i' is the JavaScript object keys or the PHP array (sent from backend/server response from method inside controller) keys/indexes, and 'error' is the Validation Error ('error' is the JavaScript object values or the PHP array (sent from backend/server response from method inside controller) values    // $.each(): https://api.jquery.com/jquery.each/    // 'errors' is sent as a PHP array key (in the HTTP response from the server (backend)) from inside the userAccount() method in Front/UserController.php

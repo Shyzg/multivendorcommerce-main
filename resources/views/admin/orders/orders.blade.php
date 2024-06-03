@@ -4,10 +4,10 @@
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="row">
-            <div class="col-lg-12 grid-margin stretch-card">
+            <div class="col grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Orders</h4>
+                        <h4 class="card-title">Pesanan</h4>
                         <div class="table-responsive pt-3">
                             <table id="orders" class="table table-bordered">
                                 <thead>
@@ -24,10 +24,10 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($orders as $order)
-                                    @if ($order['orders_products'])
+                                    <!-- @if ($order['orders_products']) -->
                                     <tr>
                                         <td>{{ $order['id'] }}</td>
-                                        <td>{{ date('Y-m-d h:i:s', strtotime($order['created_at'])) }}</td>
+                                        <td>{{ date('l, d F Y H:i:s', strtotime($order['created_at'])) }}</td>
                                         <td>{{ $order['name'] }}</td>
                                         <td>{{ $order['email'] }}</td>
                                         <td>
@@ -44,7 +44,7 @@
                                             </a>
                                         </td>
                                     </tr>
-                                    @endif
+                                    <!-- @endif -->
                                     @endforeach
                                 </tbody>
                             </table>

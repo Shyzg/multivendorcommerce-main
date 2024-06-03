@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-
 use App\Models\Section;
 
 class SectionController extends Controller
@@ -16,7 +15,7 @@ class SectionController extends Controller
         // Menggunakan session untuk sebagai penanda halaman yang sedang digunakan pada sidebar
         Session::put('page', 'sections');
 
-        $sections = Section::get()->toArray();
+        $sections = Section::get();
 
         return view('admin.sections.sections')->with(compact('sections'));
     }
@@ -26,7 +25,7 @@ class SectionController extends Controller
         Session::put('page', 'sections');
 
         if ($id == '') {
-            $title = 'Tambahkan Section';
+            $title = 'Tambah Section';
             $section = new Section();
             $message = 'Berhasil menambahkan section';
         } else {

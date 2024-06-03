@@ -11,7 +11,7 @@
                         <a href="{{ url('/') }}">Home</a>
                     </li>
                     <li class="is-marked">
-                        <a href="cart.html">Checkout</a>
+                        <a href="#">Checkout</a>
                     </li>
                 </ul>
             </div>

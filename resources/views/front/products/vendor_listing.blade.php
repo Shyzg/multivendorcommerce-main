@@ -8,10 +8,10 @@
             <ul class="bread-crumb">
                 <li class="has-separator">
                     <i class="ion ion-md-home"></i>
-                    <a href="{{ url('/'); }}">Home</a>
+                    <a href="{{ url('/') }}">Home</a>
                 </li>
                 <li class="is-marked">
-                    <a href="listing.html">{{ $getVendorShop }}</a>
+                    <a href="#">{{ $getVendorShop }}</a>
                 </li>
             </ul>
         </div>
@@ -19,31 +19,14 @@
 </div>
 <div class="page-shop u-s-p-t-80">
     <div class="container">
-        <div class="shop-intro">
-            <ul class="bread-crumb">
-                <li class="has-separator">
-                    <a href="{{ url('/') }}">Home</a>
-                </li>
-                <li>{{ $getVendorShop }}</li>
-            </ul>
-        </div>
         <div class="row">
-            <div class="col-lg-9 col-md-9 col-sm-12">
-                <div class="page-bar clearfix">
-                </div>
+            <div class="col">
                 <div class="">
                     @include('front.products.vendor_products_listing')
                 </div>
-                @if (isset($_GET['sort']))
-                <div>
-                    {{ $vendorProducts->appends(['sort' => $_GET['sort']])->links() }}
-                </div>
-                @else
                 <div>
                     {{ $vendorProducts->links() }}
                 </div>
-                @endif
-                <div>&nbsp;</div>
             </div>
         </div>
     </div>

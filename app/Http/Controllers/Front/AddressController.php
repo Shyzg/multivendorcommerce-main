@@ -5,12 +5,12 @@ namespace App\Http\Controllers\Front;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\View;
 use App\Models\DeliveryAddress;
 use App\Models\Country;
 use App\Models\City;
 use App\Models\Province;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\View;
 
 class AddressController extends Controller
 {
@@ -56,9 +56,9 @@ class AddressController extends Controller
                 }
 
                 $deliveryAddresses = DeliveryAddress::deliveryAddresses();
-                $countries = Country::get()->toArray();
-                $cities =  City::get()->toArray();
-                $provinces = Province::get()->toArray();
+                $countries = Country::orderBy('name', 'asc')->get();
+                $cities = City::orderBy('name', 'asc')->get();
+                $provinces = Province::orderBy('name', 'asc')->get();
 
                 return response()->json([
                     'view' => (string) View::make('front.products.delivery_addresses')->with(compact('deliveryAddresses', 'countries', 'cities', 'provinces'))
@@ -80,9 +80,9 @@ class AddressController extends Controller
             DeliveryAddress::where('id', $data['addressid'])->delete();
 
             $deliveryAddresses = DeliveryAddress::deliveryAddresses();
-            $countries = Country::get();
-            $cities =  City::get();
-            $provinces = Province::get();
+            $countries = Country::orderBy('name', 'asc')->get();
+            $cities = City::orderBy('name', 'asc')->get();
+            $provinces = Province::orderBy('name', 'asc')->get();
 
             return response()->json([
                 'view' => (string) View::make('front.products.delivery_addresses')->with(compact('deliveryAddresses', 'countries', 'cities', 'provinces'))

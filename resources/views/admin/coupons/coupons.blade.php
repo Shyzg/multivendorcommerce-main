@@ -4,13 +4,12 @@
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="row">
-            <div class="col-lg-12 grid-margin stretch-card">
+            <div class="col grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Kupon</h4>
                         <a href="{{ url('admin/add-edit-coupon') }}" style="max-width: 150px; float: right; display: inline-block" class="btn btn-block btn-primary">Tambah Kupon</a>
                         @if (Session::has('success_message'))
-                        <!-- Check AdminController.php, updateAdminPassword() method -->
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                             <strong>Success:</strong> {{ Session::get('success_message') }}
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">

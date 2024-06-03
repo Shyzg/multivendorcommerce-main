@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Hash;
 use Intervention\Image\Facades\Image;
 use App\Models\Admin;
 use App\Models\Section;
@@ -17,7 +18,8 @@ use App\Models\User;
 use App\Models\Vendor;
 use App\Models\VendorsBusinessDetail;
 use App\Models\Country;
-use Illuminate\Support\Facades\Hash;
+use App\Models\Province;
+use App\Models\City;
 
 class AdminController extends Controller
 {
@@ -101,7 +103,7 @@ class AdminController extends Controller
                     ]);
 
                     // Jika sama maka akan menampilkan pesan sukses
-                    return redirect()->back()->with('success_message', 'Berhasil memperbarui password admin');
+                    return redirect()->back()->with('success_message', 'Berhasil memperbarui kata sandi admin');
                 } else {
                     // Jika tidak sama maka akan menampilkan pesan error
                     return redirect()->back()->with('error_message', 'Kata sandi baru dan konfirmasi kata sandi tidak sama');
@@ -174,7 +176,7 @@ class AdminController extends Controller
                 'image'  => $imageName
             ]);
 
-            return redirect()->back()->with('success_message', 'Berhasil memperbarui admin detail');
+            return redirect()->back()->with('success_message', 'Berhasil memperbarui informasi admin');
         }
 
         return view('admin/settings/update_admin_details');
@@ -232,7 +234,7 @@ class AdminController extends Controller
                     'country' => $data['vendor_country']
                 ]);
 
-                return redirect()->back()->with('success_message', 'Berhasil memperbarui vendor detail');
+                return redirect()->back()->with('success_message', 'Berhasil memperbarui informasi penjual');
             }
         } else if ($slug == 'business') {
             Session::put('page', 'update_business_details');
@@ -266,7 +268,6 @@ class AdminController extends Controller
                     VendorsBusinessDetail::where('vendor_id', Auth::guard('admin')->user()->vendor_id)->update([
                         'shop_name'               => $data['shop_name'],
                         'shop_mobile'             => $data['shop_mobile'],
-                        'shop_website'            => $data['shop_website'],
                         'shop_address'            => $data['shop_address'],
                         'shop_city'               => $data['shop_city'],
                         'shop_state'              => $data['shop_state'],
@@ -278,7 +279,6 @@ class AdminController extends Controller
                         'vendor_id'               => Auth::guard('admin')->user()->vendor_id,
                         'shop_name'               => $data['shop_name'],
                         'shop_mobile'             => $data['shop_mobile'],
-                        'shop_website'            => $data['shop_website'],
                         'shop_address'            => $data['shop_address'],
                         'shop_city'               => $data['shop_city'],
                         'shop_state'              => $data['shop_state'],
@@ -286,13 +286,15 @@ class AdminController extends Controller
                     ]);
                 }
 
-                return redirect()->back()->with('success_message', 'Berhasil memperbarui vendor bisnis detail');
+                return redirect()->back()->with('success_message', 'Berhasil memperbarui informasi toko');
             }
         }
 
-        $countries = Country::get();
+        $countries = Country::orderBy('name', 'asc')->get();
+        $cities = City::orderBy('name', 'asc')->get();
+        $provinces = Province::orderBy('name', 'asc')->get();
 
-        return view('admin/settings/update_vendor_details')->with(compact('slug', 'vendorDetails', 'countries'));
+        return view('admin/settings/update_vendor_details')->with(compact('slug', 'vendorDetails', 'countries', 'cities', 'provinces'));
     }
 
     public function viewVendorDetails($id)

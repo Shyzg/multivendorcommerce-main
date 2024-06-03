@@ -26,6 +26,5 @@ class DatabaseSeeder extends Seeder
         $this->call(ProvinceSeeder::class);
         $this->call(CitySeeder::class);
         $this->call(CountriesSeeder::class);
-        $this->call(ShippingChargeSeeder::class);
     }
 }

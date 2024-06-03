@@ -40,13 +40,6 @@ $(function () {
         borderColour: '#e9e9e9',
     });
 
-    // For `modals` we don't want to enable `zoom window`.
-    $('#zoom-pro-quick-view').elevateZoom({
-        gallery: 'gallery-quick-view',
-        galleryActiveClass: 'active',
-        zoomEnabled: false, // false disables zoomwindow from showing
-    });
-
     // Bind resize select on mid header
     $('#select-category', document).ResizeSelect();
     $('.select-hide').removeClass('select-hide');
@@ -322,26 +315,6 @@ $(function () {
 (function ($, window, document) {
     'use strict';
     /**
-     * Initialize Main Slider
-     */
-    const sliderMain = function () {
-        let $owl = $('.slider-main');
-        $owl.owlCarousel({
-            items: 1,
-            autoplay: true,
-			autoplayTimeout: 8000,
-            loop: false,
-            dots: false,
-            rewind: true, // Go backwards when the boundary has reached
-            nav: true,// Show next/prev buttons
-            //   navContainerClass: 'owl-nav' by default,
-            navElement: 'div',
-            navClass: ['main-slider-previous', 'main-slider-next'],// Add these classes on navElement
-            navText: ['<i class="fas fa-angle-left"></i>', '<i class="fas fa-angle-right"></i>'], // by default text prev, next will not show
-        });
-
-    };
-    /**
      * Initialize owl-carousel for all product-place section on page
      */
     const productSlider = function () {
@@ -433,7 +406,6 @@ $(function () {
     };
     
     $(function () {
-        sliderMain();
         productSlider();
         SpecificCategorySlider();
         onTabChangeRefreshPositionOfCarousel();

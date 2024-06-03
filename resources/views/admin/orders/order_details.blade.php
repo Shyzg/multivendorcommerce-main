@@ -30,27 +30,17 @@
         </div>
         @endif
         <div class="row">
-            <div class="col-md-12 grid-margin">
-                <div class="row">
-                    <div class="col-12 col-xl-8 mb-4 mb-xl-0">
-                        <h3 class="font-weight-bold">Order Details</h3>
-                        <h6 class="font-weight-normal mb-0"><a href="{{ url('admin/orders') }}">Back to Orders</a></h6>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
             <div class="col-md-6 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Order Details</h4>
+                        <h4 class="card-title">Detail Pembelian</h4>
                         <div class="form-group" style="height: 15px">
                             <label style="font-weight: 550">Order ID: </label>
                             <label>#{{ $orderDetails['id'] }}</label>
                         </div>
                         <div class="form-group" style="height: 15px">
                             <label style="font-weight: 550">Order Date: </label>
-                            <label>{{ date('Y-m-d h:i:s', strtotime($orderDetails['created_at'])) }}</label>
+                            <label>{{ date('l, d F Y H:i:s a', strtotime($orderDetails['created_at'])) }}</label>
                         </div>
                         <div class="form-group" style="height: 15px">
                             <label style="font-weight: 550">Order Total: </label>

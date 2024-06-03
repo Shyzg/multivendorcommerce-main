@@ -2,9 +2,9 @@
     <table>
         <thead>
             <tr>
-                <th>Product</th>
-                <th>Price</th>
-                <th>Quantity</th>
+                <th>Produk</th>
+                <th>Harga</th>
+                <th>Kuantitas</th>
                 <th>Subtotal</th>
             </tr>
         </thead>
@@ -32,7 +32,7 @@
                             <div class="item-new-price">
                                 IDR {{ $getDiscountAttributePrice['final_price'] }}
                             </div>
-                            <div class="item-old-price" style="margin-left: -40px">
+                            <div class="item-old-price">
                                 IDR {{ $getDiscountAttributePrice['product_price'] }}
                             </div>
                         </div>
@@ -73,15 +73,10 @@
 <div class="calculation u-s-m-b-60">
     <div class="table-wrapper-2">
         <table>
-            <thead>
-                <tr>
-                    <th colspan="2">Cart Totals</th>
-                </tr>
-            </thead>
             <tbody>
                 <tr>
                     <td>
-                        <h3 class="calc-h3 u-s-m-b-0">Sub Total</h3>
+                        <h3 class="calc-h3 u-s-m-b-0">Subtotal</h3>
                     </td>
                     <td>
                         <span class="calc-text">IDR {{ $total_price }}</span>
@@ -89,7 +84,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <h3 class="calc-h3 u-s-m-b-0">Coupon Discount</h3>
+                        <h3 class="calc-h3 u-s-m-b-0">Diskon Kupon</h3>
                     </td>
                     <td>
                         <span class="calc-text couponAmount">

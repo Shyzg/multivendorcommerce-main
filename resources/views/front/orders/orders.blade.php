@@ -4,14 +4,13 @@
 <div class="page-style-a">
     <div class="container">
         <div class="page-intro">
-            <h2>My Orders</h2>
             <ul class="bread-crumb">
                 <li class="has-separator">
                     <i class="ion ion-md-home"></i>
                     <a href="{{ url('/'); }}">Home</a>
                 </li>
                 <li class="is-marked">
-                    <a href="#">Orders</a>
+                    <a href="#">Riwayat Pemesanan</a>
                 </li>
             </ul>
         </div>
@@ -22,11 +21,11 @@
         <div class="row">
             <table class="table table-striped table-borderless">
                 <tr class="table-danger">
-                    <th>Order ID</th>
-                    <th>Ordered Products</th>
+                    <th>ID Pembelian</th>
+                    <th>Produk Pembelian</th>
                     <th>Payment Method</th>
                     <th>Grand Total</th>
-                    <th>Created on</th>
+                    <th>Pada</th>
                     @foreach ($orders as $order)
                 <tr>
                     <td>
@@ -40,7 +39,7 @@
                     </td>
                     <td>{{ $order['payment_method'] }}</td>
                     <td>{{ $order['grand_total'] }}</td>
-                    <td>{{ date('Y-m-d h:i:s', strtotime($order['created_at'])) }}</td>
+                    <td>{{ date('l, d F Y H:i:s', strtotime($order['created_at'])) }}</td>
                 </tr>
                 @endforeach
                 </tr>

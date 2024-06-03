@@ -4,14 +4,13 @@
 <div class="page-style-a">
     <div class="container">
         <div class="page-intro">
-            <h2>My Account</h2>
             <ul class="bread-crumb">
                 <li class="has-separator">
                     <i class="ion ion-md-home"></i>
                     <a href="{{ url('/'); }}">Home</a>
                 </li>
                 <li class="is-marked">
-                    <a href="#">Account</a>
+                    <a href="#">Detail Akun</a>
                 </li>
             </ul>
         </div>
@@ -52,17 +51,24 @@
                     <form id="accountForm" action="javascript:;" method="post">
                         @csrf
                         <div class="u-s-m-b-30">
-                            <label for="user-email">Surel
+                            <label for="user-email">Email
                                 <span class="astk">*</span>
                             </label>
                             <input class="text-field" value="{{ Auth::user()->email }}" style="background-color: #e9e9e9" readonly disabled>
                             <p id="account-email"></p>
                         </div>
                         <div class="u-s-m-b-30">
-                            <label for="user-name">Nama Lengkap
+                            <label for="user-name">Nama
                                 <span class="astk">*</span>
                             </label>
                             <input class="text-field" type="text" id="user-name" name="name" value="{{ Auth::user()->name }}">
+                        </div>
+                        <div class="u-s-m-b-30">
+                            <label for="user-mobile">Nomor Handphone
+                                <span class="astk">*</span>
+                            </label>
+                            <input class="text-field" type="text" id="user-mobile" name="mobile" value="{{ Auth::user()->mobile }}">
+                            <p id="account-mobile"></p>
                         </div>
                         <div class="u-s-m-b-30">
                             <label for="user-address">Alamat
@@ -75,7 +81,6 @@
                                 <span class="astk">*</span>
                             </label>
                             <select class="text-field" id="user-city" name="city" style="color: #495057">
-                                <option value="">Pilih Kota</option>
                                 @foreach ($cities as $city)
                                 <option value="{{ $city['name'] }}" @if ($city['name']==Auth::user()->city) selected @endif>{{ $city['name'] }}</option>
                                 @endforeach
@@ -86,8 +91,7 @@
                                 <span class="astk">*</span>
                             </label>
                             <select class="text-field" id="user-state" name="state" style="color: #495057">
-                                <option value="">Pilih Provinsi</option>
-                                @foreach ($province as $state)
+                                @foreach ($provinces as $state)
                                 <option value="{{ $state['name'] }}" @if ($state['name']==Auth::user()->state) selected @endif>{{ $state['name'] }}</option>
                                 @endforeach
                             </select>
@@ -97,24 +101,16 @@
                                 <span class="astk">*</span>
                             </label>
                             <select class="text-field" id="user-country" name="country" style="color: #495057">
-                                <option value="">Pilih Negara</option>
                                 @foreach ($countries as $country)
-                                <option value="{{ $country['country_name'] }}" @if ($country['country_name']==Auth::user()->country) selected @endif>
-                                    {{ $country['country_name'] }}
+                                <option value="{{ $country['name'] }}" @if ($country['name']==Auth::user()->country) selected @endif>
+                                    {{ $country['name'] }}
                                 </option>
                                 @endforeach
                             </select>
                             <p id="account-country"></p>
                         </div>
-                        <div class="u-s-m-b-30">
-                            <label for="user-mobile">Nomor Handphone
-                                <span class="astk">*</span>
-                            </label>
-                            <input class="text-field" type="text" id="user-mobile" name="mobile" value="{{ Auth::user()->mobile }}">
-                            <p id="account-mobile"></p>
-                        </div>
                         <div class="m-b-45">
-                            <button class="button button-outline-secondary w-100">Perbarui Data Diri</button>
+                            <button class="button button-outline-secondary w-100">Perbarui</button>
                         </div>
                     </form>
                 </div>

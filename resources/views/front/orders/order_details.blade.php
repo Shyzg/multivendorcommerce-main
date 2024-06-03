@@ -4,14 +4,14 @@
 <div class="page-style-a">
     <div class="container">
         <div class="page-intro">
-            <h2>Order #{{ $orderDetails['id'] }} Details</h2>
+            <h2>Detail Pemesanan #{{ $orderDetails['id'] }}</h2>
             <ul class="bread-crumb">
                 <li class="has-separator">
                     <i class="ion ion-md-home"></i>
                     <a href="{{ url('/'); }}">Home</a>
                 </li>
                 <li class="is-marked">
-                    <a href="{{ url('user/orders') }}">Orders</a>
+                    <a href="{{ url('user/orders') }}">Riwayat Pemesanan</a>
                 </li>
             </ul>
         </div>
@@ -23,12 +23,12 @@
             <table class="table table-striped table-borderless">
                 <tr class="table-danger">
                     <td colspan="2">
-                        <strong>Order Details</strong>
+                        <strong>Detail Pemesanan</strong>
                     </td>
                 </tr>
                 <tr>
                     <td>Order Date</td>
-                    <td>{{ date('Y-m-d h:i:s', strtotime($orderDetails['created_at'])) }}</td>
+                    <td>{{ date('l, d F Y H:i:s', strtotime($orderDetails['created_at'])) }}</td>
                 </tr>
                 <tr>
                     <td>Order Total</td>

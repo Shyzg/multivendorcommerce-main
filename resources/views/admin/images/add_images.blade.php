@@ -4,19 +4,10 @@
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="row">
-            <div class="col-md-12 grid-margin">
-                <div class="row">
-                    <div class="col-12 col-xl-8 mb-4 mb-xl-0">
-                        <h4 class="card-title">Images</h4>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6 grid-margin stretch-card">
+            <div class="col grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Add Images</h4>
+                        <h4 class="card-title">Tambah Gambar</h4>
                         @if (Session::has('error_message'))
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             <strong>Error:</strong> {{ Session::get('error_message') }}
@@ -43,16 +34,9 @@
                             </button>
                         </div>
                         @endif
-                        <form class="forms-sample" action="{{ url('admin/add-images/' . $product['id']) }}" method="post" enctype="multipart/form-data">
+                        <form class="forms-sample mb-2" action="{{ url('admin/add-images/' . $product['id']) }}" method="post" enctype="multipart/form-data">
                             @csrf
-                            <div class="form-group">
-                                <label for="product_name">Product Name:</label>
-                                &nbsp; {{ $product['product_name'] }}
-                            </div>
-                            <div class="form-group">
-                                <label for="product_price">Product Price:</label>
-                                &nbsp; {{ $product['product_price'] }}
-                            </div>
+                            <div class="form-group">{{ $product['product_name'] }}</div>
                             <div class="form-group">
                                 @if (!empty($product['product_image']))
                                 <img style="width: 120px" src="{{ url('front/images/product_images/small/' . $product['product_image']) }}">
@@ -68,12 +52,9 @@
                             <button type="submit" class="btn btn-primary mr-2">Submit</button>
                             <button type="reset" class="btn btn-light">Cancel</button>
                         </form>
-                        <br><br>
-                        <h4 class="card-title">Product Images</h4>
-                        <table id="products" class="table table-bordered">
+                        <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
                                     <th>Image</th>
                                     <th>Actions</th>
                                 </tr>
@@ -81,13 +62,12 @@
                             <tbody>
                                 @foreach ($product['images'] as $image)
                                 <tr>
-                                    <td>{{ $image['id'] }}</td>
                                     <td>
                                         <img src="{{ url('front/images/product_images/small/' . $image['image']) }}">
                                     </td>
                                     <td>
-                                        <a href="JavaScript:void(0)" class="confirmDelete" module="image" moduleid="{{ $image['id'] }}">
-                                            <i style="font-size: 25px" class="mdi mdi-file-excel-box"></i>
+                                        <a href="JavaScript:void(0)" class="btn btn-outline-danger confirmDelete" module="image" moduleid="{{ $image['id'] }}">
+                                            Hapus
                                         </a>
                                     </td>
                                 </tr>

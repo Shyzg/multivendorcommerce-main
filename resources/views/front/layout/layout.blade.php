@@ -19,18 +19,13 @@
     <link rel="stylesheet" href="{{ url('front/css/utility.css') }}">
     <link rel="stylesheet" href="{{ url('front/css/bundle.css') }}">
     <link rel="stylesheet" href="{{ url('front/css/easyzoom.css') }}">
-    <link rel="stylesheet" href="{{ url('front/css/custom.css') }}">
 </head>
 
 <body>
-    <div class="loader">
-        <img src="{{ asset('front/images/loaders/loader.gif') }}" alt="loading..." />
-    </div>
     <div id="app">
         @include('front.layout.header')
         @yield('content')
         @include('front.layout.footer')
-        @include('front.layout.modals')
     </div>
     <noscript>
         <div class="app-issue">

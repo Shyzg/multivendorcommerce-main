@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use Intervention\Image\Facades\Image;
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductsImage;
 use App\Models\ProductsAttribute;
@@ -46,7 +46,7 @@ class ProductsController extends Controller
         Session::put('page', 'products');
 
         if ($id == '') {
-            $title = 'Tambahkan Produk';
+            $title = 'Tambah Produk';
             $product = new Product();
             $message = 'Berhasil menambahkan produk';
         } else {

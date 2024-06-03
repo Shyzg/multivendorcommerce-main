@@ -4,12 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
 use App\Models\Coupon;
 use App\Models\Section;
 use App\Models\User;
-use Illuminate\Support\Str;
 
 class CouponsController extends Controller
 {
@@ -43,14 +43,14 @@ class CouponsController extends Controller
             $coupon = new Coupon;
             $selCats   = array();
             $selUsers  = array();
-            $message = 'Berhasil menambahkan coupon';
+            $message = 'Berhasil menambahkan kupon';
         } else {
             $title = 'Ubah Kupon';
             $coupon = Coupon::find($id);
             // Memisahkan data dalam bentuk string untuk menjadi array contoh (['Makanan', 'Minuman'])
             $selCats   = explode(',', $coupon['categories']);
             $selUsers  = explode(',', $coupon['users']);
-            $message = 'Berhasil memperbarui coupon';
+            $message = 'Berhasil memperbarui kupon';
         }
         if ($request->isMethod('post')) {
             $data = $request->all();
@@ -67,8 +67,8 @@ class CouponsController extends Controller
                 'coupon_option.required' => 'Harus memilih opsi kupon',
                 'coupon_type.required'   => 'Harus memilih tipe kupon',
                 'amount_type.required'   => 'Harus memilih tipe jumlah',
-                'amount.required'        => 'Jumlah tipe kupon harus diisi',
-                'amount.numeric'         => 'Jumlah tipe kupon harus diisikan dengan angka',
+                'amount.required'        => 'Jumlah kupon harus diisi',
+                'amount.numeric'         => 'Jumlah kupon harus diisikan dengan angka',
                 'expiry_date.required'   => 'Harus memilih tanggal berakhir kupon',
             ];
 

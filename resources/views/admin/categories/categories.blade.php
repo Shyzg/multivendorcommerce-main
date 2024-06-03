@@ -4,11 +4,11 @@
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="row">
-            <div class="col-lg-12 grid-margin stretch-card">
+            <div class="col grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Categories</h4>
-                        <a href="{{ url('admin/add-edit-category') }}" style="max-width: 150px; float: right; display: inline-block" class="btn btn-block btn-primary">Add Category</a>
+                        <h4 class="card-title">Kategori</h4>
+                        <a href="{{ url('admin/add-edit-category') }}" style="max-width: 200px; float: right; display: inline-block" class="btn btn-block btn-primary">Tambahkan Kategori</a>
                         @if (Session::has('success_message'))
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                             <strong>Success:</strong> {{ Session::get('success_message') }}
@@ -21,8 +21,7 @@
                             <table id="categories" class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
-                                        <th>Category Name</th>
+                                        <th>Nama Kategori</th>
                                         <th>Parent Section</th>
                                         <th>URL</th>
                                         <th>Actions</th>
@@ -31,17 +30,16 @@
                                 <tbody>
                                     @foreach ($categories as $category)
                                     <tr>
-                                        <td>{{ $category['id'] }}</td>
                                         <td>{{ $category['category_name'] }}</td>
                                         <td>{{ $category['section']['name'] }}</td>
                                         <td>{{ $category['url'] }}</td>
                                         <td>
-                                            <a href="{{ url('admin/add-edit-category/' . $category['id']) }}">
-                                                <i style="font-size: 25px" class="mdi mdi-pencil-box"></i>
-                                            </a>
-                                            <a href="JavaScript:void(0)" class="confirmDelete" module="category" moduleid="{{ $category['id'] }}"> {{-- Check admin/js/custom.js and web.php (routes) --}}
-                                                <i style="font-size: 25px" class="mdi mdi-file-excel-box"></i>
-                                            </a>
+                                            <div class="d-flex flex-column">
+                                                <a href="{{ url('admin/add-edit-category/' . $category['id']) }}" class="btn btn-outline-primary mb-2">Perbarui Kategori</a>
+                                                <a href="JavaScript:void(0)" class="btn btn-outline-danger confirmDelete" module="product" moduleid="{{ $category['id'] }}">
+                                                    Hapus
+                                                </a>
+                                            </div>
                                         </td>
                                     </tr>
                                     @endforeach

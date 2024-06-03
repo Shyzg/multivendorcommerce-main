@@ -5,35 +5,39 @@ namespace App\Http\Controllers\Front;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Vendor;
 use App\Models\Admin;
-use Illuminate\Support\Facades\Redirect;
+use App\Models\City;
+use App\Models\Country;
+use App\Models\Province;
 
 class VendorController extends Controller
 {
     public function loginRegister()
     {
-        return view('front.vendors.login_register');
+        $countries = Country::orderBy('name', 'asc')->get();
+        $cities = City::orderBy('name', 'asc')->get();
+        $provinces = Province::orderBy('name', 'asc')->get();
+
+        return view('front.vendors.login_register')->with(compact('countries', 'cities', 'provinces'));
     }
 
     public function vendorRegister(Request $request)
     {
         if ($request->isMethod('post')) {
             $data = $request->all();
-            $rules = [
-                'name'          => 'required',
-                'email'         => 'required|email|unique:admins|unique:vendors',
-                'mobile'        => 'required|min:10|numeric|unique:admins|unique:vendors'
-            ];
-            $customMessages = [
-                'name.required'             => 'Name is required',
-                'email.required'            => 'Email is required',
-                'email.unique'              => 'Email alreay exists',
-                'mobile.required'           => 'Mobile is required',
-                'mobile.unique'             => 'Mobile alreay exists'
-            ];
-            $validator = Validator::make($data, $rules, $customMessages);
+            $validator = Validator::make($request->all(), [
+                'name'      => 'required',
+                'mobile'    => 'required|numeric|unique:admins|unique:vendors',
+                'address'   => 'required|string|max:100',
+                'country'   => 'required|string|max:100',
+                'state'     => 'required|string|max:100',
+                'city'      => 'required|string|max:100',
+                'email'     => 'required|email|unique:admins|unique:vendors',
+                'password'  => 'required|min:6'
+            ]);
 
             if ($validator->fails()) {
                 return Redirect::back()->withErrors($validator);
@@ -44,6 +48,10 @@ class VendorController extends Controller
             $vendor = new Vendor;
             $vendor->name   = $data['name'];
             $vendor->mobile = $data['mobile'];
+            $vendor->address = $data['address'];
+            $vendor->country = $data['country'];
+            $vendor->state = $data['state'];
+            $vendor->city = $data['city'];
             $vendor->email  = $data['email'];
             date_default_timezone_set('Asia/Jakarta');
             $vendor->created_at = date('Y-m-d H:i:s');
@@ -52,8 +60,8 @@ class VendorController extends Controller
             $vendor_id = DB::getPdo()->lastInsertId();
 
             $admin = new Admin;
-            $admin->type      = 'vendor';
             $admin->vendor_id = $vendor_id;
+            $admin->type      = 'vendor';
             $admin->name      = $data['name'];
             $admin->mobile    = $data['mobile'];
             $admin->email     = $data['email'];
@@ -65,7 +73,7 @@ class VendorController extends Controller
 
             DB::commit();
 
-            $message = 'Berhasil mendaftarkan akun sebagai vendor, silahkan login.';
+            $message = 'Berhasil mendaftarkan akun sebagai penjual';
 
             return redirect()->back()->with('success_message', $message);
         }

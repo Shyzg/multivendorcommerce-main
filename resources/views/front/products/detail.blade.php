@@ -1,63 +1,13 @@
 @extends('front.layout.layout')
 
 @section('content')
-<style>
-    * {
-        margin: 0;
-        padding: 0;
-    }
-
-    .rate {
-        float: left;
-        height: 46px;
-        padding: 0 10px;
-    }
-
-    .rate:not(:checked)>input {
-        /* position:absolute; */
-        position: inherit;
-        top: -9999px;
-    }
-
-    .rate:not(:checked)>label {
-        float: right;
-        width: 1em;
-        overflow: hidden;
-        white-space: nowrap;
-        cursor: pointer;
-        font-size: 30px;
-        color: #ccc;
-    }
-
-    .rate:not(:checked)>label:before {
-        content: '★ ';
-    }
-
-    .rate>input:checked~label {
-        color: #ffc700;
-    }
-
-    .rate:not(:checked)>label:hover,
-    .rate:not(:checked)>label:hover~label {
-        color: #deb217;
-    }
-
-    .rate>input:checked+label:hover,
-    .rate>input:checked+label:hover~label,
-    .rate>input:checked~label:hover,
-    .rate>input:checked~label:hover~label,
-    .rate>label:hover~input:checked~label {
-        color: #c59b08;
-    }
-</style>
 <div class="page-style-a">
     <div class="container">
         <div class="page-intro">
-            <h2>Detail</h2>
             <ul class="bread-crumb">
                 <li class="has-separator">
                     <i class="ion ion-md-home"></i>
-                    <a href="{{ url('/'); }}">Home</a>
+                    <a href="{{ url('/') }}">Home</a>
                 </li>
                 <li class="is-marked">
                     <a href="javascript:;">Detail</a>
@@ -131,7 +81,7 @@
                         </ul>
                     </div>
                     <div class="section-2-short-description u-s-p-y-14">
-                        <h6 class="information-heading u-s-m-b-8">Description:</h6>
+                        <h6 class="information-heading u-s-m-b-8">Deskripsi</h6>
                         <p>{{ $productDetails['description'] }}</p>
                     </div>
                     <div class="section-3-price-original-discount u-s-p-y-14">
@@ -142,7 +92,7 @@
                                 <h4>IDR {{ $getDiscountPrice }}</h4>
                             </div>
                             <div class="original-price">
-                                <span>Original Price:</span>
+                                <span>Harga Normal</span>
                                 <span>IDR {{ $productDetails['product_price'] }}</span>
                             </div>
                             @else
@@ -153,27 +103,25 @@
                         </span>
                     </div>
                     <div class="section-4-sku-information u-s-p-y-14">
-                        <h6 class="information-heading u-s-m-b-8">Sku Information:</h6>
+                        <h6 class="information-heading u-s-m-b-8">Informasi SKU</h6>
                         <div class="availability">
-                            <span>Availability:</span>
+                            <span>Ketersediaan</span>
                             @if ($totalStock > 0)
-                            <span>In Stock</span>
+                            <span>Tersedia</span>
                             @else
-                            <span style="color: red">Out of Stock (Sold-out)</span>
+                            <span style="color: red">Habis</span>
                             @endif
                         </div>
                         @if ($totalStock > 0)
                         <div class="left">
-                            <span>Only:</span>
-                            <span>{{ $totalStock }} left</span>
+                            <span>Stok</span>
+                            <span>{{ $totalStock }}</span>
                         </div>
                         @endif
                     </div>
-                    @if(isset($productDetails['vendor']))
+                    @if (isset($productDetails['vendor']))
                     <div>
-                        Sold by: <a href="/products/{{ $productDetails['vendor']['id'] }}">
-                            {{ $productDetails['vendor']['vendorbusinessdetails']['shop_name'] }}
-                        </a>
+                        Penjual <a href="/products/{{ $productDetails['vendor']['id'] }}">{{ $productDetails['vendor']['vendorbusinessdetails']['shop_name'] }}</a>
                     </div>
                     @endif
                     <form action="{{ url('cart/add') }}" method="Post" class="post-form">
@@ -181,13 +129,14 @@
                         <input type="hidden" name="product_id" value="{{ $productDetails['id'] }}">
                         <div class="section-6-social-media-quantity-actions u-s-p-y-14">
                             <div class="quantity-wrapper u-s-m-b-22">
-                                <span>Quantity:</span>
+                                <span>Kuantitas</span>
                                 <div class="quantity">
                                     <input class="quantity-text-field" type="number" name="quantity" value="1">
                                 </div>
                             </div>
                             <div>
-                                <button class="button button-outline-secondary" type="submit">Tambahkan ke keranjang</button>
+                                <button class="button button-outline-secondary" type="submit">Tambahkan Kedalam
+                                    Keranjang</button>
                             </div>
                         </div>
                     </form>

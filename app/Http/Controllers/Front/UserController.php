@@ -20,7 +20,11 @@ class UserController extends Controller
 {
     public function loginRegister()
     {
-        return view('front.users.login_register');
+        $countries = Country::orderBy('name', 'asc')->get();
+        $cities = City::orderBy('name', 'asc')->get();
+        $provinces = Province::orderBy('name', 'asc')->get();
+
+        return view('front.users.login_register')->with(compact('countries', 'cities', 'provinces'));;
     }
 
     public function userRegister(Request $request)
@@ -28,10 +32,14 @@ class UserController extends Controller
         if ($request->isMethod('post')) {
             $data = $request->all();
             $validator = Validator::make($request->all(), [
-                'name'     => 'required|string|min:2|max:128',
-                'mobile'   => 'required|numeric|min_digits:10|max_digits:12',
-                'email'    => 'required|email|max:150|unique:users',
-                'password' => 'required|min:6'
+                'name'      => 'required|string|min:2|max:128',
+                'mobile'    => 'required|numeric|min_digits:10|max_digits:12',
+                'address'   => 'required|string|max:100',
+                'country'   => 'required|string|max:100',
+                'state'     => 'required|string|max:100',
+                'city'      => 'required|string|max:100',
+                'email'     => 'required|email|max:150|unique:users',
+                'password'  => 'required|min:6'
             ]);
 
             if ($validator->fails()) {
@@ -43,13 +51,17 @@ class UserController extends Controller
             $user = new User;
             $user->name     = $data['name'];
             $user->mobile   = $data['mobile'];
+            $user->address  = $data['address'];
+            $user->country  = $data['country'];
+            $user->state    = $data['state'];
+            $user->city     = $data['city'];
             $user->email    = $data['email'];
             $user->password = bcrypt($data['password']);
             $user->save();
 
             DB::commit();
 
-            $message = 'Berhasil mendaftarkan akun, silahkan login.';
+            $message = 'Berhasil mendaftarkan akun sebagai pembeli';
 
             return redirect()->back()->with('success_message', $message);
         }
@@ -109,26 +121,26 @@ class UserController extends Controller
             $data = $request->all();
             $validator = Validator::make($request->all(), [
                 'name'    => 'required|string|max:100',
+                'mobile'  => 'required|numeric|digits:12',
+                'address' => 'required|string|max:100',
                 'city'    => 'required|string|max:100',
                 'state'   => 'required|string|max:100',
-                'address' => 'required|string|max:100',
-                'country' => 'required|string|max:100',
-                'mobile'  => 'required|numeric|digits:12'
+                'country' => 'required|string|max:100'
             ]);
 
             if ($validator->passes()) {
                 User::where('id', Auth::user()->id)->update([
                     'name'    => $data['name'],
                     'mobile'  => $data['mobile'],
+                    'address' => $data['address'],
                     'city'    => $data['city'],
                     'state'   => $data['state'],
-                    'country' => $data['country'],
-                    'address' => $data['address']
+                    'country' => $data['country']
                 ]);
 
                 return response()->json([
                     'type'    => 'success',
-                    'message' => 'Your contact/billing details successfully updated!'
+                    'message' => 'Berhasil mengubah informasi akun'
                 ]);
             } else {
                 return response()->json([
@@ -137,11 +149,11 @@ class UserController extends Controller
                 ]);
             }
         } else {
-            $countries = Country::get();
-            $cities = City::get();
-            $province = Province::get();
+            $countries = Country::orderBy('name', 'asc')->get();
+            $cities = City::orderBy('name', 'asc')->get();
+            $provinces = Province::orderBy('name', 'asc')->get();
 
-            return view('front.users.user_account')->with(compact('countries', 'cities', 'province'));
+            return view('front.users.user_account')->with(compact('countries', 'cities', 'provinces'));
         }
     }
 
@@ -166,12 +178,12 @@ class UserController extends Controller
 
                     return response()->json([
                         'type'    => 'success',
-                        'message' => 'Account password successfully updated!'
+                        'message' => 'Berhasil mengubah kata sandi akun'
                     ]);
                 } else {
                     return response()->json([
                         'type'    => 'incorrect',
-                        'message' => 'Your current password is incorrect!'
+                        'message' => 'Kata sandi yang digunakan saat ini tidak sesuai'
                     ]);
                 }
             } else {

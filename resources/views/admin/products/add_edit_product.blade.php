@@ -4,16 +4,7 @@
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="row">
-            <div class="col-md-12 grid-margin">
-                <div class="row">
-                    <div class="col-12 col-xl-8 mb-4 mb-xl-0">
-                        <h4 class="card-title">Products</h4>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6 grid-margin stretch-card">
+            <div class="col grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">{{ $title }}</h4>

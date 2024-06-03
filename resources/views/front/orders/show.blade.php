@@ -39,14 +39,14 @@
 <div class="page-style-a">
     <div class="container">
         <div class="page-intro">
-            <h2>My Orders</h2>
+            <h2>Pembayaran</h2>
             <ul class="bread-crumb">
                 <li class="has-separator">
                     <i class="ion ion-md-home"></i>
                     <a href="{{ url('/') }}">Home</a>
                 </li>
                 <li class="is-marked">
-                    <a href="#">Payment</a>
+                    <a href="#">Pembayaran</a>
                 </li>
             </ul>
         </div>
@@ -70,20 +70,8 @@
                             <td><b>Rp {{ number_format($order->grand_total, 2, ',', '.') }}</b></td>
                         </tr>
                         <tr>
-                            <td>Status Pembayaran</td>
-                            <td>
-                                <b>
-                                    @if ($order->payment_status == 'Paid')
-                                    Paid
-                                    @else
-                                    Pending
-                                    @endif
-                                </b>
-                            </td>
-                        </tr>
-                        <tr>
                             <td>Tanggal</td>
-                            <td><b>{{ $order->created_at->format('d M Y H:i') }}</b></td>
+                            <td><b>{{ $order->created_at->format('l, d F Y H:i:s') }}</b></td>
                         </tr>
                     </table>
                 </div>
@@ -95,11 +83,7 @@
                     <h5>Pembayaran</h5>
                 </div>
                 <div class="card-body">
-                    @if ($order->payment_status == 'Paid')
-                    Pembayaran berhasil
-                    @else
                     <button class="btn btn-primary" id="pay-button">Bayar Sekarang</button>
-                    @endif
                 </div>
             </div>
         </div>
@@ -114,25 +98,16 @@
         e.preventDefault();
 
         snap.pay('{{ $snapToken }}', {
-            // Optional
             onSuccess: function(result) {
-                /* You may add your own js here, this is just example */
-                // document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
                 window.location.href = '/payments/finish?message=' + encodeURIComponent(JSON
                     .stringify(result));
             },
-            // Optional
             onPending: function(result) {
-                /* You may add your own js here, this is just example */
-                // document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
                 window.location.href = '/payments/unfinish?message=' + encodeURIComponent(JSON
                     .stringify(result));
 
             },
-            // Optional
             onError: function(result) {
-                /* You may add your own js here, this is just example */
-                // document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
                 window.location.href = '/payments/error?message=' + encodeURIComponent(JSON
                     .stringify(result));
 
