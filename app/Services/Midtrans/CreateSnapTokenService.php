@@ -18,14 +18,17 @@ class CreateSnapTokenService extends Midtrans
 
     public function getSnapToken()
     {
-        $item_details = OrdersProduct::where('order_id', $this->order->id)->get();
+        $item_details = OrdersProduct::with('product')
+            ->where('order_id', $this->order->id) // Ambil item berdasarkan order_id
+            ->get();
+
         $details = [];
-        foreach ($item_details as $key => $value) {
+        foreach ($item_details as $item) {
             $details[] = [
-                'id' => $value->product_id,
-                'price' => round($value->product_price),
-                'quantity' => $value->product_qty,
-                'name' => $value->product_name
+                'id' => $item->product_id, // ID produk
+                'price' => round($item->product_price), // Harga produk dibulatkan
+                'quantity' => $item->product_qty, // Kuantitas produk
+                'name' => $item->product->product_name // Nama produk dari relasi product
             ];
         }
 

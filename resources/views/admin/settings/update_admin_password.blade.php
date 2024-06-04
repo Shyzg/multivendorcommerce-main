@@ -7,7 +7,7 @@
             <div class="col">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Perbarui Kata Sandi Admin</h4>
+                        <h4 class="card-title">Ubah Kata Sandi Admin</h4>
                         @if (Session::has('error_message'))
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             <strong>Error:</strong> {{ Session::get('error_message') }}
@@ -26,14 +26,6 @@
                         @endif
                         <form class="forms-sample" action="{{ url('admin/update-admin-password') }}" method="post">
                             @csrf
-                            <div class="form-group">
-                                <label>Email Admin</label>
-                                <input class="form-control" value="{{ $adminDetails['email'] }}" readonly>
-                            </div>
-                            <div class="form-group">
-                                <label>Tipe Admin</label>
-                                <input class="form-control" value="{{ $adminDetails['type'] }}" readonly>
-                            </div>
                             <div class="form-group">
                                 <label for="current_password">Kata Sandi Saat Ini</label>
                                 <input type="password" class="form-control" id="current_password" placeholder="Masukkan Kata Sandi Saat Ini" name="current_password" required>

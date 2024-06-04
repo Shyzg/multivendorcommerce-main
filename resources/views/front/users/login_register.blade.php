@@ -8,7 +8,7 @@
             <ul class="bread-crumb">
                 <li class="has-separator">
                     <i class="ion ion-md-home"></i>
-                    <a href="{{ url('/'); }}">Home</a>
+                    <a href="{{ url('/') }}">Home</a>
                 </li>
                 <li class="is-marked">
                     <a href="#">Account</a>
@@ -94,7 +94,7 @@
                             <label for="address">Alamat
                                 <span class="astk">*</span>
                             </label>
-                            <input type="text" id="address" class="text-field" placeholder="081234567890" name="address">
+                            <input type="text" id="address" class="text-field" placeholder="Babatan Mukti A-15" name="address">
                             <p id="register-address"></p>
                         </div>
                         <div class="form-group">

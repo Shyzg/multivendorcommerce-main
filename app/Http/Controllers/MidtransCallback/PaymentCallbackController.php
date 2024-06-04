@@ -20,19 +20,19 @@ class PaymentCallbackController extends Controller
 
             if ($callback->isSuccess()) {
                 Order::where('id', $order->id)->update([
-                    'order_status' => 'paid'
+                    'order_status' => 'Lunas'
                 ]);
             }
 
             if ($callback->isExpire()) {
                 Order::where('id', $order->id)->update([
-                    'order_status' => 'expired'
+                    'order_status' => 'Kaldaluarsa'
                 ]);
             }
 
             if ($callback->isCancelled()) {
                 Order::where('id', $order->id)->update([
-                    'order_status' => 'Cancelled'
+                    'order_status' => 'Dibatalkan'
                 ]);
             }
 

@@ -34,28 +34,28 @@
                             </button>
                         </div>
                         @endif
-                        <form class="forms-sample" @if (empty($category['id'])) action="{{ url('admin/add-edit-category') }}" @else action="{{ url('admin/add-edit-category/' . $category['id']) }}" @endif method="post" enctype="multipart/form-data">
+                        <form class="forms-sample" @if (empty($category->id)) action="{{ url('admin/add-edit-category') }}" @else action="{{ url('admin/add-edit-category/' . $category->id) }}" @endif method="post" enctype="multipart/form-data">
                             @csrf
                             <div class="form-group">
                                 <label for="category_name">Nama Kategori</label>
-                                <input type="text" class="form-control" id="category_name" placeholder="Masukkan Nama Kategori" name="category_name" @if (!empty($category['category_name'])) value="{{ $category['category_name'] }}" @else value="{{ old('category_name') }}" @endif>
+                                <input type="text" class="form-control" id="category_name" placeholder="Masukkan Nama Kategori" name="category_name" @if (!empty($category->category_name)) value="{{ $category->category_name }}" @else value="{{ old('category_name') }}" @endif>
                             </div>
                             <div class="form-group">
                                 <label for="section_id">Pilih Section</label>
                                 <select name="section_id" id="section_id" class="form-control" style="color: #000">
                                     @foreach ($getSections as $section)
-                                    <option value="{{ $section['id'] }}" @if (!empty($category['section_id']) && $category['section_id']==$section['id']) selected @endif>{{ $section['name'] }}
+                                    <option value="{{ $section->id }}" @if (!empty($category->section_id) && $category->section_id==$section->id) selected @endif>{{ $section->name }}
                                     </option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label for="category_discount">Diskon Kategori</label>
-                                <input type="text" class="form-control" id="category_discount" placeholder="Masukkan Diskon Kategori" name="category_discount" @if (!empty($category['category_discount'])) value="{{ $category['category_discount'] }}" @else value="{{ old('category_discount') }}" @endif>
+                                <input type="text" class="form-control" id="category_discount" placeholder="Masukkan Diskon Kategori" name="category_discount" @if (!empty($category->category_discount)) value="{{ $category->category_discount }}" @else value="{{ old('category_discount') }}" @endif>
                             </div>
                             <div class="form-group">
                                 <label for="url">URL</label>
-                                <input type="text" class="form-control" id="url" placeholder="Masukkan URL Kategori" name="url" @if (!empty($category['url'])) value="{{ $category['url'] }}" @else value="{{ old('url') }}" @endif>
+                                <input type="text" class="form-control" id="url" placeholder="Masukkan URL Kategori" name="url" @if (!empty($category->url)) value="{{ $category->url }}" @else value="{{ old('url') }}" @endif>
                             </div>
                             <button type="submit" class="btn btn-primary mr-2">Submit</button>
                             <button type="reset" class="btn btn-light">Cancel</button>

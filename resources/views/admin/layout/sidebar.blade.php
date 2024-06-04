@@ -10,13 +10,13 @@
         <li class="nav-item">
             <a @if (Session::get('page')=='update_personal_details' || Session::get('page')=='update_business_details' ) style="background: #052CA3 !important; color: #FFF !important" @endif class="nav-link" data-toggle="collapse" href="#ui-vendors" aria-expanded="false" aria-controls="ui-vendors">
                 <i class="icon-layout menu-icon"></i>
-                <span class="menu-title">Detil Penjual</span>
+                <span class="menu-title">Pengaturan Penjual</span>
                 <i class="menu-arrow"></i>
             </a>
             <div class="collapse" id="ui-vendors">
                 <ul class="nav flex-column sub-menu" style="background: #fff !important; color: #052CA3 !important">
-                    <li class="nav-item"> <a @if (Session::get('page')=='update_personal_details' ) style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif class="nav-link" href="{{ url('admin/update-vendor-details/personal') }}">Detil Penjual</a></li>
-                    <li class="nav-item"> <a @if (Session::get('page')=='update_business_details' ) style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif class="nav-link" href="{{ url('admin/update-vendor-details/business') }}">Detil Toko</a>
+                    <li class="nav-item"> <a @if (Session::get('page')=='update_personal_details' ) style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif class="nav-link" href="{{ url('admin/update-vendor-details/personal') }}">Detail Penjual</a></li>
+                    <li class="nav-item"> <a @if (Session::get('page')=='update_business_details' ) style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif class="nav-link" href="{{ url('admin/update-vendor-details/business') }}">Detail Toko</a>
                     </li>
                 </ul>
             </div>
@@ -55,9 +55,8 @@
             </a>
             <div class="collapse" id="ui-settings">
                 <ul class="nav flex-column sub-menu" style="background: #fff !important; color: #052CA3 !important">
-                    <li class="nav-item"> <a @if (Session::get('page')=='update_admin_password' ) style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif class="nav-link" href="{{ url('admin/update-admin-password') }}">Perbarui Kata Sandi
-                            Admin</a></li>
-                    <li class="nav-item"> <a @if (Session::get('page')=='update_admin_details' ) style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif class="nav-link" href="{{ url('admin/update-admin-details') }}">Perbarui Detil Admin</a>
+                    <li class="nav-item"> <a @if (Session::get('page')=='update_admin_password' ) style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif class="nav-link" href="{{ url('admin/update-admin-password') }}">Kata Sandi Admin</a></li>
+                    <li class="nav-item"> <a @if (Session::get('page')=='update_admin_details' ) style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif class="nav-link" href="{{ url('admin/update-admin-details') }}">Detail Admin</a>
                     </li>
                 </ul>
             </div>

@@ -28,11 +28,11 @@
                                 <tbody>
                                     @foreach ($sections as $section)
                                     <tr>
-                                        <td>{{ $section['name'] }}</td>
+                                        <td>{{ $section->name }}</td>
                                         <td>
                                             <div class="d-flex flex-column">
-                                                <a href="{{ url('admin/add-edit-section/' . $section['id']) }}" class="btn btn-outline-primary mb-2">Perbarui Section</a>
-                                                <a href="JavaScript:void(0)" class="btn btn-outline-danger confirmDelete" module="product" moduleid="{{ $section['id'] }}">
+                                                <a href="{{ url('admin/add-edit-section/' . $section->id) }}" class="btn btn-outline-primary mb-2">Perbarui Section</a>
+                                                <a href="JavaScript:void(0)" class="btn btn-outline-danger confirmDelete" module="product" moduleid="{{ $section->id }}">
                                                     Hapus
                                                 </a>
                                             </div>

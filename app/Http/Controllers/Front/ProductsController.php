@@ -29,79 +29,51 @@ class ProductsController extends Controller
 {
     public function listing(Request $request)
     {
-        if ($request->ajax()) {
-            $data = $request->all();
-            $url          = $data['url'];
-            $categoryCount = Category::where(['url' => $url])->count();
+        // URL sekarang
+        $url = Route::current()->uri();
+        // Hitung jumlah kategori dengan URL tersebut
+        $categoryCount = Category::where('url', $url)->count();
 
-            if ($categoryCount > 0) {
-                $categoryDetails = Category::categoryDetails($url);
-                $categoryProducts = Product::whereIn('category_id', $categoryDetails['catIds']);
-                $productIds = array();
+        if ($categoryCount > 0) {
+            // Ambil detail kategori berdasarkan URL
+            $categoryDetails = Category::categoryDetails($url);
+            // Ambil produk berdasarkan category_id
+            $categoryProducts = Product::whereIn('category_id', $categoryDetails['catIds'])
+                ->paginate(30);
 
-                if (isset($data['price']) && !empty($data['price'])) {
-                    foreach ($data['price'] as $key => $price) {
-                        $priceArr = explode('-', $price);
-                        if (isset($priceArr[0]) && isset($priceArr[1])) {
-                            $productIds[] = Product::select('id')->whereBetween('product_price', [$priceArr[0], $priceArr[1]])->pluck('id');
-                        }
-                    }
-
-                    $productIds = array_unique(Arr::flatten($productIds));
-                    $categoryProducts->whereIn('products.id', $productIds);
-                }
-
-                $categoryProducts = $categoryProducts->paginate(30);
-
-                return view('front.products.ajax_products_listing')->with(compact('categoryDetails', 'categoryProducts', 'url'));
-            } else {
-                abort(404);
-            }
+            return view('front.products.listing', compact('categoryDetails', 'categoryProducts', 'url'));
         } else {
-            $url = Route::getFacadeRoot()->current()->uri();
-            $categoryCount = Category::where(['url' => $url])->count();
-
-            if ($categoryCount > 0) {
-                $categoryDetails = Category::categoryDetails($url);
-                $categoryProducts = Product::whereIn('category_id', $categoryDetails['catIds']);
-                $categoryProducts = $categoryProducts->paginate(30);
-
-                return view('front.products.listing')->with(compact('categoryDetails', 'categoryProducts', 'url'));
-            } else {
-                abort(404);
-            }
+            abort(404);
         }
     }
 
     public function vendorListing($vendorid)
     {
+        // Mengambil detail toko vendor berdasarkan ID vendor
         $getVendorShop = Vendor::getVendorShop($vendorid);
-        $vendorProducts = Product::where('vendor_id', $vendorid);
-        $vendorProducts = $vendorProducts->paginate(30);
+        // Mengambil produk vendor dan mem-paginate hasilnya, 30 per halaman
+        $vendorProducts = Product::where('vendor_id', $vendorid)->paginate(30);
 
-        return view('front.products.vendor_listing')->with(compact('getVendorShop', 'vendorProducts'));
+        return view('front.products.vendor_listing', compact('getVendorShop', 'vendorProducts'));
     }
 
     public function detail($id)
     {
         $productDetails = Product::with([
-            'section', 'category', 'attributes' => function ($query) {
-                $query->where('stock', '>', 0);
-            }, 'images', 'vendor'
+            // Mengambil produk dengan relasi section, category, attributes (stok > 0), images, dan vendor
+            'section', 'category', 'attributes' => fn ($query) => $query->where('stock', '>', 0),
+            'images', 'vendor'
         ])->find($id);
+        // Menghitung total stok produk
+        $totalStock = ProductsAttribute::where('product_id', $id)->sum('stock');
+        // Mendapatkan detail kategori berdasarkan URL kategori produk
         $categoryDetails = Category::categoryDetails($productDetails['category']['url'] ?? null);
-
-        if (empty(Session::get('session_id'))) {
-            $session_id = md5(uniqid(rand(), true));
-        } else {
-            $session_id = Session::get('session_id');
-        }
-
+        // Mendapatkan session_id atau membuat yang baru jika belum ada
+        $session_id = Session::get('session_id', Session::getId());
+        // Menyimpan session_id di session
         Session::put('session_id', $session_id);
 
-        $totalStock = ProductsAttribute::where('product_id', $id)->sum('stock');
-
-        return view('front.products.detail')->with(compact('productDetails', 'categoryDetails', 'totalStock'));
+        return view('front.products.detail', compact('productDetails', 'categoryDetails', 'totalStock'));
     }
 
     public function cart()
@@ -116,54 +88,43 @@ class ProductsController extends Controller
         if ($request->isMethod('post')) {
             $data = $request->all();
 
-            Session::forget('couponAmount');
-            Session::forget('couponCode');
+            // Menghapis sesi kupon sebelumnya
+            Session::forget(['couponAmount', 'couponCode']);
 
-            if ($data['quantity'] <= 0) {
-                $data['quantity'] = 1;
-            }
+            // Memastikan kuantitas minimal 1
+            $data['quantity'] = max($data['quantity'], 1);
 
-            $getProductStock = ProductsAttribute::getProductStock($data['product_id']);
-
-            if ($getProductStock < $data['quantity']) {
+            // Cek stok produk
+            if (ProductsAttribute::getProductStock($data['product_id']) < $data['quantity']) {
                 return redirect()->back()->with('error_message', 'Kuantitas yang dibutuhkan tidak tersedia');
             }
 
-            $session_id = Session::get('session_id');
+            // Ambil session_id atau bikin baru kalau belum ada
+            $session_id = Session::get('session_id', Session::getId());
+            Session::put('session_id', $session_id);
 
-            if (empty($session_id)) {
-                $session_id = Session::getId();
+            // Menentukan user_id lalu hitung produk di keranjang
+            $user_id = Auth::id() ?? 0;
+            $countProducts = Cart::where([
+                'user_id'    => $user_id,
+                'session_id' => $session_id,
+                'product_id' => $data['product_id']
+            ])->count();
 
-                Session::put('session_id', $session_id);
-            }
-
-            if (Auth::check()) {
-                $user_id = Auth::user()->id;
-                $countProducts = Cart::where([
-                    'user_id'    => $user_id,
-                    'product_id' => $data['product_id']
-                ])->count();
-            } else {
-                $user_id = 0;
-                $countProducts = Cart::where([
-                    'session_id' => $session_id,
-                    'product_id' => $data['product_id']
-                ])->count();
-            }
-
+            // Tambahkan atau update kuantitas produk
             if ($countProducts > 0) {
                 Cart::where([
+                    'user_id'    => $user_id,
+                    'product_id' => $data['product_id'],
                     'session_id' => $session_id,
-                    'user_id'    => $user_id ?? 0,
-                    'product_id' => $data['product_id']
                 ])->increment('quantity', $data['quantity']);
             } else {
-                $item = new Cart;
-                $item->session_id = $session_id;
-                $item->user_id    = $user_id;
-                $item->product_id = $data['product_id'];
-                $item->quantity   = $data['quantity'];
-                $item->save();
+                Cart::create([
+                    'user_id'    => $user_id,
+                    'product_id' => $data['product_id'],
+                    'session_id' => $session_id,
+                    'quantity'   => $data['quantity']
+                ]);
             }
 
             return redirect()->back()->with('success_message', 'Produk ini telah dimasukkan kedalam keranjang <a href="/cart" style="text-decoration: underline !important">Lihat Keranjang</a>');
@@ -175,38 +136,40 @@ class ProductsController extends Controller
         if ($request->ajax()) {
             $data = $request->all();
 
-            Session::forget('couponAmount');
-            Session::forget('couponCode');
+            // Menghapus sesi kupon sebelumnya
+            Session::forget(['couponAmount', 'couponCode']);
 
+            // Ambil detail keranjang
             $cartDetails = Cart::find($data['cartid']);
-            $availableStock = ProductsAttribute::select('stock')->where([
-                'product_id' => $cartDetails['product_id']
-            ])->first();
+            // Ambil stok yang tersedia dari produk yang terkait sama item dalam keranjang
+            $availableStock = ProductsAttribute::select('stock')
+                ->where('product_id', $cartDetails->product_id)
+                ->first();
 
-            if ($data['qty'] > $availableStock['stock']) {
+            // Kalau jumlah yang diminta melebihi stok yang tersedia
+            if ($data['qty'] > $availableStock->stock) {
                 $getCartItems = Cart::getCartItems();
 
+                // Kembalikan respons JSON dengan status false, pesan error, dan tampilan item-item keranjang yang diperbarui
                 return response()->json([
-                    'status'     => false,
-                    'message'    => 'Stok produk tidak tersedia',
-                    'view'       => (string) View::make('front.products.cart_items')->with(compact('getCartItems'))
+                    'status'  => false,
+                    'message' => 'Stok produk tidak tersedia',
+                    'view'    => (string) View::make('front.products.cart_items')->with(compact('getCartItems'))
                 ]);
             }
 
+            // Perbarui kuantitas item keranjang yang dipilih
             Cart::where('id', $data['cartid'])->update([
                 'quantity' => $data['qty']
             ]);
 
             $getCartItems = Cart::getCartItems();
-            $totalCartItems = totalCartItems();
 
-            Session::forget('couponAmount');
-            Session::forget('couponCode');
+            Session::forget(['couponAmount', 'couponCode']);
 
             return response()->json([
-                'status'         => true,
-                'totalCartItems' => $totalCartItems,
-                'view'           => (string) View::make('front.products.cart_items')->with(compact('getCartItems'))
+                'status' => true,
+                'view'   => (string) View::make('front.products.cart_items')->with(compact('getCartItems'))
             ]);
         }
     }
@@ -214,18 +177,15 @@ class ProductsController extends Controller
     public function cartDelete(Request $request)
     {
         if ($request->ajax()) {
-            Session::forget('couponAmount');
-            Session::forget('couponCode');
-
             $data = $request->all();
+
+            Session::forget(['couponAmount', 'couponCode']);
 
             Cart::where('id', $data['cartid'])->delete();
 
             $getCartItems = Cart::getCartItems();
-            $totalCartItems = totalCartItems();
 
             return response()->json([
-                'totalCartItems' => $totalCartItems,
                 'view'   => (string) View::make('front.products.cart_items')->with(compact('getCartItems'))
             ]);
         }
@@ -236,19 +196,19 @@ class ProductsController extends Controller
         if ($request->ajax()) {
             $data = $request->all();
 
-            Session::forget('couponAmount');
-            Session::forget('couponCode');
+            Session::forget(['couponAmount', 'couponCode']);
 
+            // Ambil item-item keranjang
             $getCartItems = Cart::getCartItems();
-            $totalCartItems = totalCartItems();
+            // Hitung jumlah kupon dengan kode yang diberikan
             $couponCount = Coupon::where('coupon_code', $data['code'])->count();
 
+            // Kalau gaada ada kupon dengan kode yang diberikan
             if ($couponCount == 0) {
                 return response()->json([
-                    'status'         => false,
-                    'totalCartItems' => $totalCartItems,
-                    'message'        => 'Masukkan kode kupon yang benar',
-                    'view'           => (string) View::make('front.products.cart_items')->with(compact('getCartItems'))
+                    'status'  => false,
+                    'message' => 'Masukkan kode kupon yang benar',
+                    'view'    => (string) View::make('front.products.cart_items')->with(compact('getCartItems'))
                 ]);
             } else {
                 $couponDetails = Coupon::where('coupon_code', $data['code'])->first();
@@ -259,26 +219,32 @@ class ProductsController extends Controller
                     $message = 'Kode kupon ini tidak dapat digunakan karena telah melebihi tanggal yang telah ditentukan';
                 }
 
+                // Jika tipe kupon adalah "Sekali Pakai"
                 if ($couponDetails->coupon_type == 'Sekali Pakai') {
+                    // Hitung jumlah pesanan yang menggunakan kupon ini
                     $couponCount = Order::where([
-                        'coupon_code' => $data['code'],
-                        'user_id'     => Auth::user()->id
+                        'user_id'     => Auth::user()->id,
+                        'coupon_code' => $data['code']
                     ])->count();
 
+                    // Jika kupon telah digunakan sebelumnya
                     if ($couponCount >= 1) {
                         $message = 'Kupon ini telah digunakan';
                     }
                 }
 
+                // Dapatkan kategori yang diperbolehkan untuk kupon
                 $catArr = explode(',', $couponDetails->categories);
                 $total_amount = 0;
 
+                // Iterasi melalui item keranjang belanja
                 foreach ($getCartItems as $key => $item) {
-                    // Kalau didalam array tidak memiliki customer yang telah ditentukan
+                    // Jika produk tidak termasuk dalam kategori yang diperbolehkan untuk kupon
                     if (!in_array($item['product']['category_id'], $catArr)) {
                         $message = 'Kode kupon ini hanya dapat digunakan pada kategori yang telah ditentukan';
                     }
 
+                    // Hitung total jumlah yang memenuhi syarat untuk penggunaan kupon
                     $prodPrice = Product::getDiscountAttributePrice($item['product_id']);
                     $total_amount = $total_amount + ($prodPrice['final_price'] * $item['quantity']);
                 }
@@ -303,7 +269,6 @@ class ProductsController extends Controller
                 if (isset($message)) {
                     return response()->json([
                         'status'         => false,
-                        'totalCartItems' => $totalCartItems,
                         'message'        => $message,
                         'view'           => (string) View::make('front.products.cart_items')->with(compact('getCartItems'))
                     ]);
@@ -323,7 +288,6 @@ class ProductsController extends Controller
 
                     return response()->json([
                         'status'         => true,
-                        'totalCartItems' => $totalCartItems,
                         'couponAmount'   => $couponAmount,
                         'grand_total'    => $grand_total,
                         'message'        => $message,
@@ -336,9 +300,6 @@ class ProductsController extends Controller
 
     public function checkout(Request $request)
     {
-        $countries = Country::orderBy('name', 'asc')->get();
-        $cities = City::orderBy('name', 'asc')->get();
-        $provinces = Province::orderBy('name', 'asc')->get();
         $getCartItems = Cart::getCartItems();
 
         if (count($getCartItems) == 0) {
@@ -387,7 +348,12 @@ class ProductsController extends Controller
             }
 
             $deliveryAddress = DeliveryAddress::where('id', $data['address_id'])->first();
-            $payment_method = 'Prepaid';
+
+            // if ($data['payment_gateway'] == 'Midtrans') {
+            //     $order_status   = 'Baru';
+            // } else {
+            //     $order_status   = 'Pending';
+            // }
 
             // Untuk memastikan bahwa semua operasi database berikutnya bagian dari proses penyimpanan database yang sama
             DB::beginTransaction();
@@ -415,8 +381,8 @@ class ProductsController extends Controller
             $order->shipping_charges = $data['shipping_charges'];
             $order->coupon_code      = Session::get('couponCode');
             $order->coupon_amount    = Session::get('couponAmount');
-            $order->payment_method   = $payment_method;
             $order->payment_gateway  = $data['payment_gateway'];
+            $order->order_status     = "Menunggu Pembayaran";
             $order->grand_total      = $data['grand_total'];
             // Menyimpan data ke tabel orders
             $order->save();
@@ -427,11 +393,10 @@ class ProductsController extends Controller
                 $cartItem                  = new OrdersProduct;
                 $cartItem->user_id         = Auth::user()->id;
                 $cartItem->order_id        = $order_id;
-                $getProductDetails         = Product::select('product_name', 'admin_id', 'vendor_id')->where('id', $item['product_id'])->first();
+                $getProductDetails         = Product::select('admin_id', 'vendor_id')->where('id', $item['product_id'])->first();
                 $cartItem->admin_id        = $getProductDetails['admin_id'];
                 $cartItem->vendor_id       = $getProductDetails['vendor_id'];
                 $cartItem->product_id      = $item['product_id'];
-                $cartItem->product_name    = $getProductDetails['product_name'];
                 $cartItem->item_status     = 'In Progress';
                 $getDiscountAttributePrice = Product::getDiscountAttributePrice($item['product_id']);
                 $cartItem->product_price   = $getDiscountAttributePrice['final_price'];
@@ -455,7 +420,7 @@ class ProductsController extends Controller
             // Jika semua operasi penyimpanan kedalam database untuk tabel orders dan orders_products berhasil, DB:commit() digunakan untuk menyimpan semua perubahan yang ada dalam database
             DB::commit();
 
-            if ($data['payment_gateway'] == 'midtrans') {
+            if ($data['payment_gateway'] == 'Midtrans') {
                 DB::beginTransaction();
 
                 $snapToken = $order->snap_token;
@@ -473,10 +438,14 @@ class ProductsController extends Controller
             $destroyCart = Cart::destroyCartItems();
             $orderDetails = Order::with('orders_products')->where('id', $order_id)->first();
 
-            if ($data['payment_gateway'] == 'midtrans') {
+            if ($data['payment_gateway'] == 'Midtrans') {
                 return view('front.orders.show', compact('order', 'snapToken'));
             }
         }
+
+        $countries = Country::orderBy('name', 'asc')->get();
+        $cities = City::orderBy('name', 'asc')->get();
+        $provinces = Province::orderBy('name', 'asc')->get();
 
         return view('front.products.checkout')->with(compact('deliveryAddresses', 'countries', 'cities', 'provinces', 'getCartItems', 'total_price'));
     }

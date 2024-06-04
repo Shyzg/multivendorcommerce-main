@@ -16,7 +16,7 @@ use App\Models\Category;
 |
 */
 
-require __DIR__ . '/auth.php';
+// require __DIR__ . '/auth.php';
 
 Route::prefix('/admin')->namespace('App\Http\Controllers\Admin')->group(function () {
     // Admin login
@@ -81,18 +81,20 @@ Route::prefix('/admin')->namespace('App\Http\Controllers\Admin')->group(function
         Route::get('orders', 'OrderController@orders');
         // Menampilkan order di views admin/orders/order_details.blade.php
         Route::get('orders/{id}', 'OrderController@orderDetails');
+        // Memperbarui order item status
+        Route::post('update-order-item-status', 'OrderController@updateOrderItemStatus');
     });
 });
 
 Route::namespace('App\Http\Controllers\Front')->group(function () {
     Route::get('/', 'IndexController@index');
-    // Menampilkan halaman login register untuk customer di views front/users/login_register.blade.php
+    // Menampilkan halaman login register untuk pembeli di views front/users/login_register.blade.php
     Route::get('user/login-register', ['as' => 'login', 'uses' => 'UserController@loginRegister']);
-    // User/Customer melakukan login pada form di views front/users/login_register.blade.php
+    // Pembeli melakukan login pada form di views front/users/login_register.blade.php
     Route::post('user/login', 'UserController@userLogin');
-    // User/Customer melakukan register pada form di views front/users/login_register.blade.php
+    // Pembeli melakukan register pada form di views front/users/login_register.blade.php
     Route::post('user/register', 'UserController@userRegister');
-    // User/Customer logout
+    // Pembeli logout
     Route::get('user/logout', 'UserController@userLogout');
     // Menampilkan halaman login register untuk vendor di views front/vendors/login_register.blade.php
     Route::get('vendor/login-register', 'VendorController@loginRegister'); // render vendor login_register.blade.php page
@@ -117,11 +119,11 @@ Route::namespace('App\Http\Controllers\Front')->group(function () {
     // Menghapus produk kedalam keranjang yang ada di dalam form di front/products/cart_items.blade.php
     Route::post('cart/delete', 'ProductsController@cartDelete');
     Route::group(['middleware' => ['auth']], function () {
-        // Menampilkan halaman detail akun user/customer di views front/users/user_account.blade.php
+        // Menampilkan halaman detail akun Pembeli di views front/users/user_account.blade.php
         Route::match(['GET', 'POST'], 'user/account', 'UserController@userAccount');
-        // User/Customer melakukan perubahan kata sandi pada form di views front/users/user_account.blade.php
+        // Pembeli melakukan perubahan kata sandi pada form di views front/users/user_account.blade.php
         Route::post('user/update-password', 'UserController@userUpdatePassword');
-        // User/Customer menginput kode kupon pada form di views front/products/cart_items.blade.php
+        // Pembeli menginput kode kupon pada form di views front/products/cart_items.blade.php
         Route::post('/apply-coupon', 'ProductsController@applyCoupon');
         // Menampilkan halaman checkout pada di views front/products/checkout.blade.php
         // Serta mengambil data dan menghapus data pada form untuk alamat pengiriman

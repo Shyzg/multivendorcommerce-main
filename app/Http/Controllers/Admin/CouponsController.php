@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use App\Models\Coupon;
 use App\Models\Section;
 use App\Models\User;
+use Illuminate\Support\Facades\Validator;
 
 class CouponsController extends Controller
 {
@@ -19,102 +20,82 @@ class CouponsController extends Controller
         // Menggunakan session untuk sebagai penanda halaman yang sedang digunakan pada sidebar
         Session::put('page', 'coupons');
 
-        $adminType = Auth::guard('admin')->user()->type;
-        $vendor_id = Auth::guard('admin')->user()->vendor_id;
+        $adminType = auth('admin')->user()->type;
+        $vendor_id = auth('admin')->user()->vendor_id;
+        // Mengambil daftar kupon berdasarkan tipe pengguna admin
+        // Kala admin tipenya vendor hanya kupon yang terkait dengan vendor tersebut yang diambil
+        // Sedangkan kalau tidak semua kupon diambil
+        $coupons = Coupon::when($adminType == 'vendor', function ($query) use ($vendor_id) {
+            return $query->where('vendor_id', $vendor_id);
+        })->get();
 
-        if ($adminType == 'vendor') {
-            $coupons = Coupon::where('vendor_id', $vendor_id)->get();
-        } else {
-            $coupons = Coupon::get();
-        }
-
-        return view('admin.coupons.coupons')->with(compact('coupons'));
+        return view('admin.coupons.coupons', compact('coupons'));
     }
 
     public function addEditCoupon(Request $request, $id = null)
     {
         Session::put('page', 'coupons');
 
+        // Mengambil daftar kategori produk dan pengguna
         $categories = Section::with('categories')->get();
         $users = User::select('email')->get();
 
+        // Menetapkan judul berdasarkan apakah itu penambahan atau pengeditan
         if ($id == '') {
             $title = 'Tambah Kupon';
             $coupon = new Coupon;
-            $selCats   = array();
-            $selUsers  = array();
+            $selCats = $selUsers = [];
             $message = 'Berhasil menambahkan kupon';
         } else {
             $title = 'Ubah Kupon';
             $coupon = Coupon::find($id);
-            // Memisahkan data dalam bentuk string untuk menjadi array contoh (['Makanan', 'Minuman'])
-            $selCats   = explode(',', $coupon['categories']);
-            $selUsers  = explode(',', $coupon['users']);
+            // Memisahkan string $coupon->categories menjadi array
+            $selCats = explode(',', $coupon->categories);
+            // Memisahkan string $coupon->users menjadi array
+            $selUsers = explode(',', $coupon->users);
             $message = 'Berhasil memperbarui kupon';
         }
+
+        // Memproses data jika permintaan adalah POST
         if ($request->isMethod('post')) {
             $data = $request->all();
-            $rules = [
+            $validator = Validator::make($request->all(), [
                 'categories'    => 'required',
                 'coupon_option' => 'required',
                 'coupon_type'   => 'required',
                 'amount_type'   => 'required',
                 'amount'        => 'required|numeric',
                 'expiry_date'   => 'required'
-            ];
-            $customMessages = [
-                'categories.required'    => 'Harus memilih kategori',
-                'coupon_option.required' => 'Harus memilih opsi kupon',
-                'coupon_type.required'   => 'Harus memilih tipe kupon',
-                'amount_type.required'   => 'Harus memilih tipe jumlah',
-                'amount.required'        => 'Jumlah kupon harus diisi',
-                'amount.numeric'         => 'Jumlah kupon harus diisikan dengan angka',
-                'expiry_date.required'   => 'Harus memilih tanggal berakhir kupon',
-            ];
+            ]);
 
-            $this->validate($request, $rules, $customMessages);
-
-            if (isset($data['categories'])) {
-                // Menggabungkan data dalam bentuk array untuk jadi satu string contoh ("Makanan,Minuman")
-                $categories = implode(',', $data['categories']);
-            } else {
-                $categories = '';
-            }
-            if (isset($data['users'])) {
-                // Menggabungkan data dalam bentuk array untuk jadi satu string contoh ("Jero,Reza,Abel")
-                $users = implode(',', $data['users']);
-            } else {
-                $users = '';
-            }
-            if ($data['coupon_option'] == 'Automatic') {
-                // Akan otomatis memberikan kupon kode berupa string yang acak
-                $coupon_code = Str::random(8);
-            } else {
-                $coupon_code = $data['coupon_code'];
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput();
             }
 
-            $adminType = Auth::guard('admin')->user()->type;
+            // Mengubah array kategori menjadi string
+            $categories = isset($data['categories']) ? implode(',', $data['categories']) : '';
+            // Mengubah array pengguna menjadi string
+            $users = isset($data['users']) ? implode(',', $data['users']) : '';
+            // Menyiapkan kode kupon
+            $coupon_code = $data['coupon_option'] == 'Automatic' ? Str::random(8) : $data['coupon_code'];
 
-            if ($adminType == 'vendor') {
-                $coupon->vendor_id = Auth::guard('admin')->user()->vendor_id;
-            } else {
-                $coupon->vendor_id = 0;
-            }
-
+            // Menetapkan vendor_id berdasarkan jenis admin yang saat ini masuk
+            $coupon->vendor_id = Auth::guard('admin')->user()->type == 'vendor' ? Auth::guard('admin')->user()->vendor_id : 0;
+            // Menetapkan nilai atribut kupon
             $coupon->coupon_option = $data['coupon_option'];
-            $coupon->coupon_code   = $coupon_code;
-            $coupon->categories    = $categories;
-            $coupon->users         = $users;
-            $coupon->coupon_type   = $data['coupon_type'];
-            $coupon->amount_type   = $data['amount_type'];
-            $coupon->amount        = $data['amount'];
-            $coupon->expiry_date   = $data['expiry_date'];
+            $coupon->coupon_code = $coupon_code;
+            $coupon->categories = $categories;
+            $coupon->users = $users;
+            $coupon->coupon_type = $data['coupon_type'];
+            $coupon->amount_type = $data['amount_type'];
+            $coupon->amount = $data['amount'];
+            $coupon->expiry_date = $data['expiry_date'];
             $coupon->save();
 
             return redirect('admin/coupons')->with('success_message', $message);
         }
 
-        return view('admin.coupons.add_edit_coupon')->with(compact('title', 'coupon', 'categories', 'users', 'selCats', 'selUsers'));
+        return view('admin.coupons.add_edit_coupon', compact('title', 'coupon', 'categories', 'users', 'selCats', 'selUsers'));
     }
 
     public function deleteCoupon($id)

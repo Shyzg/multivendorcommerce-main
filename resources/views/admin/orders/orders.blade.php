@@ -12,39 +12,33 @@
                             <table id="orders" class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <th>Order ID</th>
-                                        <th>Order Date</th>
-                                        <th>Name</th>
+                                        <th>Tanggal Pemesanan</th>
+                                        <th>Nama</th>
                                         <th>Email</th>
-                                        <th>Ordered Products</th>
-                                        <th>Order Amount</th>
-                                        <th>Payment Method</th>
+                                        <th>Produk Pesanan</th>
+                                        <th>Total</th>
+                                        <th>Payment Gateway</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($orders as $order)
-                                    <!-- @if ($order['orders_products']) -->
                                     <tr>
-                                        <td>{{ $order['id'] }}</td>
-                                        <td>{{ date('l, d F Y H:i:s', strtotime($order['created_at'])) }}</td>
-                                        <td>{{ $order['name'] }}</td>
-                                        <td>{{ $order['email'] }}</td>
+                                        <td>{{ $order->created_at->locale('id_ID')->isoFormat('dddd, D MMMM YYYY H:mm:ss') }}</td>
+                                        <td>{{ $order->name }}</td>
+                                        <td>{{ $order->email }}</td>
                                         <td>
-                                            @foreach ($order['orders_products'] as $product)
-                                            {{ $product['product_name'] }} ({{ $product['product_qty'] }})
+                                            @foreach ($order->orders_products as $orderProduct)
+                                            {{ $orderProduct->product->product_name }} ({{ $orderProduct->product_qty }})
                                             <br>
                                             @endforeach
                                         </td>
-                                        <td>{{ $order['grand_total'] }}</td>
-                                        <td>{{ $order['payment_method'] }}</td>
+                                        <td>{{ $order->grand_total }}</td>
+                                        <td>{{ $order->payment_gateway }}</td>
                                         <td>
-                                            <a title="View Order Details" href="{{ url('admin/orders/' . $order['id']) }}">
-                                                <i style="font-size: 25px" class="mdi mdi-file-document"></i>
-                                            </a>
+                                            <a href="{{ url('admin/orders/' . $order['id']) }}" class="btn btn-outline-primary">Lihat Detail Pesanan</a>
                                         </td>
                                     </tr>
-                                    <!-- @endif -->
                                     @endforeach
                                 </tbody>
                             </table>

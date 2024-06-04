@@ -19,8 +19,7 @@
                 <div class="row w-100 mx-0">
                     <div class="col-lg-4 mx-auto">
                         <div class="auth-form-light text-left py-5 px-4 px-sm-5">
-                            <h4>Hello! let's get started</h4>
-                            <h6 class="font-weight-light">Sign in to continue.</h6>
+                            <h4>Masuk Sebagai Admin Atau Penjual</h4>
                             @if (Session::has('error_message'))
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                 <strong>Error:</strong> {{ Session::get('error_message') }}
@@ -42,21 +41,13 @@
                             <form class="pt-3" action="{{ url('admin/login') }}" method="post">
                                 @csrf
                                 <div class="form-group">
-                                    <input type="email" name="email" id="email" class="form-control form-control-lg" id="exampleInputEmail1" placeholder="Username" required>
+                                    <input type="email" name="email" id="email" class="form-control form-control-lg" id="exampleInputEmail1" placeholder="Email" required>
                                 </div>
                                 <div class="form-group">
-                                    <input type="password" name="password" id="password" class="form-control form-control-lg" id="exampleInputPassword1" placeholder="Password" required>
+                                    <input type="password" name="password" id="password" class="form-control form-control-lg" id="exampleInputPassword1" placeholder="Kata Sandi" required>
                                 </div>
                                 <div class="mt-3">
-                                    <button type="submit" class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn">SIGN IN</button>
-                                </div>
-                                <div class="my-2 d-flex justify-content-between align-items-center">
-                                    <div class="form-check">
-                                        <label class="form-check-label text-muted">
-                                            <input type="checkbox" class="form-check-input">
-                                            Keep me signed in
-                                        </label>
-                                    </div>
+                                    <button type="submit" class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn">Masuk</button>
                                 </div>
                             </form>
                         </div>

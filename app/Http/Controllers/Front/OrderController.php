@@ -11,14 +11,18 @@ class OrderController extends Controller
 {
     public function orders($id = null)
     {
-        if (empty($id)) {
-            $orders = Order::with('orders_products')->where('user_id', Auth::user()->id)->orderBy('id', 'Desc')->get();
+        if (is_null($id)) {
+            $orders = Order::with(['orders_products.product'])
+                ->where('user_id', Auth::id())
+                ->orderBy('id', 'desc')
+                ->get();
 
-            return view('front.orders.orders')->with(compact('orders'));
-        } else {
-            $orderDetails = Order::with('orders_products')->where('id', $id)->first();
-
-            return view('front.orders.order_details')->with(compact('orderDetails'));
+            return view('front.orders.orders', compact('orders'));
         }
+
+        $orderDetails = Order::with(['orders_products.product'])
+            ->findOrFail($id);
+
+        return view('front.orders.order_details', compact('orderDetails'));
     }
 }

@@ -31,22 +31,22 @@
                                 <tbody>
                                     @foreach ($products as $product)
                                     <tr>
-                                        <td>{{ $product['product_name'] }}</td>
+                                        <td>{{ $product->product_name }}</td>
                                         <td>
-                                            @if (!empty($product['product_image']))
-                                            <img style="width:120px; height:100px" src="{{ asset('front/images/product_images/small/' . $product['product_image']) }}">
+                                            @if (!empty($product->product_image))
+                                            <img style="width:120px; height:100px" src="{{ asset('front/images/product_images/small/' . $product->product_image) }}">
                                             @else
                                             <img style="width:120px; height:100px" src="{{ asset('front/images/product_images/small/no-image.png') }}">
                                             @endif
                                         </td>
-                                        <td>{{ $product['category']['category_name'] ?? null }}</td>
-                                        <td>{{ $product['section']['name']  ?? null }}</td>
+                                        <td>{{ $product->category->category_name ?? null }}</td>
+                                        <td>{{ $product->section->name  ?? null }}</td>
                                         <td>
                                             <div class="d-flex flex-column">
-                                                <a href="{{ url('admin/add-edit-product/' . $product['id']) }}" class="btn btn-outline-primary mb-2">Perbarui Produk</a>
-                                                <a href="{{ url('admin/add-edit-attributes/' . $product['id']) }}" class="btn btn-outline-primary mb-2">Tambah Atribut</a>
-                                                <a href="{{ url('admin/add-images/' . $product['id']) }}" class="btn btn-outline-primary mb-2">Tambah Gambar</a>
-                                                <a href="JavaScript:void(0)" class="btn btn-outline-danger confirmDelete" module="product" moduleid="{{ $product['id'] }}">
+                                                <a href="{{ url('admin/add-edit-product/' . $product->id) }}" class="btn btn-outline-primary mb-2">Perbarui Produk</a>
+                                                <a href="{{ url('admin/add-edit-attributes/' . $product->id) }}" class="btn btn-outline-primary mb-2">Tambah Atribut</a>
+                                                <a href="{{ url('admin/add-images/' . $product->id) }}" class="btn btn-outline-primary mb-2">Tambah Gambar</a>
+                                                <a href="JavaScript:void(0)" class="btn btn-outline-danger confirmDelete" module="product" moduleid="{{ $product->id }}">
                                                     Hapus
                                                 </a>
                                             </div>

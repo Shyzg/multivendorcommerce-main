@@ -34,12 +34,12 @@
                             </button>
                         </div>
                         @endif
-                        <form class="forms-sample mb-2" action="{{ url('admin/add-images/' . $product['id']) }}" method="post" enctype="multipart/form-data">
+                        <form class="forms-sample mb-2" action="{{ url('admin/add-images/' . $product->id) }}" method="post" enctype="multipart/form-data">
                             @csrf
-                            <div class="form-group">{{ $product['product_name'] }}</div>
+                            <div class="form-group">{{ $product->product_name }}</div>
                             <div class="form-group">
-                                @if (!empty($product['product_image']))
-                                <img style="width: 120px" src="{{ url('front/images/product_images/small/' . $product['product_image']) }}">
+                                @if (!empty($product->product_image))
+                                <img style="width: 120px" src="{{ url('front/images/product_images/small/' . $product->product_image) }}">
                                 @else
                                 <img style="width: 120px" src="{{ url('front/images/product_images/small/no-image.png') }}">
                                 @endif
@@ -60,13 +60,13 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($product['images'] as $image)
+                                @foreach ($product->images as $image)
                                 <tr>
                                     <td>
-                                        <img src="{{ url('front/images/product_images/small/' . $image['image']) }}">
+                                        <img src="{{ url('front/images/product_images/small/' . $image->image) }}">
                                     </td>
                                     <td>
-                                        <a href="JavaScript:void(0)" class="btn btn-outline-danger confirmDelete" module="image" moduleid="{{ $image['id'] }}">
+                                        <a href="JavaScript:void(0)" class="btn btn-outline-danger confirmDelete" module="image" moduleid="{{ $image->id }}">
                                             Hapus
                                         </a>
                                     </td>

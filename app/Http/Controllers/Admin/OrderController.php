@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\OrderItemStatus;
+use App\Models\OrdersProduct;
+use Illuminate\Http\Client\Request;
 
 class OrderController extends Controller
 {
@@ -21,16 +23,18 @@ class OrderController extends Controller
         $vendor_id = Auth::guard('admin')->user()->vendor_id;
 
         if ($adminType == 'vendor') {
-            $orders = Order::with([
+            $orders = Order::whereHas('orders_products', function ($query) use ($vendor_id) {
+                $query->where('vendor_id', $vendor_id);
+            })->with([
                 'orders_products' => function ($query) use ($vendor_id) {
-                    $query->where('vendor_id', $vendor_id);
+                    $query->where('vendor_id', $vendor_id)->with('product');
                 }
-            ])->orderBy('id', 'Desc')->get();
+            ])->orderBy('id', 'desc')->get();
         } else {
-            $orders = Order::with('orders_products')->orderBy('id', 'Desc')->get();
+            $orders = Order::with('orders_products.product')->orderBy('id', 'desc')->get();
         }
 
-        return view('admin.orders.orders')->with(compact('orders'));
+        return view('admin.orders.orders', compact('orders'));
     }
 
     public function orderDetails($id)
@@ -39,34 +43,68 @@ class OrderController extends Controller
 
         $adminType = Auth::guard('admin')->user()->type;
         $vendor_id = Auth::guard('admin')->user()->vendor_id;
+        $order = Order::with('orders_products.product')->findOrFail($id);
 
-        if ($adminType == 'vendor') {
-            $orderDetails = Order::with([
-                'orders_products' => function ($query) use ($vendor_id) {
-                    $query->where('vendor_id', $vendor_id);
-                }
-            ])->where('id', $id)->first();
-        } else {
-            $orderDetails = Order::with('orders_products')->where('id', $id)->first();
-        }
+        $orderDetails = Order::with([
+            'orders_products' => function ($query) use ($vendor_id) {
+                $query->where('vendor_id', $vendor_id);
+            }
+        ])->when($adminType != 'vendor', function ($query) {
+            $query->with('orders_products.product');
+        })->findOrFail($id);
 
-        $userDetails = User::where('id', $orderDetails['user_id'])->first();
+        $userDetails = User::findOrFail($orderDetails->user_id);
         $orderItemStatuses = OrderItemStatus::where([
             'status' => 1,
             'name' => 'In Progress'
         ])->get();
-        $total_items = 0;
+        $total_items = $orderDetails->orders_products->sum('product_qty');
 
-        foreach ($orderDetails['orders_products'] as $product) {
-            $total_items = $total_items + $product['product_qty'];
+        $item_discount = $orderDetails->coupon_amount > 0 ? round($orderDetails->coupon_amount / $total_items, 2) : 0;
+
+        return view('admin.orders.order_details')->with(compact('order', 'orderDetails', 'userDetails', 'orderItemStatuses', 'item_discount', 'vendor_id'));
+    }
+
+    public function updateOrderItemStatus(Request $request)
+    {
+        if ($request->isMethod('post')) {
+            $data = $request->all();
+
+            // Validasi status
+            $statusExists = OrderItemStatus::where('name', $data['order_item_status'])->exists(); // Memeriksa apakah status ada di tabel order_item_statuses
+            if (!$statusExists) {
+                return redirect()->back()->with('error_message', 'Invalid order item status');
+            }
+
+            // Update status item order
+            $updateData = [
+                'item_status' => $data['order_item_status']
+            ];
+
+            if (!empty($data['item_courier_name']) && !empty($data['item_tracking_number'])) {
+                $updateData['courier_name'] = $data['item_courier_name'];
+                $updateData['tracking_number'] = $data['item_tracking_number'];
+            }
+
+            OrdersProduct::where('id', $data['order_item_id'])->update($updateData); // Memperbarui data item order
+
+            // Ambil order_id
+            $orderItem = OrdersProduct::select('order_id')->where('id', $data['order_item_id'])->first(); // Mengambil order_id dari item order
+
+            // Cek jika order item ada
+            if (!$orderItem) {
+                return redirect()->back()->with('error_message', 'Order item not found');
+            }
+
+            $orderDetails = Order::with([
+                'orders_products' => function ($query) use ($data) {
+                    $query->where('id', $data['order_item_id']);
+                }
+            ])->where('id', $orderItem->order_id)->first(); // Mengambil detail order dengan order_id yang sesuai
+
+            $message = 'Order Item Status has been updated successfully!'; // Pesan sukses
+
+            return redirect()->back()->with('success_message', $message); // Redirect kembali dengan pesan sukses
         }
-
-        if ($orderDetails['coupon_amount'] > 0) {
-            $item_discount = round($orderDetails['coupon_amount'] / $total_items, 2);
-        } else {
-            $item_discount = 0;
-        }
-
-        return view('admin.orders.order_details')->with(compact('orderDetails', 'userDetails', 'orderItemStatuses', 'item_discount'));
     }
 }

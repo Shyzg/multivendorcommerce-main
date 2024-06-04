@@ -30,13 +30,13 @@
                                 <tbody>
                                     @foreach ($categories as $category)
                                     <tr>
-                                        <td>{{ $category['category_name'] }}</td>
-                                        <td>{{ $category['section']['name'] }}</td>
-                                        <td>{{ $category['url'] }}</td>
+                                        <td>{{ $category->category_name }}</td>
+                                        <td>{{ $category->section->name }}</td>
+                                        <td>{{ $category->url }}</td>
                                         <td>
                                             <div class="d-flex flex-column">
-                                                <a href="{{ url('admin/add-edit-category/' . $category['id']) }}" class="btn btn-outline-primary mb-2">Perbarui Kategori</a>
-                                                <a href="JavaScript:void(0)" class="btn btn-outline-danger confirmDelete" module="product" moduleid="{{ $category['id'] }}">
+                                                <a href="{{ url('admin/add-edit-category/' . $category->id) }}" class="btn btn-outline-primary mb-2">Perbarui Kategori</a>
+                                                <a href="JavaScript:void(0)" class="btn btn-outline-danger confirmDelete" module="product" moduleid="{{ $category->id }}">
                                                     Hapus
                                                 </a>
                                             </div>

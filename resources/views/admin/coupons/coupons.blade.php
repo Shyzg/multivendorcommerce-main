@@ -31,24 +31,24 @@
                                 <tbody>
                                     @foreach ($coupons as $coupon)
                                     <tr>
-                                        <td>{{ $coupon['coupon_code'] }}</td>
-                                        <td>{{ $coupon['coupon_type'] }}</td>
+                                        <td>{{ $coupon->coupon_code }}</td>
+                                        <td>{{ $coupon->coupon_type }}</td>
                                         <td>
-                                            {{ $coupon['amount'] }}
-                                            @if ($coupon['amount_type'] == 'Persentase')
+                                            {{ $coupon->amount }}
+                                            @if ($coupon->amount_type == 'Persentase')
                                             %
                                             @else
                                             IDR
                                             @endif
                                         </td>
-                                        <td>{{ $coupon['expiry_date'] }}</td>
+                                        <td>{{ $coupon->expiry_date }}</td>
                                         <td>
-                                            <a href="{{ url('admin/add-edit-coupon/' . $coupon['id']) }}">
-                                                <i style="font-size: 25px" class="mdi mdi-pencil-box"></i>
-                                            </a>
-                                            <a href="JavaScript:void(0)" class="confirmDelete" module="coupon" moduleid="{{ $coupon['id'] }}">
-                                                <i style="font-size: 25px" class="mdi mdi-file-excel-box"></i>
-                                            </a>
+                                            <div class="d-flex flex-column">
+                                                <a href="{{ url('admin/add-edit-coupon/' . $coupon->id) }}" class="btn btn-outline-primary mb-2">Perbarui Kupon</a>
+                                                <a href="JavaScript:void(0)" class="btn btn-outline-danger confirmDelete" module="coupon" moduleid="{{ $coupon->id }}">
+                                                    Hapus
+                                                </a>
+                                            </div>
                                         </td>
                                     </tr>
                                     @endforeach

@@ -34,12 +34,12 @@
                             </button>
                         </div>
                         @endif
-                        <form class="forms-sample mb-2" action="{{ url('admin/add-edit-attributes/' . $product['id']) }}" method="post">
+                        <form class="forms-sample mb-2" action="{{ url('admin/add-edit-attributes/' . $product->id) }}" method="post">
                             @csrf
-                            <div class="form-group">{{ $product['product_name'] }}</div>
+                            <div class="form-group">{{ $product->product_name }}</div>
                             <div class="form-group">
-                                @if (!empty($product['product_image']))
-                                <img style="width: 120px" src="{{ url('front/images/product_images/small/' . $product['product_image']) }}">
+                                @if (!empty($product->product_image))
+                                <img style="width: 120px" src="{{ url('front/images/product_images/small/' . $product->product_image) }}">
                                 @else
                                 <img style="width: 120px" src="{{ url('front/images/product_images/small/no-image.png') }}">
                                 @endif
@@ -56,7 +56,7 @@
                             <button type="submit" class="btn btn-primary mr-2">Submit</button>
                             <button type="reset" class="btn btn-light">Cancel</button>
                         </form>
-                        <form method="post" action="{{ url('admin/edit-attributes/' . $product['id']) }}">
+                        <form method="post" action="{{ url('admin/edit-attributes/' . $product->id) }}">
                             @csrf
                             <table class="table table-bordered">
                                 <thead>
@@ -66,12 +66,12 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($product['attributes'] as $attribute)
-                                    <input style="display: none" type="text" name="attributeId[]" value="{{ $attribute['id'] }}">
+                                    @foreach ($product->attributes as $attribute)
+                                    <input style="display: none" type="text" name="attributeId[]" value="{{ $attribute->id }}">
                                     <tr>
-                                        <td>{{ $attribute['sku'] }}</td>
+                                        <td>{{ $attribute->sku }}</td>
                                         <td>
-                                            <input type="number" name="stock[]" value="{{ $attribute['stock'] }}" required style="width: 60px">
+                                            <input type="number" name="stock[]" value="{{ $attribute->stock }}" required style="width: 60px">
                                         </td>
                                     </tr>
                                     @endforeach

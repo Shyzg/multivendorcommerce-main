@@ -9,6 +9,8 @@ class ProductsAttribute extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['product_id', 'sku', 'stock'];
+
     public static function getProductStock($product_id)
     {
         $getProductStock = ProductsAttribute::select('stock')->where([

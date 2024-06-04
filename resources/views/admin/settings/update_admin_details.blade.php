@@ -7,7 +7,7 @@
             <div class="col grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Perbarui Detil Admin</h4>
+                        <h4 class="card-title">Perbarui Detail Admin</h4>
                         @if (Session::has('error_message'))
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             <strong>Error:</strong> {{ Session::get('error_message') }}

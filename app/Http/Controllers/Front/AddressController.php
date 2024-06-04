@@ -18,13 +18,14 @@ class AddressController extends Controller
     {
         if ($request->ajax()) {
             $data = $request->all();
-            $deliveryAddress = DeliveryAddress::where('id', $data['addressid'])->first();
+            // Mencari alamat pengiriman berdasarkan id dari data request
+            $deliveryAddress = DeliveryAddress::find($data['addressid']);
 
-            return response()->json([
-                'address' => $deliveryAddress
-            ]);
+            // Mengembalikan data alamat dalam format json karna yang ada di dalam views front berinteraksi menggunakan AJAX
+            return response()->json(['address' => $deliveryAddress]);
         }
     }
+
 
     public function saveDeliveryAddress(Request $request)
     {
@@ -40,30 +41,37 @@ class AddressController extends Controller
 
             if ($validator->passes()) {
                 $data = $request->all();
-                $address = array();
-                $address['user_id'] = Auth::user()->id;
-                $address['name']    = $data['delivery_name'];
-                $address['address'] = $data['delivery_address'];
-                $address['city']    = $data['delivery_city'];
-                $address['state']   = $data['delivery_state'];
-                $address['country'] = $data['delivery_country'];
-                $address['mobile']  = $data['delivery_mobile'];
+                // Menyiapkan data alamat yang akan disimpan
+                $address = [
+                    'user_id' => Auth::user()->id,
+                    'name'    => $data['delivery_name'],
+                    'address' => $data['delivery_address'],
+                    'city'    => $data['delivery_city'],
+                    'state'   => $data['delivery_state'],
+                    'country' => $data['delivery_country'],
+                    'mobile'  => $data['delivery_mobile']
+                ];
 
+                // Memeriksa apakah ada id pengiriman
                 if (!empty($data['delivery_id'])) {
                     DeliveryAddress::where('id', $data['delivery_id'])->update($address);
                 } else {
                     DeliveryAddress::create($address);
                 }
 
+                // Mengambil data alamat pengiriman terbaru
                 $deliveryAddresses = DeliveryAddress::deliveryAddresses();
                 $countries = Country::orderBy('name', 'asc')->get();
                 $cities = City::orderBy('name', 'asc')->get();
                 $provinces = Province::orderBy('name', 'asc')->get();
 
+                // Mengembalikan tampilan alamat pengiriman dalam format json
                 return response()->json([
-                    'view' => (string) View::make('front.products.delivery_addresses')->with(compact('deliveryAddresses', 'countries', 'cities', 'provinces'))
+                    'view' => (string) View::make('front.products.delivery_addresses')
+                        ->with(compact('deliveryAddresses', 'countries', 'cities', 'provinces'))
                 ]);
             } else {
+                // Mengembalikan pesan kesalahan validasi dalam format json
                 return response()->json([
                     'type'   => 'error',
                     'errors' => $validator->messages()
@@ -79,13 +87,16 @@ class AddressController extends Controller
 
             DeliveryAddress::where('id', $data['addressid'])->delete();
 
+            // Mengambil data terbaru dari database untuk diperbarui di view
             $deliveryAddresses = DeliveryAddress::deliveryAddresses();
             $countries = Country::orderBy('name', 'asc')->get();
             $cities = City::orderBy('name', 'asc')->get();
             $provinces = Province::orderBy('name', 'asc')->get();
 
             return response()->json([
-                'view' => (string) View::make('front.products.delivery_addresses')->with(compact('deliveryAddresses', 'countries', 'cities', 'provinces'))
+                // Mengonversi view menjadi string dan mengubah/memasukkan dalam bentuk json
+                'view' => (string) View::make('front.products.delivery_addresses')
+                    ->with(compact('deliveryAddresses', 'countries', 'cities', 'provinces'))
             ]);
         }
     }

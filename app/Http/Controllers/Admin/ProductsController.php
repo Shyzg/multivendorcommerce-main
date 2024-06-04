@@ -12,6 +12,7 @@ use App\Models\Product;
 use App\Models\ProductsImage;
 use App\Models\ProductsAttribute;
 use App\Models\Section;
+use Illuminate\Support\Facades\Validator;
 
 class ProductsController extends Controller
 {
@@ -23,17 +24,10 @@ class ProductsController extends Controller
 
         $adminType = Auth::guard('admin')->user()->type;
         $vendor_id = Auth::guard('admin')->user()->vendor_id;
-        $products = Product::with([
-            'section' => function ($query) {
-                $query->select('id', 'name');
-            },
-            'category' => function ($query) {
-                $query->select('id', 'category_name');
-            }
-        ]);
+        $products = Product::with(['section:id,name', 'category:id,category_name']);
 
         if ($adminType == 'vendor') {
-            $produtcs = $products->where('vendor_id', $vendor_id);
+            $products->where('vendor_id', $vendor_id);
         }
 
         $products = $products->get();
@@ -44,33 +38,47 @@ class ProductsController extends Controller
     public function addEditProduct(Request $request, $id = null)
     {
         Session::put('page', 'products');
+        // Memeriksa apakah $id kosong
+        $isAdding = empty($id);
 
-        if ($id == '') {
-            $title = 'Tambah Produk';
-            $product = new Product();
-            $message = 'Berhasil menambahkan produk';
-        } else {
-            $title = 'Ubah Produk';
-            $product = Product::find($id);
-            $message = 'Berhasil memperbarui produk';
-        }
+        // Menetapkan judul halaman berdasarkan menambahkan atau memperbarui
+        $title = $isAdding ? 'Tambah Produk' : 'Ubah Produk';
+        $product = $isAdding ? new Product() : Product::find($id);
+        // Menetapkan pesan berhasil berdasarkan menambahkan atau memperbarui
+        $message = $isAdding ? 'Berhasil menambahkan produk' : 'Berhasil memperbarui produk';
 
         if ($request->isMethod('post')) {
             $data = $request->all();
-            $rules = [
+            $validator = Validator::make($request->all(), [
                 'category_id'   => 'required',
                 'product_name'  => 'required',
                 'product_price' => 'required|numeric'
-            ];
-            $customMessages = [
-                'category_id.required'   => 'Category is required',
-                'product_name.required'  => 'Nama produk harus diisi',
-                'product_price.required' => 'Harga produk harus diisi',
-                'product_price.numeric'  => 'Harga produk harus diisikan dengan angka'
-            ];
+            ]);
 
-            $this->validate($request, $rules, $customMessages);
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput();
+            }
 
+            if ($isAdding) {
+                $admin_id  = Auth::guard('admin')->user()->id;
+                $vendor_id = Auth::guard('admin')->user()->vendor_id;
+                $adminType = Auth::guard('admin')->user()->type;
+                $product->admin_id   = $admin_id;
+                $product->vendor_id  = ($adminType == 'vendor') ? $vendor_id : 0;
+                $product->admin_type = $adminType;
+            }
+
+            // Mengambil detail kategori berdasarkan category_id yang diterima dari form
+            $categoryDetails = Category::find($data['category_id']);
+            // Menetapkan section_id produk berdasarkan dari kategori yang dipilih
+            $product->section_id  = $categoryDetails['section_id'];
+            $product->category_id = $data['category_id'];
+            $product->product_name     = $data['product_name'];
+            $product->product_price    = $data['product_price'];
+            // Menetapkan nilai diskon produk berdasarkan nilai yang diterima dari form, jika tidak ada nilai yang diterima, maka defaultnya adalah 0
+            $product->product_discount = $data['product_discount'] ?? 0;
+            // Menetapkan berat produk berdasarkan nilai yang diterima dari form, jika tidak ada nilai yang diterima, maka defaultnya adalah 0
+            $product->product_weight   = $data['product_weight'] ?? 0;
             if ($request->hasFile('product_image')) {
                 $image_tmp = $request->file('product_image');
                 if ($image_tmp->isValid()) {
@@ -87,40 +95,8 @@ class ProductsController extends Controller
                     $product->product_image = $imageName;
                 }
             }
-
-            $categoryDetails = Category::find($data['category_id']);
-            $product->section_id  = $categoryDetails['section_id'];
-            $product->category_id = $data['category_id'];
-
-            if ($id == '') {
-                $adminType = Auth::guard('admin')->user()->type;
-                $vendor_id = Auth::guard('admin')->user()->vendor_id;
-                $admin_id  = Auth::guard('admin')->user()->id;
-                $product->admin_type = $adminType;
-                $product->admin_id   = $admin_id;
-
-                if ($adminType == 'vendor') {
-                    $product->vendor_id  = $vendor_id;
-                } else {
-                    $product->vendor_id = 0;
-                }
-            }
-            if (empty($data['product_discount'])) {
-                $data['product_discount'] = 0;
-            }
-            if (empty($data['product_weight'])) {
-                $data['product_weight'] = 0;
-            }
-            $product->product_name     = $data['product_name'];
-            $product->product_price    = $data['product_price'];
-            $product->product_discount = $data['product_discount'];
-            $product->product_weight   = $data['product_weight'];
             $product->description      = $data['description'];
-            if (!empty($data['is_bestseller'])) {
-                $product->is_bestseller = $data['is_bestseller'];
-            } else {
-                $product->is_bestseller = 'No';
-            }
+            $product->is_bestseller    = !empty($data['is_bestseller']) ? $data['is_bestseller'] : 'No';
             $product->save();
 
             return redirect('admin/products')->with('success_message', $message);
@@ -142,23 +118,22 @@ class ProductsController extends Controller
 
     public function deleteProductImage($id)
     {
-        $productImage = Product::select('product_image')->where('id', $id)->first();
-        $small_image_path  = 'front/images/product_images/small/';
-        $medium_image_path = 'front/images/product_images/medium/';
-        $large_image_path  = 'front/images/product_images/large/';
+        // Menghapus gambar produk
+        $productImage = Product::find($id, ['product_image']);
+        $imagePaths = [
+            'front/images/product_images/small/',
+            'front/images/product_images/medium/',
+            'front/images/product_images/large/'
+        ];
 
-        if (file_exists($small_image_path . $productImage->product_image)) {
-            unlink($small_image_path . $productImage->product_image);
+        foreach ($imagePaths as $path) {
+            $imagePath = $path . $productImage->product_image;
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
         }
 
-        if (file_exists($medium_image_path . $productImage->product_image)) {
-            unlink($medium_image_path . $productImage->product_image);
-        }
-
-        if (file_exists($large_image_path . $productImage->product_image)) {
-            unlink($large_image_path . $productImage->product_image);
-        }
-
+        // Memperbarui kolom product_image menjadi string kosong
         Product::where('id', $id)->update(['product_image' => '']);
 
         $message = 'Berhasil menghapus foto produk';
@@ -169,19 +144,23 @@ class ProductsController extends Controller
     public function addAttributes(Request $request, $id)
     {
         Session::put('page', 'products');
-
+        // Mengambil data produk berdasarkan ID, serta relasi atributnya
         $product = Product::select('id', 'product_name', 'product_price', 'product_image')->with('attributes')->find($id);
 
+        // Jika metode permintaan adalah POST, maka tambahkan atribut produk
         if ($request->isMethod('post')) {
             $data = $request->all();
             foreach ($data['sku'] as $key => $value) {
                 if (!empty($value)) {
+                    // Memeriksa apakah SKU sudah ada dalam database
                     $skuCount = ProductsAttribute::where('sku', $value)->count();
 
+                    // Jika SKU sudah ada, kembalikan dengan pesan kesalahan
                     if ($skuCount > 0) {
-                        return redirect()->back()->with('error_message', 'SKU already exists! Please add another SKU!');
+                        return redirect()->back()->with('error_message', 'Tidak dapat menambahkan SKU karena SKU tersebut sudah ada');
                     }
 
+                    // Menambahkan atribut produk baru
                     $attribute = new ProductsAttribute;
                     $attribute->product_id = $id;
                     $attribute->sku        = $value;
@@ -190,26 +169,27 @@ class ProductsController extends Controller
                 }
             }
 
-            return redirect()->back()->with('success_message', 'Product Attributes have been addded successfully!');
+            // Kembali ke halaman sebelumnya dengan pesan sukses setelah menambahkan atribut produk
+            return redirect()->back()->with('success_message', 'Berhasil menambahkan product attributes');
         }
 
-        return view('admin.attributes.add_edit_attributes')->with(compact('product'));
+        // Sedangkan kalu bukan metode POST atau bisa GET tampilkan halaman untuk menambah atau memperbarui atribut produk
+        return view('admin.attributes.add_edit_attributes', compact('product'));
     }
 
     public function editAttributes(Request $request)
     {
         Session::put('page', 'products');
 
+        // Kalau permintaan yakni metode POST maka ambil data
         if ($request->isMethod('post')) {
-            $data = $request->all();
+            $data = $request->only(['attributeId', 'stock']);
 
-            foreach ($data['attributeId'] as $key => $attribute) {
-                if (!empty($attribute)) {
-                    ProductsAttribute::where([
-                        'id' => $data['attributeId'][$key]
-                    ])->update([
-                        'stock' => $data['stock'][$key]
-                    ]);
+            // Iterasi melalui setiap id atribut yang diterima dari form
+            foreach ($data['attributeId'] as $key => $attributeId) {
+                // Jika id atribut tidak kosong lakukan pembaruan stok untuk atribut tersebut
+                if (!empty($attributeId)) {
+                    ProductsAttribute::where('id', $attributeId)->update(['stock' => $data['stock'][$key]]);
                 }
             }
 
@@ -221,14 +201,18 @@ class ProductsController extends Controller
     {
         Session::put('page', 'products');
 
+        // Mengambil data produk berdasarkan id serta relasi gambar produk
         $product = Product::select('id', 'product_name', 'product_price', 'product_image')->with('images')->find($id);
 
+        // Jika metode permintaan yakni POST tambahkan gambar produk baru
         if ($request->isMethod('post')) {
             $data = $request->all();
 
+            // Memeriksa apakah ada file gambar yang diupload
             if ($request->hasFile('images')) {
                 $images = $request->file('images');
 
+                // Iterasi melalui setiap gambar yang diupload
                 foreach ($images as $key => $image) {
                     $image_tmp = Image::make($image);
                     $image_name = $image->getClientOriginalName();

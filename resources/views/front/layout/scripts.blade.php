@@ -73,8 +73,9 @@
                                 var grand_total = parseFloat($('#price_static')
                                     .val());
                                 var totalPrice = grand_total + shippingCharges;
-                                $('.shipping_charges').text(shippingCharges);
-                                $('.grand_total').text(totalPrice);
+                                $('.shipping_charges').text('IDR ' +
+                                    shippingCharges);
+                                $('.grand_total').text('IDR ' + totalPrice);
                                 document.getElementById('grand_total').value =
                                     totalPrice;
                                 document.getElementById('shipping_charges').value =

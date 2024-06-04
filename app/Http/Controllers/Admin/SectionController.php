@@ -24,34 +24,28 @@ class SectionController extends Controller
     {
         Session::put('page', 'sections');
 
-        if ($id == '') {
-            $title = 'Tambah Section';
-            $section = new Section();
-            $message = 'Berhasil menambahkan section';
-        } else {
-            $title = 'Ubah Section';
-            $section = Section::find($id);
-            $message = 'Berhasil memperbarui section';
-        }
+        // Menetapkan judul halaman berdasarkan menambahkan atau memperbarui
+        $title = $id ? 'Ubah Section' : 'Tambah Section';
+        $section = $id ? Section::find($id) : new Section();
+        // Menetapkan pesan berhasil halaman berdasarkan menambahkan atau memperbarui
+        $message = $id ? 'Berhasil memperbarui section' : 'Berhasil menambahkan section';
 
+        // Memproses data jika permintaan adalah POST
         if ($request->isMethod('post')) {
-            $data = $request->all();
-            $rules = [
-                'section_name' => 'required'
-            ];
-            $customMessages = [
-                'section_name.required' => 'Nama section harus diisi'
-            ];
+            // Validasi data masukan
+            $validatedData = $request->validate([
+                'section_name' => 'required',
+            ], [
+                'section_name.required' => 'Nama section harus diisi',
+            ]);
 
-            $this->validate($request, $rules, $customMessages);
-
-            $section->name   = $data['section_name'];
+            $section->name = $validatedData['section_name'];
             $section->save();
 
-            return redirect('admin/products')->with('success_message', $message);
+            return redirect('admin/sections')->with('success_message', $message);
         }
 
-        return view('admin.sections.add_edit_section')->with(compact('title', 'section'));
+        return view('admin.sections.add_edit_section', compact('title', 'section'));
     }
 
     public function deleteSection($id)

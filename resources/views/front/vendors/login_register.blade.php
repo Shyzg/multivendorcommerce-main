@@ -4,7 +4,7 @@
 <div class="page-style-a">
     <div class="container">
         <div class="page-intro">
-            <h2>Pemilik Toko</h2>
+            <h2>Penjual</h2>
             <ul class="bread-crumb">
                 <li class="has-separator">
                     <i class="ion ion-md-home"></i>
@@ -88,7 +88,7 @@
                             <label for="vendoraddress">Alamat
                                 <span class="astk">*</span>
                             </label>
-                            <input type="text" id="vendoraddress" class="text-field" placeholder="081234567890" name="address">
+                            <input type="text" id="vendoraddress" class="text-field" placeholder="Demak AD-32" name="address">
                             <p id="register-address"></p>
                         </div>
                         <div class="form-group">

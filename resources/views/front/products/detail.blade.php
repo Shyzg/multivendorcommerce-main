@@ -4,13 +4,14 @@
 <div class="page-style-a">
     <div class="container">
         <div class="page-intro">
+            <h2>Detail Produk</h2>
             <ul class="bread-crumb">
                 <li class="has-separator">
                     <i class="ion ion-md-home"></i>
                     <a href="{{ url('/') }}">Home</a>
                 </li>
                 <li class="is-marked">
-                    <a href="javascript:;">Detail</a>
+                    <a href="javascript:;">Detail Produk</a>
                 </li>
             </ul>
         </div>

@@ -26,12 +26,10 @@ return new class extends Migration
             $table->float('shipping_charges');
             $table->string('coupon_code')->nullable();
             $table->float('coupon_amount')->nullable();
-            $table->string('payment_method');
             $table->string('payment_gateway');
-            $table->string('snap_token', 36)->nullable();
+            $table->string('order_status');
             $table->float('grand_total');
-            $table->string('courier_name')->nullable();
-            $table->string('tracking_number')->nullable();
+            $table->string('snap_token', 36)->nullable();
             $table->timestamps();
         });
     }

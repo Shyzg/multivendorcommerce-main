@@ -42,6 +42,12 @@ class Product extends Model
         return $this->belongsTo(Vendor::class, 'vendor_id')->with('vendorbusinessdetails');
     }
 
+    public function orders_products()
+    {
+        // 'order_id' (column of `orders_products` table) is the Foreign Key of the Relationship
+        return $this->hasMany(OrdersProduct::class);
+    }
+
     public static function getDiscountPrice($product_id)
     {
         // Ambil 'product_price', 'product_discount', dan 'category_id' untuk di tampilkan di front/index.blade.php
@@ -76,18 +82,15 @@ class Product extends Model
         $catDetails = json_decode(json_encode($catDetails), true);
 
         if ($proDetails['product_discount'] > 0) {
-            // if there's a 'product_discount' (in `products` table) (i.e. discount is not zero 0)
-            // if there's a PRODUCT discount on the product itself
+            // Kalau ada 'product_discount' di dalam table 'products' yang nilainya bukan 0
             $final_price = $prodPrice['product_price'] - ($prodPrice['product_price'] * $proDetails['product_discount'] / 100);
             $discount = $prodPrice['product_price'] - $final_price; // the discount value = original price - price after discount
         } else if ($catDetails['category_discount'] > 0) {
-            // if there's a `category_discount` (in `categories` table) (i.e. discount is not zero 0) (if there's a discount on the whole category of that product)
-            // if there's NO a PRODUCT discount, but there's a CATEGORY discount
+            // Kalau ada 'category_discount di dalam table 'categories' yang nilainya bukan 0
             $final_price = $prodPrice['product_price'] - ($prodPrice['product_price'] * $catDetails['category_discount'] / 100);
-            $discount = $prodPrice['product_price'] - $final_price; // the discount value = original price - price after discount
-            // Note: Didn't ACCOUNT FOR presence of discounts of BOTH `product_discount` (in `products` table) AND `category_discount` (in `categories` table) AT THE SAME TIME!!
+            $discount = $prodPrice['product_price'] - $final_price;
         } else {
-            // there's no discount on neither `product_discount` (in `products` table) nor `category_discount` (in `categories` table)
+            // Kalau gaada 'product_discount' dan 'category_discount di dalam table 'products' dan 'categories' yang nilainya bukan 0
             $final_price = $prodPrice['product_price'];
             $discount = 0;
         }
@@ -97,22 +100,6 @@ class Product extends Model
             'final_price'   => $final_price,
             'discount'      => $discount
         );
-    }
-
-    public static function isProductNew($product_id)
-    {
-        // Ambil 3 terakhir dari product yang baru ditambahlam
-        $productIds = Product::select('id')->where('status', 1)->orderBy('id', 'Desc')->limit(3)->pluck('id');
-        $productIds = json_decode(json_encode($productIds, true));
-
-        if (in_array($product_id, $productIds)) {
-            // Jika berhasil melewati $product_id di dalam array yang baru ditambahkan
-            $isProductNew = 'Yes';
-        } else {
-            $isProductNew = 'No';
-        }
-
-        return $isProductNew;
     }
 
     public static function getProductImage($product_id)
