@@ -83,6 +83,8 @@ Route::prefix('/admin')->namespace('App\Http\Controllers\Admin')->group(function
         Route::get('orders/{id}', 'OrderController@orderDetails');
         // Memperbarui order item status
         Route::post('update-order-item-status', 'OrderController@updateOrderItemStatus');
+        // Memperbarui order status
+        Route::post('update-order-status', 'OrderController@updateOrderStatus');
     });
 });
 
@@ -133,7 +135,7 @@ Route::namespace('App\Http\Controllers\Front')->group(function () {
         Route::post('remove-delivery-address', 'AddressController@removeDeliveryAddress');
         // Menampilkan halaman riwayat pemesanan di views front/orders/orders.blade.php
         Route::get('user/orders/{id?}', 'OrderController@orders');
-        Route::post('payments/midtrans-notification', [PaymentCallbackController::class, 'receive']);
+        // Route::post('payments/midtrans-notification', [PaymentCallbackController::class, 'receive']);
         Route::get('payments/finish', [PaymentCallbackController::class, 'finish']);
         Route::get('payments/unfinish', [PaymentCallbackController::class, 'unfinish']);
         Route::get('payments/error', [PaymentCallbackController::class, 'error']);

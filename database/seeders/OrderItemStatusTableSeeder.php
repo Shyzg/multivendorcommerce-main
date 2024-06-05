@@ -23,17 +23,17 @@ class OrderItemStatusTableSeeder extends Seeder
             ],
             [
                 'id'     => 2,
-                'name'   => 'In Progress',
+                'name'   => 'Dalam Proses',
                 'status' => 1
             ],
             [
                 'id'     => 3,
-                'name'   => 'Shipped',
+                'name'   => 'Dikirim',
                 'status' => 1
             ],
             [
                 'id'     => 4,
-                'name'   => 'Delivered',
+                'name'   => 'Tiba',
                 'status' => 1
             ]
         ];

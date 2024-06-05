@@ -312,7 +312,6 @@ class ProductsController extends Controller
         foreach ($getCartItems as $item) {
             $prodPrice = Product::getDiscountAttributePrice($item['product_id']);
             $total_price = $total_price + ($prodPrice['final_price'] * $item['quantity']);
-            $product_weight = $item['product']['product_weight'];
         }
 
         $deliveryAddresses = DeliveryAddress::deliveryAddresses();
@@ -349,12 +348,6 @@ class ProductsController extends Controller
 
             $deliveryAddress = DeliveryAddress::where('id', $data['address_id'])->first();
 
-            // if ($data['payment_gateway'] == 'Midtrans') {
-            //     $order_status   = 'Baru';
-            // } else {
-            //     $order_status   = 'Pending';
-            // }
-
             // Untuk memastikan bahwa semua operasi database berikutnya bagian dari proses penyimpanan database yang sama
             DB::beginTransaction();
 
@@ -382,11 +375,11 @@ class ProductsController extends Controller
             $order->coupon_code      = Session::get('couponCode');
             $order->coupon_amount    = Session::get('couponAmount');
             $order->payment_gateway  = $data['payment_gateway'];
-            $order->order_status     = "Menunggu Pembayaran";
+            $order->order_status     = "Dalam Proses";
             $order->grand_total      = $data['grand_total'];
             // Menyimpan data ke tabel orders
             $order->save();
-            // Digunakan untuk mendapatkan id auto-increment dari tabel orders yang barusan disimpan yang ada didalam variable $order_id
+            // Digunakan untuk mendapatkan order_id sebagai auto-increment dari tabel orders dan akan dimasukkan kedalam tabel orders_products melalui proses yang ada dibawah
             $order_id = DB::getPdo()->lastInsertId();
 
             foreach ($getCartItems as $item) {
@@ -397,7 +390,7 @@ class ProductsController extends Controller
                 $cartItem->admin_id        = $getProductDetails['admin_id'];
                 $cartItem->vendor_id       = $getProductDetails['vendor_id'];
                 $cartItem->product_id      = $item['product_id'];
-                $cartItem->item_status     = 'In Progress';
+                $cartItem->item_status     = 'Dalam Proses';
                 $getDiscountAttributePrice = Product::getDiscountAttributePrice($item['product_id']);
                 $cartItem->product_price   = $getDiscountAttributePrice['final_price'];
                 $getProductStock = ProductsAttribute::getProductStock($item['product_id']);

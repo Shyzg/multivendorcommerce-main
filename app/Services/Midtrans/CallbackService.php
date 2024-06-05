@@ -37,12 +37,12 @@ class CallbackService extends Midtrans
 
     public function isExpire()
     {
-        return ($this->notification['transaction_status'] == 'expire');
+        return ($this->notification['transaction_status'] == 'Kaldaluarsa');
     }
 
     public function isCancelled()
     {
-        return ($this->notification['transaction_status'] == 'cancel');
+        return ($this->notification['transaction_status'] == 'Dibatalkan');
     }
 
     public function getNotification()

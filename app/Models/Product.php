@@ -44,7 +44,7 @@ class Product extends Model
 
     public function orders_products()
     {
-        // 'order_id' (column of `orders_products` table) is the Foreign Key of the Relationship
+        // Foreign key untuk 'order_id' yang ada di kolom orders_products
         return $this->hasMany(OrdersProduct::class);
     }
 

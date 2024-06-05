@@ -186,10 +186,10 @@ class ProductsController extends Controller
             $data = $request->only(['attributeId', 'stock']);
 
             // Iterasi melalui setiap id atribut yang diterima dari form
-            foreach ($data['attributeId'] as $key => $attributeId) {
+            foreach ($data['attributeId'] as $key => $attribute) {
                 // Jika id atribut tidak kosong lakukan pembaruan stok untuk atribut tersebut
-                if (!empty($attributeId)) {
-                    ProductsAttribute::where('id', $attributeId)->update(['stock' => $data['stock'][$key]]);
+                if (!empty($attribute)) {
+                    ProductsAttribute::where('id', $attribute)->update(['stock' => $data['stock'][$key]]);
                 }
             }
 

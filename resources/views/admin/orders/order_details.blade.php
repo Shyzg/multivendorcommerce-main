@@ -156,6 +156,7 @@
                                     <th>Nama Produk</th>
                                     <th>Harga Produk</th>
                                     <th>Kuantitas</th>
+                                    <th>Status Pesanan</th>
                                 </tr>
                                 @foreach ($order->orders_products as $orderProduct)
                                 @if ($orderProduct->vendor_id == $vendor_id)
@@ -171,23 +172,18 @@
                                     <td>{{ $orderProduct->product->product_name }}</td>
                                     <td>{{ $orderProduct->product->product_price }}</td>
                                     <td>{{ $orderProduct->product_qty }}</td>
-                                    <!-- <td>
+                                    <td>
                                         <form action="{{ url('admin/update-order-item-status') }}" method="post">
                                             @csrf
-
                                             <input type="hidden" name="order_item_id" value="{{ $orderProduct->id }}">
-
                                             <select id="order_item_status" name="order_item_status" required>
-                                                <option value="">Select</option>
                                                 @foreach ($orderItemStatuses as $status)
                                                 <option value="{{ $status['name'] }}" @if (!empty($orderProduct['item_status']) && $orderProduct['item_status']==$status['name']) selected @endif>{{ $status['name'] }}</option>
                                                 @endforeach
                                             </select>
-                                            <input style="width: 110px" type="text" name="item_courier_name" id="item_courier_name" placeholder="Item Courier Name" @if (!empty($orderProduct['courier_name'])) value="{{ $orderProduct['courier_name'] }}" @endif>
-                                            <input style="width: 110px" type="text" name="item_tracking_number" id="item_tracking_number" placeholder="Item Tracking Number" @if (!empty($orderProduct['tracking_number'])) value="{{ $orderProduct['tracking_number'] }}" @endif>
-                                            <button type="submit">Update</button>
+                                            <button type="submit">Perbarui</button>
                                         </form>
-                                    </td> -->
+                                    </td>
                                 </tr>
                                 @endif
                                 @endforeach

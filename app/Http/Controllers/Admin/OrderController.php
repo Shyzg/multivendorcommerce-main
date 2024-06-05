@@ -23,14 +23,18 @@ class OrderController extends Controller
         $vendor_id = Auth::guard('admin')->user()->vendor_id;
 
         if ($adminType == 'vendor') {
+            // Mendapatkan semua order yang memiliki produk yang terkait dengan vendor tertentu
             $orders = Order::whereHas('orders_products', function ($query) use ($vendor_id) {
+                // Memfilter orders_products berdasarkan vendor_id
                 $query->where('vendor_id', $vendor_id);
             })->with([
                 'orders_products' => function ($query) use ($vendor_id) {
+                    // Memuat relasi produk terkait untuk setiap orders_product
                     $query->where('vendor_id', $vendor_id)->with('product');
                 }
             ])->orderBy('id', 'desc')->get();
         } else {
+            // Kalau tipe adminnya bukan vendor, akan menampilkan keselurannya
             $orders = Order::with('orders_products.product')->orderBy('id', 'desc')->get();
         }
 
@@ -54,10 +58,7 @@ class OrderController extends Controller
         })->findOrFail($id);
 
         $userDetails = User::findOrFail($orderDetails->user_id);
-        $orderItemStatuses = OrderItemStatus::where([
-            'status' => 1,
-            'name' => 'In Progress'
-        ])->get();
+        $orderItemStatuses = OrderItemStatus::where('status', 1)->get();
         $total_items = $orderDetails->orders_products->sum('product_qty');
 
         $item_discount = $orderDetails->coupon_amount > 0 ? round($orderDetails->coupon_amount / $total_items, 2) : 0;
@@ -76,17 +77,9 @@ class OrderController extends Controller
                 return redirect()->back()->with('error_message', 'Invalid order item status');
             }
 
-            // Update status item order
-            $updateData = [
+            OrdersProduct::where('id', $data['order_item_id'])->update([
                 'item_status' => $data['order_item_status']
-            ];
-
-            if (!empty($data['item_courier_name']) && !empty($data['item_tracking_number'])) {
-                $updateData['courier_name'] = $data['item_courier_name'];
-                $updateData['tracking_number'] = $data['item_tracking_number'];
-            }
-
-            OrdersProduct::where('id', $data['order_item_id'])->update($updateData); // Memperbarui data item order
+            ]); // Memperbarui data item order
 
             // Ambil order_id
             $orderItem = OrdersProduct::select('order_id')->where('id', $data['order_item_id'])->first(); // Mengambil order_id dari item order
