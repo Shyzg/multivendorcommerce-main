@@ -20,7 +20,7 @@ class PaymentCallbackController extends Controller
 
             if ($callback->isSuccess()) {
                 Order::where('id', $order->id)->update([
-                    'order_status' => 'Lunas'
+                    'order_status' => 'Dibayar'
                 ]);
             }
 

@@ -13,109 +13,28 @@ $(document).ready(function() {
     $('.nav-link').removeClass('active');
 
     $('#current_password').keyup(function() {
-        // console.log(this);
         var current_password = $(this).val();
-
         $.ajax({
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}, // X-CSRF-TOKEN: https://laravel.com/docs/9.x/csrf#csrf-x-csrf-token    
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}, 
             type   : 'post',
-            url    : '/admin/check-admin-password', // check the web.php for this route and check the AdminController for the checkAdminPassword() method
-            data   : {current_password: current_password}, // A key/value pair that will checked inside the AdminController using Hash::check($data['current_password']) (e.g. current_password: 123456)    // send the the    var current_password    (Check the above variable)
+            url    : '/admin/check-admin-password', 
+            data   : {current_password: current_password}, 
             success: function(resp) {
-                // alert(resp);
+
                 if (resp == 'false') {
-                    $('#check_password').html('<b style="color: red">Current Password is Incorrect!</b>'); // the <span> element in update_admin_password.blade.php
+                    $('#check_password').html('<b style="color: red">Current Password is Incorrect!</b>'); 
                 } else if (resp == 'true') {
-                    $('#check_password').html('<b style="color: green">Current Password is Correct!</b>'); // the <span> element in update_admin_password.blade.php
+                    $('#check_password').html('<b style="color: green">Current Password is Correct!</b>'); 
                 }
             },
             error  : function() {alert('Error');}
         });
     });
 
-    // Updating Filter status (active/inactive) using AJAX in filters.blade.php    
-    $(document).on('click', '.updateFilterStatus', function() { // '.updateFilterStatus' is the anchor link <a> CSS class    // This is the same as    $('.updateFilterstatus').on('click', function() {
-        var status    = $(this).children('i').attr('status'); // Using HTML Custom Attributes
-        var filter_id = $(this).attr('filter_id'); // Using HTML Custom Attributes
-
-        
-        $.ajax({
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}, // X-CSRF-TOKEN: https://laravel.com/docs/9.x/csrf#csrf-x-csrf-token    
-            type   : 'post',
-            url    : '/admin/update-filter-status', // check the web.php for this route and check the ProductsController for the updateFilterStatus() method
-            data   : {status: status, filter_id: filter_id}, // we pass the status and filter_id
-            success: function(resp) {
-                if (resp.status == 0) { // in case of success, reverse the status (active/inactive) and show the right icon in the frontend    // Or the same    if (resp['status'] == 0) {
-                    $('#filter-' + filter_id).html('<i style="font-size: 25px" class="mdi mdi-bookmark-outline" status="Inactive"></i>');
-                } else if (resp.status == 1) {
-                    $('#filter-' + filter_id).html('<i style="font-size: 25px" class="mdi mdi-bookmark-check" status="Active"></i>');
-                }
-            },
-            error  : function() {
-                alert('Error');
-            }
-        });
-    });
-
-    // Updating Filter Value status (active/inactive) using AJAX in filters_values.blade.php    
-    $(document).on('click', '.updateFilterValueStatus', function() { // '.updateFilterValueStatus' is the anchor link <a> CSS class    // This is the same as    $('.updateFilterValuestatus').on('click', function() {
-        var status    = $(this).children('i').attr('status'); // Using HTML Custom Attributes
-        var filter_id = $(this).attr('filter_id'); // Using HTML Custom Attributes
-
-        
-        $.ajax({
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}, // X-CSRF-TOKEN: https://laravel.com/docs/9.x/csrf#csrf-x-csrf-token    
-            type   : 'post',
-            url    : '/admin/update-filter-value-status', // check the web.php for this route and check the ProductsController for the updateFilterValueStatus() method
-            data   : {status: status, filter_id: filter_id}, // we pass the status and filter_id
-            success: function(resp) {
-                if (resp.status == 0) { // in case of success, reverse the status (active/inactive) and show the right icon in the frontend    // Or the same    if (resp['status'] == 0) {
-                    $('#filter-' + filter_id).html('<i style="font-size: 25px" class="mdi mdi-bookmark-outline" status="Inactive"></i>');
-                } else if (resp.status == 1) {
-                    $('#filter-' + filter_id).html('<i style="font-size: 25px" class="mdi mdi-bookmark-check" status="Active"></i>');
-                }
-            },
-            error  : function() {
-                alert('Error');
-            }
-        });
-    });
-
-    // Update Coupon Status (active/inactive) via AJAX in admin/coupons/coupons.blade.php, check admin/js/custom.js    
-    $(document).on('click', '.updateCouponStatus', function() { // '.updateCouponStatus' is the anchor link <a> CSS class    // This is the same as    $('.updateCouponStatus').on('click', function() {
-        var status    = $(this).children('i').attr('status'); // Using HTML Custom Attributes
-        var coupon_id = $(this).attr('coupon_id'); // Using HTML Custom Attributes
-
-
-
-        $.ajax({
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}, // X-CSRF-TOKEN: https://laravel.com/docs/9.x/csrf#csrf-x-csrf-token    
-            type   : 'post',
-            url    : '/admin/update-coupon-status', // check the web.php for this route and check the CouponsController for the updateCouponStatus() method
-            data   : {status: status, coupon_id: coupon_id}, // we pass the status and coupon_id
-            success: function(resp) {
-                if (resp.status == 0) { // in case of success, reverse the status (active/inactive) and show the right icon in the frontend    // Or the same    if (resp['status'] == 0) {
-                    $('#coupon-' + coupon_id).html('<i style="font-size: 25px" class="mdi mdi-bookmark-outline" status="Inactive"></i>');
-                } else if (resp.status == 1) {
-                    $('#coupon-' + coupon_id).html('<i style="font-size: 25px" class="mdi mdi-bookmark-check" status="Active"></i>');
-                }
-            },
-            error  : function() {
-                alert('Error');
-            }
-        });
-    });
-
-    // This method will be GLOBAL/COMMON and SHARED with many things that are going to be deleted in different pages, but they ALL must have both the HTML custom attributs: module and module_id to use them here to redirect to the relevant proper route (Check down a little bit    window.location = ....)
-    // Confirm Deletion using SweetAlert JavaScript package/plugin
-    // Delete category image in add_edit_category.blade.php
-    // $('.confirmDelete').click(function() {
-    $(document).on('click', '.confirmDelete', function() { // correcting the issue of .confirmDelete (Delete button is not working) is not working when going to the next page (using pagination)
+    $(document).on('click', '.confirmDelete', function() { 
         var module   = $(this).attr('module');
         var moduleid = $(this).attr('moduleid');
 
-
-        // After the CDNs block in the country, I resorted to this solution:
         if (confirm('Are you sure you want to delete this?')) {
             window.location = '/admin/delete-' + module + '/' + moduleid;
         } else {
@@ -123,40 +42,33 @@ $(document).ready(function() {
         }
     });
 
-    // Add Remove Input Fields Dynamically using jQuery: https://www.codexworld.com/add-remove-input-fields-dynamically-using-jquery/    
-    // Products attributes add//remove input fields dynamically using jQuery
-    var maxField = 10; //Input fields increment limitation
-    var addButton = $('.add_button'); //Add button selector
-    var wrapper = $('.field_wrapper'); //Input field wrapper
-    var fieldHTML = '<div><div style="height:10px"></div><input type="text" name="sku[]" placeholder="SKU" style="width:100px">&nbsp;<input type="text" name="stock[]" placeholder="Stock" style="width:100px">&nbsp;<a href="javascript:void(0);" class="remove_button">Remove</a></div>'; //New input field html 
-    var x = 1; //Initial field counter is 1
-    
-    // Once add button is clicked
+    var maxField = 10; 
+    var addButton = $('.add_button'); 
+    var wrapper = $('.field_wrapper'); 
+    var fieldHTML = '<div><div style="height:10px"></div><input type="text" name="sku[]" placeholder="SKU" style="width:100px">&nbsp;<input type="text" name="stock[]" placeholder="Stock" style="width:100px">&nbsp;<a href="javascript:void(0);" class="remove_button">Remove</a></div>'; 
+    var x = 1; 
+
     $(addButton).click(function(){
-        // Check maximum number of input fields
+
         if(x < maxField){ 
-            x++; // Increment field counter
-            $(wrapper).append(fieldHTML); //Add field html
+            x++; 
+            $(wrapper).append(fieldHTML); 
         }
     });
-    
-    // Once remove button is clicked
+
     $(wrapper).on('click', '.remove_button', function(e){
         e.preventDefault();
-        $(this).parent('div').remove(); // Remove field html
-        x--; // Decrement field counter
+        $(this).parent('div').remove(); 
+        x--; 
     });
 
-
-
-    // Show the related filters depending on the selected category in category_filters.blade.php (which in turn is included by add_edit_product.php) using AJAX
     $('#category_id').on('change', function() {
-        var category_id = $(this).val(); // the category_id of the selected category
+        var category_id = $(this).val(); 
 
         $.ajax({
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}, // X-CSRF-TOKEN: https://laravel.com/docs/9.x/csrf#csrf-x-csrf-token    
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}, 
             type   : 'post',
-            url    : 'category-filters', // check this route in web.php
+            url    : 'category-filters', 
             data   : {category_id: category_id},
             success: function(resp) {
                 $('.loadFilters').html(resp.view);
@@ -164,9 +76,6 @@ $(document).ready(function() {
         });
     });
 
-
-
-    // Show/Hide Coupon fields for Coupon Options (Manual/Automatic) in admin/coupons/add_edit_coupon.blade.php    
     $('#ManualCoupon').click(function() {
         $('#couponField').show();
     });
@@ -174,13 +83,10 @@ $(document).ready(function() {
         $('#couponField').hide();
     });
 
-
-
-    // Hide Courier Name and Tracking Number HTML input fields in admin/orders/order_details.blade.php in "Update Order Status" Section, and show them ONLY if the "Update Order Status" <select><option> (dropdown menu) is updated/changed (to 'Shipped' only) by an 'admin'    
     $('#courier_name').hide();
     $('#tracking_number').hide();
     $('#order_status').on('change', function() {
-        if (this.value == 'Shipped') { // is the same as:    if ($(this).val() == 'Shipped') {
+        if (this.value == 'Shipped') { 
             $('#courier_name').show();
             $('#tracking_number').show();
         } else {
@@ -189,4 +95,4 @@ $(document).ready(function() {
         }
     });
 
-}); // End of $(document).ready()
+}); 
